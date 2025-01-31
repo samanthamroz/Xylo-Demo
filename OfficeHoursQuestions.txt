@@ -1,0 +1,2 @@
+How do I fix the x-z rotation issue for the camera? (equation?)
+How do I sucessfully get Git to ignore the /Library path?
