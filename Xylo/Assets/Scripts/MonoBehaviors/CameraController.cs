@@ -16,6 +16,9 @@ public class CameraController : MonoBehaviour
     void Awake()
     {   
         cam = Camera.main;
+    }
+    void Start()
+    {
         cam.orthographicSize = baseZoom;
         cam.transform.LookAt(zero);
     }
@@ -29,28 +32,21 @@ public class CameraController : MonoBehaviour
     }
     void OnScroll(InputValue value) {
         scrollInput = value.Get<float>();
-        Debug.Log("scroll me");
     }
-    public void LeftPan(){
+    public void LeftPan() {
         direction = Vector3.up;
     }
-    public void RightPan(){
+    public void RightPan() {
         direction = Vector3.down;
     }
-    public void UpPan(){
-        Debug.Log(cam.transform.rotation.eulerAngles.y);
-        
-
-        float angle = 0.0f;
-        Vector3 axis = Vector3.zero;
-        transform.rotation.ToAngleAxis(out angle, out axis);
-
-        float xaxis = 360 / cam.transform.rotation.eulerAngles.y;
-        Debug.Log(new Vector3(xaxis, 0, xaxis));
-        direction = new Vector3(xaxis, 0, xaxis);
+    public void UpPan() {
+        //TODO: fix equation
+        float axis = 90 / (cam.transform.rotation.eulerAngles.y + .001f);
+        direction = new Vector3(axis, 0, axis);
     }
-    public void DownPan(){
-        float axis = 90 / cam.transform.rotation.eulerAngles.y;
+    public void DownPan() {
+        //TODO: fix equation
+        float axis = 90 / (cam.transform.rotation.eulerAngles.y + .001f);
         direction = new Vector3(-axis, 0, -axis);
     }
     public void StopPan() {
