@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class DraggableBlock : MonoBehaviour
 {
+    public Note note;
     private Vector3 mousePosition;
     private Vector3 originalPos;
     private Vector3 direction = Vector3.one;
@@ -10,19 +11,17 @@ public class DraggableBlock : MonoBehaviour
     {
         originalPos = GetRoundedVector(transform.position);
     }
-
     private Vector3 GetRoundedVector(Vector3 vec) {
         return new Vector3((float)Math.Round(vec.x), (float)Math.Round(vec.y), (float)Math.Round(vec.z));
     }
     private Vector3 GetMousePosition() {
         return Camera.main.WorldToScreenPoint(transform.position);
     }
-
     private void OnMouseDown() {
         originalPos = GetRoundedVector(transform.position);
         mousePosition = Input.mousePosition - GetMousePosition();
+        GetComponent<AudioSource>().Play();
     }
-
     private void OnMouseDrag()
     {
         Vector3 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition - mousePosition);
@@ -51,22 +50,26 @@ public class DraggableBlock : MonoBehaviour
             transform.position = newPos;
         }
     }
-
     private bool IsCollidingAtPosition(Vector3 position)
     {
         Collider[] colliders = Physics.OverlapBox(position, GetComponent<Collider>().bounds.extents, Quaternion.identity);
         return colliders.Length > 0;
     }
-
     private bool IsValidMovement(Vector3 position) {
         return 
             Math.Abs(transform.position.x - position.x) <= 1 &&
             Math.Abs(transform.position.y - position.y) <= 1 &&
             Math.Abs(transform.position.z - position.z) <= 1;
     }
-    
     void OnMouseUp()
     {
         direction = Vector3.one;
+    }
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "Marble") {
+            GetComponent<AudioSource>().Play();
+            other.gameObject.GetComponent<PlayerMarble>().AddNote(note);
+        }
     }
 }

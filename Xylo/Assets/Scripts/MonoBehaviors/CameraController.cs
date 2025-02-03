@@ -7,7 +7,6 @@ public class CameraController : MonoBehaviour
     private Camera cam;
     public int speed = 20;
     Vector3 direction = Vector3.zero;
-    public Transform zero;
     public float zoomAllowance = 3;
     private float baseZoom = 9.5f; 
     private float scrollInput = 0f;
@@ -20,11 +19,11 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         cam.orthographicSize = baseZoom;
-        cam.transform.LookAt(zero);
+        cam.transform.LookAt(Vector3.zero);
     }
     void Update() {
-        cam.transform.RotateAround(zero.position, direction, speed * Time.deltaTime);
-        cam.transform.LookAt(zero);
+        cam.transform.RotateAround(Vector3.zero, direction, speed * Time.deltaTime);
+        cam.transform.LookAt(Vector3.zero);
         if ((scrollInput < 0 && !(cam.orthographicSize <= baseZoom - zoomAllowance))
                 || (scrollInput > 0 && !(cam.orthographicSize >= baseZoom + zoomAllowance))) {
             cam.orthographicSize += scrollInput * scrollSpeed * Time.deltaTime;
