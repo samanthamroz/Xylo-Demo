@@ -6,7 +6,6 @@ public class DraggableBlock : MonoBehaviour
     private Vector3 mousePosition;
     private Vector3 originalPos;
     private Vector3 direction = Vector3.one;
-
     void Start()
     {
         originalPos = GetRoundedVector(transform.position);
@@ -47,7 +46,23 @@ public class DraggableBlock : MonoBehaviour
             direction = newPos - originalPos;
         }
 
-        transform.position = newPos;
+        if (!IsCollidingAtPosition(newPos) && IsValidMovement(newPos))
+        {
+            transform.position = newPos;
+        }
+    }
+
+    private bool IsCollidingAtPosition(Vector3 position)
+    {
+        Collider[] colliders = Physics.OverlapBox(position, GetComponent<Collider>().bounds.extents, Quaternion.identity);
+        return colliders.Length > 0;
+    }
+
+    private bool IsValidMovement(Vector3 position) {
+        return 
+            Math.Abs(transform.position.x - position.x) <= 1 &&
+            Math.Abs(transform.position.y - position.y) <= 1 &&
+            Math.Abs(transform.position.z - position.z) <= 1;
     }
     
     void OnMouseUp()
