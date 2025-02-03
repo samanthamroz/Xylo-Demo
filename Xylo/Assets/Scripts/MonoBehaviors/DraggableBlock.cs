@@ -44,7 +44,6 @@ public class DraggableBlock : MonoBehaviour
         if (direction == Vector3.one) {
             direction = newPos - originalPos;
         }
-
         if (!IsCollidingAtPosition(newPos) && IsValidMovement(newPos))
         {
             transform.position = newPos;
@@ -53,7 +52,17 @@ public class DraggableBlock : MonoBehaviour
     private bool IsCollidingAtPosition(Vector3 position)
     {
         Collider[] colliders = Physics.OverlapBox(position, GetComponent<Collider>().bounds.extents, Quaternion.identity);
-        return colliders.Length > 0;
+        if (colliders.Length == 0) {
+            return false;
+        }
+
+        int count = colliders.Length;
+        foreach (Collider c in colliders) {
+            if (c.gameObject == this.gameObject) {
+                count -= 1;
+            }
+        }
+        return count > 0;
     }
     private bool IsValidMovement(Vector3 position) {
         return 
