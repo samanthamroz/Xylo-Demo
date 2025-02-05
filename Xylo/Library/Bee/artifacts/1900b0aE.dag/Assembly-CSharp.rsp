@@ -359,6 +359,7 @@
 "Assets/Scripts/MonoBehaviors/CameraController.cs"
 "Assets/Scripts/MonoBehaviors/DraggableBlock.cs"
 "Assets/Scripts/MonoBehaviors/PlayerMarble.cs"
+"Assets/Scripts/MonoBehaviors/Springboard.cs"
 -langversion:9.0
 
 /deterministic
