@@ -22,8 +22,11 @@ public class CameraController : MonoBehaviour
         cam.transform.LookAt(Vector3.zero);
     }
     void Update() {
+        //Rotate Camera
         cam.transform.RotateAround(Vector3.zero, direction, speed * Time.deltaTime);
         cam.transform.LookAt(Vector3.zero);
+
+        //Zoom Camera
         if ((scrollInput < 0 && !(cam.orthographicSize <= baseZoom - zoomAllowance))
                 || (scrollInput > 0 && !(cam.orthographicSize >= baseZoom + zoomAllowance))) {
             cam.orthographicSize += scrollInput * scrollSpeed * Time.deltaTime;
@@ -39,14 +42,12 @@ public class CameraController : MonoBehaviour
         direction = Vector3.down;
     }
     public void UpPan() {
-        //TODO: fix equation
-        float axis = 90 / (cam.transform.rotation.eulerAngles.y + .001f);
-        direction = new Vector3(axis, 0, axis);
+        Vector3 axis = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f) * Vector3.right;
+        direction = axis;
     }
     public void DownPan() {
-        //TODO: fix equation
-        float axis = 90 / (cam.transform.rotation.eulerAngles.y + .001f);
-        direction = new Vector3(-axis, 0, -axis);
+        Vector3 axis = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f) * Vector3.right;
+        direction = -axis;
     }
     public void StopPan() {
         direction = Vector3.zero;
