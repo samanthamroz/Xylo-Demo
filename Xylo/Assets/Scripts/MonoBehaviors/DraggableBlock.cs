@@ -76,9 +76,9 @@ public class DraggableBlock : MonoBehaviour
     }
     void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag == "Marble") {
+        if (other.gameObject.CompareTag("Marble")) {
             GetComponent<AudioSource>().Play();
-            other.gameObject.GetComponent<PlayerMarble>().AddNote(note);
+            WinManager.self.TriggerNote(note);
         }
     }
 }
