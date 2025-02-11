@@ -1,6 +1,9 @@
+using System;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+
 
 public class CameraController : MonoBehaviour
 {
@@ -22,7 +25,9 @@ public class CameraController : MonoBehaviour
         cam.transform.LookAt(Vector3.zero);
     }
     void Update() {
-        //Rotate Camera
+        if ((cam.transform.position.y >= 29.98f && IsGoingUp()) || (cam.transform.position.y <= -29.98f && IsGoingDown())) {
+            direction = Vector3.zero;
+        }
         cam.transform.RotateAround(Vector3.zero, direction, speed * Time.deltaTime);
         cam.transform.LookAt(Vector3.zero);
 
@@ -31,6 +36,12 @@ public class CameraController : MonoBehaviour
                 || (scrollInput > 0 && !(cam.orthographicSize >= baseZoom + zoomAllowance))) {
             cam.orthographicSize += scrollInput * scrollSpeed * Time.deltaTime;
         }
+    }
+    private bool IsGoingUp() {
+        return ((cam.transform.rotation.eulerAngles.y <= 90 || cam.transform.rotation.eulerAngles.y >= -90) && direction.x > 0) || ((cam.transform.rotation.eulerAngles.y >= 90 || cam.transform.rotation.eulerAngles.y <= -90) && direction.x < 0);
+    }
+    private bool IsGoingDown() {
+        return ((cam.transform.rotation.eulerAngles.y <= 90 || cam.transform.rotation.eulerAngles.y >= -90) && direction.x < 0) || ((cam.transform.rotation.eulerAngles.y >= 90 || cam.transform.rotation.eulerAngles.y <= -90) && direction.x > 0);
     }
     void OnScroll(InputValue value) {
         scrollInput = value.Get<float>();
