@@ -9,12 +9,13 @@ public class LoadingManager : MonoBehaviour
     void Awake() {
 		if (self == null) {
 			self = this;
+			SceneManager.sceneLoaded += LoadCurrentScene;
 			DontDestroyOnLoad(gameObject);
 		} else {
 			Destroy(gameObject);
 		}
 
-		SceneManager.sceneLoaded += LoadCurrentScene;
+		
     }
 
     void Update()
@@ -29,6 +30,7 @@ public class LoadingManager : MonoBehaviour
     }
 
 	public void LoadNewScene(string sceneName) {
+		SaveCurrentScene();
 		SceneManager.LoadScene(sceneName);
 	}
 
