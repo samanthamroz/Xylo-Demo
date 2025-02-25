@@ -14,6 +14,7 @@ public class CameraController : MonoBehaviour
     private float baseZoom = 9.5f; 
     private float scrollInput = 0f;
     public float scrollSpeed = 0.1f;
+    private int verticalDirection = 0;
 
     void Awake()
     {   
@@ -25,7 +26,7 @@ public class CameraController : MonoBehaviour
         cam.transform.LookAt(Vector3.zero);
     }
     void Update() {
-        if ((cam.transform.position.y >= 29.98f && IsGoingUp()) || (cam.transform.position.y <= -29.98f && IsGoingDown())) {
+        if ((cam.transform.position.y >= 29.999f && verticalDirection == 1) || (cam.transform.position.y <= -29.999f && verticalDirection == -1)) {
             direction = Vector3.zero;
         }
         cam.transform.RotateAround(Vector3.zero, direction, speed * Time.deltaTime);
@@ -37,12 +38,6 @@ public class CameraController : MonoBehaviour
             cam.orthographicSize += scrollInput * scrollSpeed * Time.deltaTime;
         }
     }
-    private bool IsGoingUp() {
-        return ((cam.transform.rotation.eulerAngles.y <= 90 || cam.transform.rotation.eulerAngles.y >= -90) && direction.x > 0) || ((cam.transform.rotation.eulerAngles.y >= 90 || cam.transform.rotation.eulerAngles.y <= -90) && direction.x < 0);
-    }
-    private bool IsGoingDown() {
-        return ((cam.transform.rotation.eulerAngles.y <= 90 || cam.transform.rotation.eulerAngles.y >= -90) && direction.x < 0) || ((cam.transform.rotation.eulerAngles.y >= 90 || cam.transform.rotation.eulerAngles.y <= -90) && direction.x > 0);
-    }
     void OnScroll(InputValue value) {
         scrollInput = value.Get<float>();
     }
@@ -53,14 +48,17 @@ public class CameraController : MonoBehaviour
         direction = Vector3.down;
     }
     public void UpPan() {
+        verticalDirection = 1;
         Vector3 axis = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f) * Vector3.right;
         direction = axis;
     }
     public void DownPan() {
+        verticalDirection = -1;
         Vector3 axis = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f) * Vector3.right;
         direction = -axis;
     }
     public void StopPan() {
+        verticalDirection = 0;
         direction = Vector3.zero;
     }
 }

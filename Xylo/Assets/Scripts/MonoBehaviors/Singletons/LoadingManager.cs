@@ -14,8 +14,6 @@ public class LoadingManager : MonoBehaviour
 		} else {
 			Destroy(gameObject);
 		}
-
-		
     }
 
     void Update()
@@ -43,14 +41,12 @@ public class LoadingManager : MonoBehaviour
             objectStates = new List<bool>()
         };
         
-
         //save to file
         var saveProfile  = new SaveProfile<SceneSaveData>(sceneSave, sceneSave.scene.name);
         SaveManager.Save(saveProfile);
     }
 
     public static void LoadCurrentScene(Scene scene, LoadSceneMode mode) {
-		Debug.Log(scene.name);
         var saveData = SaveManager.Load<SceneSaveData>(scene.name).saveData;
     }
 }
