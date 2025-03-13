@@ -10,7 +10,6 @@ public class Springboard : MonoBehaviour
     void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.TryGetComponent<Rigidbody>(out var rb)) {
-            Debug.Log(rb.velocity.z);
             rb.AddForce(rb.velocity * springiness);
         }
     }

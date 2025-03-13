@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class LoadingManager : MonoBehaviour
@@ -24,6 +25,12 @@ public class LoadingManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.V)) {
             SaveCurrentScene();
+        }
+    }
+
+    void OnRestart(InputValue value) {
+        if (value.Get<float>() == 1) {
+            LoadNewScene(SceneManager.GetActiveScene().name);
         }
     }
 
