@@ -5,7 +5,10 @@ using UnityEngine;
 
 public class PlayerMarble : MonoBehaviour
 {
-    
+    void FixedUpdate()
+    {
+        //Debug.Log(GetComponent<Rigidbody>().velocity);
+    }
 
     void OnMouseDown() {
         GetComponent<Rigidbody>().isKinematic = false;

@@ -78,7 +78,7 @@ public class DraggableBlock : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Marble")) {
             GetComponent<AudioSource>().Play();
-            WinManager.self.TriggerNote(note);
+            //WinManager.self.TriggerNote(note);
         }
     }
 }
