@@ -12,7 +12,7 @@ public class DraggableBlock : MonoBehaviour
         originalPos = GetRoundedVector(transform.position);
     }
     private Vector3 GetRoundedVector(Vector3 vec) {
-        return new Vector3((float)Math.Round(vec.x), (float)(Math.Round(vec.y * 2, MidpointRounding.AwayFromZero) / 2), (float)Math.Round(vec.z));
+        return new Vector3((float)Math.Round(vec.x), (float)Math.Round(vec.y), (float)Math.Round(vec.z));
     }
     private Vector3 GetMousePosition() {
         return Camera.main.WorldToScreenPoint(transform.position);
