@@ -12,7 +12,7 @@ public class DraggableBlock : MonoBehaviour
         originalPos = GetRoundedVector(transform.position);
     }
     private Vector3 GetRoundedVector(Vector3 vec) {
-        return new Vector3((float)Math.Round(vec.x), (float)Math.Round(vec.y), (float)Math.Round(vec.z));
+        return new Vector3((float)Math.Round(vec.x), (float)(Math.Round(vec.y * 2, MidpointRounding.AwayFromZero) / 2), (float)Math.Round(vec.z));
     }
     private Vector3 GetMousePosition() {
         return Camera.main.WorldToScreenPoint(transform.position);
@@ -67,7 +67,7 @@ public class DraggableBlock : MonoBehaviour
     private bool IsValidMovement(Vector3 position) {
         return 
             Math.Abs(transform.position.x - position.x) <= 1 &&
-            Math.Abs(transform.position.y - position.y) <= 1 &&
+            Math.Abs(transform.position.y - position.y) <= .5 &&
             Math.Abs(transform.position.z - position.z) <= 1;
     }
     void OnMouseUp()
