@@ -9,16 +9,16 @@ public class DraggableBlock : MonoBehaviour
     private Vector3 direction = Vector3.one;
     void Start()
     {
-        originalPos = GetRoundedVector(transform.position);
+        originalPos = GetRoundedVector(transform.localPosition);
     }
     private Vector3 GetRoundedVector(Vector3 vec) {
-        return new Vector3((float)Math.Round(vec.x), (float)Math.Round(vec.y), (float)Math.Round(vec.z));
+        return new Vector3((float)Math.Round(vec.x), (float)(Math.Round(vec.y * 2)/2), (float)Math.Round(vec.z));
     }
     private Vector3 GetMousePosition() {
         return Camera.main.WorldToScreenPoint(transform.position);
     }
     private void OnMouseDown() {
-        originalPos = GetRoundedVector(transform.position);
+        originalPos = GetRoundedVector(transform.localPosition);
         mousePosition = Input.mousePosition - GetMousePosition();
         GetComponent<AudioSource>().Play();
     }
@@ -46,7 +46,7 @@ public class DraggableBlock : MonoBehaviour
         }
         if (!IsCollidingAtPosition(newPos) && IsValidMovement(newPos))
         {
-            transform.position = newPos;
+            transform.localPosition = newPos;
         }
     }
     private bool IsCollidingAtPosition(Vector3 position)
