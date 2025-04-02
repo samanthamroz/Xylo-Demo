@@ -1,9 +1,10 @@
+using System;
 using System.Linq.Expressions;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-//source: https://www.youtube.com/watch?v=zo1dkYfIJVg
+//inspo: https://www.youtube.com/watch?v=zo1dkYfIJVg
 
 public class MouseManager : MonoBehaviour
 {
@@ -40,12 +41,33 @@ public class MouseManager : MonoBehaviour
     
     void OnMouseClick(InputValue value) {
         if (value.Get<float>() == 1) { //click down
+            CameraManager.self.isRotating = false;
+            CameraManager.self.isPanning = false;
 			if (isInteractable) {
-                StartCoroutine(currentInteractable.Drag());
+                currentInteractable.DoClick();
             }
 		} else { //click released
             currentInteractable.isDragging = false;
             currentInteractable = null;
+        }
+    }
+
+    void OnMiddleMouseClick(InputValue value) {
+        if (value.Get<float>() == 1) { //click down
+			CameraManager.self.DoRotate();
+		}
+    }
+
+    void OnRightMouseClick(InputValue value) {
+        if (value.Get<float>() == 1) { //click down
+			CameraManager.self.DoPan();
+		}
+    }
+
+    void OnScroll(InputValue value) {
+        float scrollInput = value.Get<float>();
+        if (scrollInput != 0) {
+            CameraManager.self.DoScroll(Math.Sign(scrollInput));
         }
     }
 }

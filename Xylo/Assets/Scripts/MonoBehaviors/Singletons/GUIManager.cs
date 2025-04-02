@@ -6,7 +6,7 @@ public class GUIManager : MonoBehaviour
 {
     public static GUIManager self;
 	public GameObject UICanvasPrefab, cameraControllerPrefab, pauseMenuPrefab, pianoMenuPrefab;
-	private GameObject UICanvas, cameraController, pauseMenu, pianoMenu;
+	private GameObject UICanvas, pauseMenu, pianoMenu;
 
 	void Awake() {
 		if (self == null) {
@@ -25,7 +25,6 @@ public class GUIManager : MonoBehaviour
 	private void InstantiateLevelUI(Scene scene, LoadSceneMode mode) {
 		if (scene.buildIndex > 1) {
 			UICanvas = Instantiate(UICanvasPrefab);
-			cameraController = Instantiate(cameraControllerPrefab, UICanvas.transform);
 			pianoMenu = Instantiate(pianoMenuPrefab, UICanvas.transform);
 			pianoMenu.SetActive(false);
 			pauseMenu = Instantiate(pauseMenuPrefab, UICanvas.transform);

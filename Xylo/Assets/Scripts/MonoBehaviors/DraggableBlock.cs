@@ -17,32 +17,13 @@ public class DraggableBlock : MonoBehaviour
     private Vector3 GetRoundedVector(Vector3 vec) {
         return new Vector3((float)Math.Round(vec.x), (float)(Math.Round(vec.y * 2)/2), (float)Math.Round(vec.z));
     }
-    public void OnMouseDown() {
+    
+    //Click & Drag Behavior
+    public void DoClick() {
         GetComponent<AudioSource>().Play();
+        StartCoroutine(Drag());
     }
-    private bool IsCollidingAtPosition(Vector3 position)
-    {
-        Collider[] colliders = Physics.OverlapBox(position, GetComponent<Collider>().bounds.extents, Quaternion.identity);
-        if (colliders.Length == 0) {
-            return false;
-        }
-
-        int count = colliders.Length;
-        foreach (Collider c in colliders) {
-            if (c.gameObject == this.gameObject) {
-                count -= 1;
-            }
-        }
-        return count > 0;
-    }
-    private bool IsValidMovement(Vector3 position) {
-        return 
-            Math.Abs(transform.position.x - position.x) <= 1 &&
-            Math.Abs(transform.position.y - position.y) <= .5 &&
-            Math.Abs(transform.position.z - position.z) <= 1;
-    }
-
-    public IEnumerator Drag() {
+    private IEnumerator Drag() {
         isDragging = true;
         Vector3 newWorldPosition;
         while(isDragging) {
@@ -91,7 +72,29 @@ public class DraggableBlock : MonoBehaviour
         direction = Vector3.one;
         originalPosition = GetRoundedVector(transform.localPosition);
     }
+    private bool IsCollidingAtPosition(Vector3 position)
+    {
+        Collider[] colliders = Physics.OverlapBox(position, GetComponent<Collider>().bounds.extents, Quaternion.identity);
+        if (colliders.Length == 0) {
+            return false;
+        }
 
+        int count = colliders.Length;
+        foreach (Collider c in colliders) {
+            if (c.gameObject == this.gameObject) {
+                count -= 1;
+            }
+        }
+        return count > 0;
+    }
+    private bool IsValidMovement(Vector3 position) {
+        return 
+            Math.Abs(transform.position.x - position.x) <= 1 &&
+            Math.Abs(transform.position.y - position.y) <= .5 &&
+            Math.Abs(transform.position.z - position.z) <= 1;
+    }
+
+    //Marble Collision Behavior
     void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Marble")) {
