@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DraggableBlock : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class DraggableBlock : MonoBehaviour
     }
     private Vector3 GetMousePosition() {
         return Camera.main.WorldToScreenPoint(transform.position);
+    }
+    void OnMouseClick() {
+
     }
     private void OnMouseDown() {
         originalPos = GetRoundedVector(transform.localPosition);
