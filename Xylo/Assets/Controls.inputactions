@@ -47,16 +47,16 @@
                     "id": "8d633495-3a8b-4932-bc3e-7b6e5730a98a",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": false
                 },
                 {
                     "name": "MouseMove",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "c9808085-b09f-4dd7-b94a-6d99d7419d82",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": "Press",
+                    "interactions": "",
                     "initialStateCheck": true
                 }
             ],
