@@ -1,19 +1,18 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class DraggableBlock : MonoBehaviour
 {
     public Note note;
     private Vector3 mousePosition { get { return MouseManager.self.mousePosition; } }
-    private Vector3 originalPos;
+    private Vector3 originalPosition;
     private Vector3 direction = Vector3.one;
     public bool isDragging;
     void Start()
     {
         isDragging = false;
-        originalPos = GetRoundedVector(transform.localPosition);
+        originalPosition = GetRoundedVector(transform.localPosition);
     }
     private Vector3 GetRoundedVector(Vector3 vec) {
         return new Vector3((float)Math.Round(vec.x), (float)(Math.Round(vec.y * 2)/2), (float)Math.Round(vec.z));
@@ -45,40 +44,52 @@ public class DraggableBlock : MonoBehaviour
 
     public IEnumerator Drag() {
         isDragging = true;
-        Vector3 originalPosition = GetRoundedVector(transform.localPosition);
         Vector3 newWorldPosition;
         while(isDragging) {
             float z = Camera.main.WorldToScreenPoint(transform.position).z;
-            newWorldPosition = GetRoundedVector(Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, z)));
-            print(newWorldPosition);
-            
-            //if we haven't moved yet, let it move in any direction
-            if (direction == Vector3.zero) {
-                direction = Vector3.one;
-                direction = newWorldPosition - originalPos; //locks direction
-            } else {
+            Vector3 unroundedNewWorldPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, z));
+            newWorldPosition = GetRoundedVector(unroundedNewWorldPos);
+
+            if (direction != Vector3.one) {
                 //we must be currently moving
                 if (direction.x == 0) {
-                    newWorldPosition.x = originalPos.x;
+                    newWorldPosition.x = originalPosition.x;
                 }
                 if (direction.y == 0) {
-                    newWorldPosition.y = originalPos.y;
+                    newWorldPosition.y = originalPosition.y;
                 }
                 if (direction.z == 0) {
-                    newWorldPosition.z = originalPos.z;
+                    newWorldPosition.z = originalPosition.z;
+                }
+
+                if (!IsCollidingAtPosition(newWorldPosition) && IsValidMovement(newWorldPosition))
+                {
+                    transform.localPosition = newWorldPosition;
+                }
+            } else { //we need to figure out our direction
+                if (newWorldPosition - originalPosition != Vector3.zero) { //check that mouse has moved enough from origin of click
+                    Vector3 positionIfX = new(newWorldPosition.x, originalPosition.y, originalPosition.z);
+                    Vector3 positionIfY = new(originalPosition.x, newWorldPosition.y, originalPosition.z);
+                    Vector3 positionIfZ = new(originalPosition.x, originalPosition.y, newWorldPosition.z);
+
+                    float distanceToMouseIfX = Math.Abs((Camera.main.WorldToScreenPoint(positionIfX) - mousePosition).magnitude);
+                    float distanceToMouseIfY = Math.Abs((Camera.main.WorldToScreenPoint(positionIfY) - mousePosition).magnitude);
+                    float distanceToMouseIfZ = Math.Abs((Camera.main.WorldToScreenPoint(positionIfZ) - mousePosition).magnitude);
+
+                    if (distanceToMouseIfX < distanceToMouseIfY && distanceToMouseIfX < distanceToMouseIfZ) {
+                        direction = Vector3.right;
+                    } else if (distanceToMouseIfY < distanceToMouseIfZ) {
+                        direction = Vector3.up;
+                    } else {
+                        direction = Vector3.forward;
+                    }
                 }
             }
-
-            //check for collisions, etc, then move
-            if (!IsCollidingAtPosition(newWorldPosition) && IsValidMovement(newWorldPosition))
-            {
-                transform.localPosition = newWorldPosition;
-            }
-
             yield return null;
         }
         //drop
         direction = Vector3.one;
+        originalPosition = GetRoundedVector(transform.localPosition);
     }
 
     void OnCollisionEnter(Collision other)
