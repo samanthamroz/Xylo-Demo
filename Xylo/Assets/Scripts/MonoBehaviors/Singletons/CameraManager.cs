@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class CameraManager : MonoBehaviour
 {
     public static CameraManager self;
-	public GameObject cameraPrefab;
+	public GameObject cameraPrefab, cameraObject;
 	private Camera cam;
 
     public bool isRotating;
@@ -31,9 +31,11 @@ public class CameraManager : MonoBehaviour
     }
 
     private void InstantiateCamera(Scene scene, LoadSceneMode mode) {
-		cam = Instantiate(cameraPrefab).GetComponent<Camera>();
+        GameObject camera = Instantiate(cameraPrefab);
+		cam = camera.GetComponent<Camera>();
         cam.orthographicSize = baseZoom;
         scrollGoal = cam.orthographicSize;
+        cam.transform.position = new Vector3(20, 0, -20);
         cam.transform.LookAt(Vector3.zero);
 	}
 
