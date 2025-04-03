@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using UnityEngine.SceneManagement;
-using System.Security.Cryptography.X509Certificates;
+using Unity.VisualScripting;
 
 public class CameraManager : MonoBehaviour
 {
@@ -45,7 +45,7 @@ public class CameraManager : MonoBehaviour
         scrollGoal = cam.orthographicSize;
         cam.transform.position = new Vector3(20, 0, -20);
         cam.transform.LookAt(Vector3.zero);
-        distanceFromLookAtCoordinates = Vector3.Distance(cam.transform.position, lookAtWorldCoordinates);
+        distanceFromLookAtCoordinates = Math.Abs(Vector3.Distance(cam.transform.position, lookAtWorldCoordinates));
 	}
 
     public void DoPan() {
@@ -76,25 +76,17 @@ public class CameraManager : MonoBehaviour
     }
 
     public void DoRotate() {
-        lastPositionInWorld = mousePosition;
         lastMousePosition = mousePosition;
         StartCoroutine(Rotate());
     }
     private IEnumerator Rotate() {
         isRotating = true;
-        
+
         while(isRotating) {
-            float z = Camera.main.WorldToScreenPoint(lookAtWorldCoordinates).z;
-            Vector3 newPositioninWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, z));
-            newPositioninWorld = newPositioninWorld.normalized * distanceFromLookAtCoordinates;
-
-            Vector3 delta = newPositioninWorld - lastPositionInWorld;
-            lastPositionInWorld = newPositioninWorld;
+            Vector3 screenRotationAxis = new Vector3(-mousePosition.y, mousePosition.x, 0).normalized;
+            Vector3 worldRotationAxis = cam.transform.rotation * transform.TransformDirection(screenRotationAxis);
             
-            float mouseDelta = (lastMousePosition - mousePosition).magnitude;
-            Vector3 move = new Vector3(-delta.x, -delta.y, -delta.z) * rotateDistancePerFrame * mouseDelta;
-
-            cam.transform.position += move;
+            cam.transform.RotateAround(lookAtWorldCoordinates, worldRotationAxis, rotateDistancePerFrame);
             cam.transform.LookAt(lookAtWorldCoordinates);
 
             lastMousePosition = mousePosition;
