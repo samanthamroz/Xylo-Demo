@@ -15,13 +15,13 @@ public class CameraManager : MonoBehaviour
     public bool isRotating;
     public bool isPanning;
 
+    private Vector3 lastPositionInWorld;
     private Vector3 lastMousePosition;
-
-    private float panDistancePerFrame = 0.05f;
-
     private Vector3 lookAtWorldCoordinates = Vector3.zero;
+    private float distanceFromLookAtCoordinates;
+
+    private float panDistancePerFrame = .05f;
     private float rotateDistancePerFrame = .1f;
-    private Vector3 rotationDirection = Vector3.zero;
 
     private float zoomAllowance = 4;
     private float baseZoom;
@@ -45,9 +45,11 @@ public class CameraManager : MonoBehaviour
         scrollGoal = cam.orthographicSize;
         cam.transform.position = new Vector3(20, 0, -20);
         cam.transform.LookAt(Vector3.zero);
+        distanceFromLookAtCoordinates = Vector3.Distance(cam.transform.position, lookAtWorldCoordinates);
 	}
 
     public void DoPan() {
+        lastPositionInWorld = cam.transform.position;
         lastMousePosition = mousePosition;
         StartCoroutine(Pan());
     }
@@ -55,11 +57,14 @@ public class CameraManager : MonoBehaviour
     private IEnumerator Pan() {
         isPanning = true;
         while(isPanning) {
-            Vector3 delta = mousePosition - lastMousePosition;
+            float z = Camera.main.WorldToScreenPoint(lookAtWorldCoordinates).z;
+            Vector3 newPositioninWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, z));
 
-            // Convert screen movement to world movement
-            Vector3 move = new Vector3(-delta.x, -delta.y, 0) * panDistancePerFrame;
-
+            Vector3 delta = newPositioninWorld - lastPositionInWorld;
+            lastPositionInWorld = newPositioninWorld;
+            
+            float mouseDelta = (lastMousePosition - mousePosition).magnitude;
+            Vector3 move = new Vector3(-delta.x, -delta.y, -delta.z) * panDistancePerFrame * mouseDelta;
             lookAtWorldCoordinates += move;
             cam.transform.position += move;
             cam.transform.LookAt(lookAtWorldCoordinates);
@@ -71,21 +76,29 @@ public class CameraManager : MonoBehaviour
     }
 
     public void DoRotate() {
+        lastPositionInWorld = mousePosition;
         lastMousePosition = mousePosition;
         StartCoroutine(Rotate());
     }
     private IEnumerator Rotate() {
         isRotating = true;
-        //CHANGE ME!!!!
+        
         while(isRotating) {
-            Vector3 delta = mousePosition - lastMousePosition;
+            float z = Camera.main.WorldToScreenPoint(lookAtWorldCoordinates).z;
+            Vector3 newPositioninWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, z));
+            newPositioninWorld = newPositioninWorld.normalized * distanceFromLookAtCoordinates;
 
-            // Convert screen movement to world movement
-            Vector3 move = new Vector3(-delta.x, -delta.y, 0) * rotateDistancePerFrame;
+            Vector3 delta = newPositioninWorld - lastPositionInWorld;
+            lastPositionInWorld = newPositioninWorld;
+            
+            float mouseDelta = (lastMousePosition - mousePosition).magnitude;
+            Vector3 move = new Vector3(-delta.x, -delta.y, -delta.z) * rotateDistancePerFrame * mouseDelta;
+
             cam.transform.position += move;
             cam.transform.LookAt(lookAtWorldCoordinates);
 
             lastMousePosition = mousePosition;
+
             yield return null;
         }
         isRotating = false;
