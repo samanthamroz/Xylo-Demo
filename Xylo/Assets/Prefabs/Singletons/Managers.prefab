@@ -50,11 +50,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraPrefab: {fileID: 6637513072474089607, guid: e2534d2040cf2634ca6c7439432e6772, type: 3}
+  cameraObject: {fileID: 6637513072474089607, guid: e2534d2040cf2634ca6c7439432e6772, type: 3}
   isRotating: 0
   isPanning: 0
-  speed: 20
-  zoomAllowance: 3
-  scrollSpeed: 0.1
 --- !u!114 &5613111966735843151
 MonoBehaviour:
   m_ObjectHideFlags: 0

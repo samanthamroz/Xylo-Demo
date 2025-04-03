@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System.Security.Cryptography.X509Certificates;
 
 public class CameraManager : MonoBehaviour
 {
@@ -9,15 +10,22 @@ public class CameraManager : MonoBehaviour
 	public GameObject cameraPrefab, cameraObject;
 	private Camera cam;
 
+    private Vector3 mousePosition { get { return MouseManager.self.mousePosition; } }
+
     public bool isRotating;
     public bool isPanning;
 
-    public float speed = .5f;
-    Vector3 direction = Vector3.zero;
+    private Vector3 lastMousePosition;
 
-    public float zoomAllowance = 3;
-    private float baseZoom = 9.5f;
-    public float scrollDistancePerFrame = 0.01f;
+    private float panDistancePerFrame = 0.05f;
+
+    private Vector3 lookAtWorldCoordinates = Vector3.zero;
+    private float rotateDistancePerFrame = .1f;
+    private Vector3 rotationDirection = Vector3.zero;
+
+    private float zoomAllowance = 4;
+    private float baseZoom;
+    private float scrollDistancePerFrame = 0.05f;
     float scrollGoal;
 
 	void Awake() {
@@ -33,31 +41,54 @@ public class CameraManager : MonoBehaviour
     private void InstantiateCamera(Scene scene, LoadSceneMode mode) {
         GameObject camera = Instantiate(cameraPrefab);
 		cam = camera.GetComponent<Camera>();
-        cam.orthographicSize = baseZoom;
+        baseZoom = cam.orthographicSize;
         scrollGoal = cam.orthographicSize;
         cam.transform.position = new Vector3(20, 0, -20);
         cam.transform.LookAt(Vector3.zero);
 	}
 
     public void DoPan() {
+        lastMousePosition = mousePosition;
         StartCoroutine(Pan());
     }
 
     private IEnumerator Pan() {
         isPanning = true;
         while(isPanning) {
+            Vector3 delta = mousePosition - lastMousePosition;
+
+            // Convert screen movement to world movement
+            Vector3 move = new Vector3(-delta.x, -delta.y, 0) * panDistancePerFrame;
+
+            lookAtWorldCoordinates += move;
+            cam.transform.position += move;
+            cam.transform.LookAt(lookAtWorldCoordinates);
+
+            lastMousePosition = mousePosition;
             yield return null;
         }
+        isPanning = false;
     }
 
     public void DoRotate() {
-
+        lastMousePosition = mousePosition;
+        StartCoroutine(Rotate());
     }
     private IEnumerator Rotate() {
-        isPanning = true;
+        isRotating = true;
+        //CHANGE ME!!!!
         while(isRotating) {
+            Vector3 delta = mousePosition - lastMousePosition;
+
+            // Convert screen movement to world movement
+            Vector3 move = new Vector3(-delta.x, -delta.y, 0) * rotateDistancePerFrame;
+            cam.transform.position += move;
+            cam.transform.LookAt(lookAtWorldCoordinates);
+
+            lastMousePosition = mousePosition;
             yield return null;
         }
+        isRotating = false;
     }
 
     public void DoScroll(float scrollInput) {

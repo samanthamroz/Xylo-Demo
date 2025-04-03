@@ -47,21 +47,28 @@ public class MouseManager : MonoBehaviour
                 currentInteractable.DoClick();
             }
 		} else { //click released
-            currentInteractable.isDragging = false;
-            currentInteractable = null;
+            try {
+                currentInteractable.isDragging = false;
+            } finally {
+                currentInteractable = null;
+            }
         }
     }
 
     void OnMiddleMouseClick(InputValue value) {
         if (value.Get<float>() == 1) { //click down
 			CameraManager.self.DoRotate();
-		}
+		} else {
+            CameraManager.self.isRotating = false;
+        }
     }
 
     void OnRightMouseClick(InputValue value) {
         if (value.Get<float>() == 1) { //click down
 			CameraManager.self.DoPan();
-		}
+		} else {
+            CameraManager.self.isPanning = false;
+        }
     }
 
     void OnScroll(InputValue value) {
