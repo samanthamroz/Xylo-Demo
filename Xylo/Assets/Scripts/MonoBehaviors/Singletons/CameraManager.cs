@@ -20,7 +20,7 @@ public class CameraManager : MonoBehaviour
     private Vector3 lookAtWorldCoordinates = Vector3.zero;
     private float distanceFromLookAtCoordinates;
 
-    private float panDistancePerFrame = .05f;
+    private float panDistancePerFrame = .005f;
     private float rotateDistancePerFrame = .1f;
 
     private float zoomAllowance = 4;
@@ -45,7 +45,7 @@ public class CameraManager : MonoBehaviour
         scrollGoal = cam.orthographicSize;
         cam.transform.position = new Vector3(20, 0, -20);
         cam.transform.LookAt(Vector3.zero);
-        distanceFromLookAtCoordinates = Math.Abs(Vector3.Distance(cam.transform.position, lookAtWorldCoordinates));
+        distanceFromLookAtCoordinates = Vector3.Distance(cam.transform.position, lookAtWorldCoordinates);
 	}
 
     public void DoPan() {
@@ -57,19 +57,37 @@ public class CameraManager : MonoBehaviour
     private IEnumerator Pan() {
         isPanning = true;
         while(isPanning) {
+            //if we haven't started moving
+            if (lastMousePosition == mousePosition) {
+                yield return null;
+            }
+
+            //Calculate new world position for camera at mouse point
             float z = Camera.main.WorldToScreenPoint(lookAtWorldCoordinates).z;
             Vector3 newPositioninWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, z));
 
-            Vector3 delta = newPositioninWorld - lastPositionInWorld;
-            lastPositionInWorld = newPositioninWorld;
+            //Calculate how far to move the camera to get to the new world position
+            Vector3 deltaPosition = lastPositionInWorld - newPositioninWorld;
             
-            float mouseDelta = (lastMousePosition - mousePosition).magnitude;
-            Vector3 move = new Vector3(-delta.x, -delta.y, -delta.z) * panDistancePerFrame * mouseDelta;
-            lookAtWorldCoordinates += move;
-            cam.transform.position += move;
+            //Calculate speed of mouse
+            Vector2 mouseDelta = mousePosition - lastMousePosition;
+            float mouseSpeed = mouseDelta.magnitude;
+
+            //Scale by speed of mouse
+            Vector3 howMuchToMove = deltaPosition * panDistancePerFrame * mouseSpeed;
+
+            //Move camera and the place it is facing
+            cam.transform.position += howMuchToMove;
+            lookAtWorldCoordinates += howMuchToMove;
+
+            //Update direction of camera
             cam.transform.LookAt(lookAtWorldCoordinates);
 
+            //Update variables for next loop
             lastMousePosition = mousePosition;
+            lastPositionInWorld = newPositioninWorld;
+
+            //Loop
             yield return null;
         }
         isPanning = false;
@@ -79,16 +97,17 @@ public class CameraManager : MonoBehaviour
         lastMousePosition = mousePosition;
         StartCoroutine(Rotate());
     }
+
     private IEnumerator Rotate() {
         isRotating = true;
 
         while(isRotating) {
-            float mouseDelta = mousePosition.x - lastMousePosition.x;
+            float mouseDeltaX = mousePosition.x - lastMousePosition.x;
             
-            //Vector3 screenRotationAxis = new Vector3(-mousePosition.y, mousePosition.x, 0).normalized;
-            //Vector3 worldRotationAxis = cam.transform.rotation * transform.TransformDirection(screenRotationAxis);
+            Vector3 screenRotationAxis = new Vector3(-mousePosition.y, mousePosition.x, 0).normalized;
+            Vector3 worldRotationAxis = cam.transform.rotation * transform.TransformDirection(screenRotationAxis);
             
-            cam.transform.RotateAround(lookAtWorldCoordinates, new Vector3(0, 1, 0), rotateDistancePerFrame * mouseDelta);
+            cam.transform.RotateAround(lookAtWorldCoordinates, new Vector3(0, 1, 0), rotateDistancePerFrame * mouseDeltaX);
             cam.transform.LookAt(lookAtWorldCoordinates);
 
             lastMousePosition = mousePosition;
@@ -106,7 +125,6 @@ public class CameraManager : MonoBehaviour
         StartCoroutine(Scroll(scrollInput));
     }
     private IEnumerator Scroll(float scrollInput) {
-        print(scrollInput);
         if (scrollInput == 1) {
             while (cam.orthographicSize <= scrollGoal) {
                 cam.orthographicSize += scrollDistancePerFrame;

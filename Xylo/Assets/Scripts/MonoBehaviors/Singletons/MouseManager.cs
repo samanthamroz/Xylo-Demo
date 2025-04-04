@@ -49,7 +49,7 @@ public class MouseManager : MonoBehaviour
 		} else { //click released
             try {
                 currentInteractable.isDragging = false;
-            } finally {
+            } catch {} finally {
                 currentInteractable = null;
             }
         }
