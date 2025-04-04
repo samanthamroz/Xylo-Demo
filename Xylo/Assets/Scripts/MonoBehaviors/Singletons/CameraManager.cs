@@ -83,10 +83,12 @@ public class CameraManager : MonoBehaviour
         isRotating = true;
 
         while(isRotating) {
-            Vector3 screenRotationAxis = new Vector3(-mousePosition.y, mousePosition.x, 0).normalized;
-            Vector3 worldRotationAxis = cam.transform.rotation * transform.TransformDirection(screenRotationAxis);
+            float mouseDelta = mousePosition.x - lastMousePosition.x;
             
-            cam.transform.RotateAround(lookAtWorldCoordinates, worldRotationAxis, rotateDistancePerFrame);
+            //Vector3 screenRotationAxis = new Vector3(-mousePosition.y, mousePosition.x, 0).normalized;
+            //Vector3 worldRotationAxis = cam.transform.rotation * transform.TransformDirection(screenRotationAxis);
+            
+            cam.transform.RotateAround(lookAtWorldCoordinates, new Vector3(0, 1, 0), rotateDistancePerFrame * mouseDelta);
             cam.transform.LookAt(lookAtWorldCoordinates);
 
             lastMousePosition = mousePosition;
