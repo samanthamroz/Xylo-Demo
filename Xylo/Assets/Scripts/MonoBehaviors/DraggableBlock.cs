@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class DraggableBlock : MonoBehaviour
 {
+    public bool isMultipleParts = false;
     public Note note;
-    private Vector3 mousePosition { get { return MouseManager.self.mousePosition; } }
-    private Vector3 originalPosition;
-    private Vector3 direction = Vector3.one;
+    protected Vector3 mousePosition { get { return MouseManager.self.mousePosition; } }
+    protected Vector3 originalPosition;
+    protected Vector3 direction = Vector3.one;
     public bool isDragging;
     void Start()
     {
         isDragging = false;
-        originalPosition = GetRoundedVector(transform.localPosition);
+        originalPosition = GetRoundedVector(transform.position);
     }
     private Vector3 GetRoundedVector(Vector3 vec) {
         return new Vector3((float)Math.Round(vec.x), (float)(Math.Round(vec.y * 2)/2), (float)Math.Round(vec.z));
@@ -23,6 +24,7 @@ public class DraggableBlock : MonoBehaviour
         GetComponent<AudioSource>().Play();
         StartCoroutine(Drag());
     }
+    
     private IEnumerator Drag() {
         isDragging = true;
         Vector3 newWorldPosition;
@@ -43,9 +45,28 @@ public class DraggableBlock : MonoBehaviour
                     newWorldPosition.z = originalPosition.z;
                 }
 
+                
                 if (!IsCollidingAtPosition(newWorldPosition) && IsValidMovement(newWorldPosition))
                 {
-                    transform.localPosition = newWorldPosition;
+                    if (!isMultipleParts) {
+                        transform.position = newWorldPosition;
+                    } else {
+                        Vector3 offset = newWorldPosition - transform.position;
+                        bool isAnyChildrenColliding = false;
+                        foreach (Transform child in transform.parent) {
+                            if (child.gameObject.GetComponent<DraggableBlock>().IsCollidingAtPosition(child.position + offset)) {
+                                isAnyChildrenColliding = true;
+                            }
+                        }
+
+                        if (!isAnyChildrenColliding)
+                        {
+                            foreach (Transform child in transform.parent) {
+                                child.position += offset;
+                            }
+                            transform.position = newWorldPosition;
+                        }
+                    }
                 }
             } else { //we need to figure out our direction
                 if (newWorldPosition - originalPosition != Vector3.zero) { //check that mouse has moved enough from origin of click
@@ -66,28 +87,31 @@ public class DraggableBlock : MonoBehaviour
                     }
                 }
             }
+
             yield return null;
         }
         //drop
         direction = Vector3.one;
-        originalPosition = GetRoundedVector(transform.localPosition);
+        originalPosition = GetRoundedVector(transform.position);
     }
-    private bool IsCollidingAtPosition(Vector3 position)
+
+    public bool IsCollidingAtPosition(Vector3 position)
     {
         Collider[] colliders = Physics.OverlapBox(position, GetComponent<Collider>().bounds.extents, Quaternion.identity);
-        if (colliders.Length == 0) {
-            return false;
-        }
 
-        int count = colliders.Length;
+        bool isColliding = false;
         foreach (Collider c in colliders) {
-            if (c.gameObject == this.gameObject) {
-                count -= 1;
+            if (c.gameObject != this.gameObject && !c.transform.IsChildOf(this.transform.parent) && !c.isTrigger)
+            {
+                //print(this.gameObject.name + "detects a collision with " + c.gameObject.name);
+                isColliding = true;
+                break;
             }
         }
-        return count > 0;
+        return isColliding;
     }
-    private bool IsValidMovement(Vector3 position) {
+
+    public bool IsValidMovement(Vector3 position) {
         return 
             Math.Abs(transform.position.x - position.x) <= 1 &&
             Math.Abs(transform.position.y - position.y) <= .5 &&
@@ -95,7 +119,7 @@ public class DraggableBlock : MonoBehaviour
     }
 
     //Marble Collision Behavior
-    void OnCollisionEnter(Collision other)
+    private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Marble")) {
             GetComponent<AudioSource>().Play();

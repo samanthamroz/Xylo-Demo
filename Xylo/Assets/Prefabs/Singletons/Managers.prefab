@@ -53,6 +53,9 @@ MonoBehaviour:
   cameraObject: {fileID: 6637513072474089607, guid: e2534d2040cf2634ca6c7439432e6772, type: 3}
   isRotating: 0
   isPanning: 0
+  panDistancePerFrame: 0.05
+  rotateDistancePerFrame: 0.1
+  scrollDistancePerFrame: 0.05
 --- !u!114 &5613111966735843151
 MonoBehaviour:
   m_ObjectHideFlags: 0

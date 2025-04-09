@@ -20,12 +20,12 @@ public class CameraManager : MonoBehaviour
     private Vector3 lookAtWorldCoordinates = Vector3.zero;
     private float distanceFromLookAtCoordinates;
 
-    private float panDistancePerFrame = .005f;
-    private float rotateDistancePerFrame = .1f;
+    public float panDistancePerFrame = .005f;
+    public float rotateDistancePerFrame = .1f;
 
     private float zoomAllowance = 4;
     private float baseZoom;
-    private float scrollDistancePerFrame = 0.05f;
+    public float scrollDistancePerFrame = 0.05f;
     float scrollGoal;
 
 	void Awake() {
