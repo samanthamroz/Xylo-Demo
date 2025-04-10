@@ -47,8 +47,7 @@ public class CameraManager : MonoBehaviour
         cam = cameraObject.GetComponent<Camera>();
         baseZoom = cam.orthographicSize;
         scrollGoal = cam.orthographicSize;
-
-        lookAtObject.transform.LookAt(cam.transform);
+        
         cam.transform.position = new Vector3(
             lookAtObject.transform.position.x + distanceFromLookAtCoordinates * (float)Math.Cos(lookAtObject.transform.rotation.eulerAngles.y), 
             cam.transform.position.y, 
