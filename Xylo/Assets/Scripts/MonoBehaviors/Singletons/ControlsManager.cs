@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 //inspo: https://www.youtube.com/watch?v=zo1dkYfIJVg
 
@@ -10,7 +11,7 @@ public class ControlsManager : MonoBehaviour
 {
     public static ControlsManager self;
     
-    [SerializeField] private InputActionAsset inputActions;
+    private InputActionAsset inputActions;
     private InputActionMap mainMap;
     private InputActionMap menuMap;
 
@@ -35,6 +36,10 @@ public class ControlsManager : MonoBehaviour
     void Awake() {
 		if (self == null) {
 			self = this;
+            inputActions = GetComponent<PlayerInput>().actions;
+            mainMap = inputActions.FindActionMap("Main");
+            menuMap = inputActions.FindActionMap("Menus");
+            SceneManager.sceneLoaded += InitializeActionMap;
 			DontDestroyOnLoad(gameObject);
 		} else {
 			Destroy(gameObject);
@@ -42,11 +47,20 @@ public class ControlsManager : MonoBehaviour
     }
     
     void Start() {
-        mainMap = inputActions.FindActionMap("Main");
-        menuMap = inputActions.FindActionMap("Menus");
+
     }
     
-    public void ToggleMenuMode() {
+    private void InitializeActionMap(Scene scene, LoadSceneMode mode) {
+        if (scene.buildIndex <= 1) {
+			mainMap.Disable();
+            menuMap.Enable();
+		} else {
+            menuMap.Disable();
+            mainMap.Enable();
+        }
+    }
+
+    public void ToggleActionMap() {
         if (mainMap.enabled) {
             mainMap.Disable();
             menuMap.Enable();
@@ -102,14 +116,14 @@ public class ControlsManager : MonoBehaviour
     void OnPiano(InputValue value) {
         if (value.Get<float>() == 1) {
 			GUIManager.self.TogglePiano();
-            ToggleMenuMode();
+            ToggleActionMap();
 		}
     }
 
 	void OnPause(InputValue value) {
 		if (value.Get<float>() == 1) {
 			GUIManager.self.TogglePause();
-            ToggleMenuMode();
+            ToggleActionMap();
 		}
 	}
 }
