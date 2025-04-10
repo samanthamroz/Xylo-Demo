@@ -32,15 +32,11 @@ public class GUIManager : MonoBehaviour
 		}
 	}
 
-	void OnPiano(InputValue value) {
-        if (value.Get<float>() == 1) {
-			pianoMenu.SetActive(!pianoMenu.activeSelf);
-		}
+	public void TogglePiano() {
+        pianoMenu.SetActive(!pianoMenu.activeSelf);
     }
 
-	void OnPause(InputValue value) {
-		if (value.Get<float>() == 1) {
-			pauseMenu.SetActive(!pauseMenu.activeSelf);
-		}
+	public void TogglePause() {
+		pauseMenu.SetActive(!pauseMenu.activeSelf);
 	}
 }

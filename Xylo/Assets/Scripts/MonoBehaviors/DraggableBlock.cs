@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class DraggableBlock : MonoBehaviour
 {
-    public bool isMultipleParts = false;
+    [SerializeField] private bool isMultipleParts = false;
     public Note note;
-    protected Vector3 mousePosition { get { return MouseManager.self.mousePosition; } }
-    protected Vector3 originalPosition;
-    protected Vector3 direction = Vector3.one;
-    public bool isDragging;
+    private Vector3 mousePosition { get { return ControlsManager.self.mousePosition; } }
+    private Vector3 originalPosition;
+    private Vector3 direction = Vector3.one;
+    [HideInInspector] public bool isDragging;
     void Start()
     {
         isDragging = false;

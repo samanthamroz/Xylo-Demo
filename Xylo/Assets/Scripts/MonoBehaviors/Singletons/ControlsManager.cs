@@ -6,11 +6,17 @@ using UnityEngine.InputSystem;
 
 //inspo: https://www.youtube.com/watch?v=zo1dkYfIJVg
 
-public class MouseManager : MonoBehaviour
+public class ControlsManager : MonoBehaviour
 {
-    public static MouseManager self;
-    public Vector3 mousePosition;
-    public DraggableBlock currentInteractable;
+    public static ControlsManager self;
+    
+    [SerializeField] private InputActionAsset inputActions;
+    private InputActionMap mainMap;
+    private InputActionMap menuMap;
+
+    
+    [HideInInspector] public Vector3 mousePosition;
+    private DraggableBlock currentInteractable;
     private bool isInteractable {
         get {
             Ray ray = Camera.main.ScreenPointToRay(mousePosition);
@@ -35,6 +41,21 @@ public class MouseManager : MonoBehaviour
 		}
     }
     
+    void Start() {
+        mainMap = inputActions.FindActionMap("Main");
+        menuMap = inputActions.FindActionMap("Menus");
+    }
+    
+    public void ToggleMenuMode() {
+        if (mainMap.enabled) {
+            mainMap.Disable();
+            menuMap.Enable();
+        } else {
+            menuMap.Disable();
+            mainMap.Enable();
+        }
+    }
+
     void OnMouseMove(InputValue value) {
         mousePosition = value.Get<Vector2>();
     }
@@ -77,4 +98,18 @@ public class MouseManager : MonoBehaviour
             CameraManager.self.DoScroll(Math.Sign(scrollInput));
         }
     }
+
+    void OnPiano(InputValue value) {
+        if (value.Get<float>() == 1) {
+			GUIManager.self.TogglePiano();
+            ToggleMenuMode();
+		}
+    }
+
+	void OnPause(InputValue value) {
+		if (value.Get<float>() == 1) {
+			GUIManager.self.TogglePause();
+            ToggleMenuMode();
+		}
+	}
 }

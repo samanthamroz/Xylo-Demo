@@ -50,11 +50,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraPrefab: {fileID: 6637513072474089607, guid: e2534d2040cf2634ca6c7439432e6772, type: 3}
-  cameraObject: {fileID: 6637513072474089607, guid: e2534d2040cf2634ca6c7439432e6772, type: 3}
   lookAtPrefab: {fileID: 4270330739806824873, guid: e12c0c2ae03821846a54820a4c4faa7f, type: 3}
-  lookAtObject: {fileID: 0}
   isRotating: 0
   isPanning: 0
+  distanceFromLookAtCoordinates: 20
   panDistancePerFrame: 0.5
   rotateDistancePerFrame: 0.1
   scrollDistancePerFrame: 0.05
@@ -110,8 +109,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02ff9d680431fce4aa4f9cf1e07601fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputActions: {fileID: -944628639613478452, guid: ba21d0a90af6b1d44b70ca46120e3f4f, type: 3}
   mousePosition: {x: 0, y: 0, z: 0}
-  currentInteractable: {fileID: 0}
 --- !u!114 &8558856008816538421
 MonoBehaviour:
   m_ObjectHideFlags: 0

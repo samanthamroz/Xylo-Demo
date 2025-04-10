@@ -6,26 +6,26 @@ using UnityEngine.SceneManagement;
 public class CameraManager : MonoBehaviour
 {
     public static CameraManager self;
-	public GameObject cameraPrefab, lookAtPrefab;
+	[SerializeField] private GameObject cameraPrefab, lookAtPrefab;
     private GameObject cameraObject, lookAtObject;
 	private Camera cam;
 
-    private Vector3 mousePosition { get { return MouseManager.self.mousePosition; } }
+    private Vector3 mousePosition { get { return ControlsManager.self.mousePosition; } }
 
-    public bool isRotating;
-    public bool isPanning;
+    [HideInInspector] public bool isRotating;
+    [HideInInspector] public bool isPanning;
 
     private Vector3 lastPositionInWorld;
     private Vector3 lastMousePosition;
-    public float distanceFromLookAtCoordinates = 20f;
+    [SerializeField] private float distanceFromLookAtCoordinates = 20f;
 
-    public float panDistancePerFrame = .005f;
-    public float rotateDistancePerFrame = .1f;
+    [SerializeField] private float panDistancePerFrame = .005f;    
+    [SerializeField] private float rotateDistancePerFrame = .1f;
 
     private float zoomAllowance = 4;
     private float baseZoom;
-    public float scrollDistancePerFrame = 0.05f;
-    float scrollGoal;
+    [SerializeField] private float scrollDistancePerFrame = 0.05f;
+    private float scrollGoal;
 
 	void Awake() {
 		if (self == null) {
@@ -40,25 +40,20 @@ public class CameraManager : MonoBehaviour
     private void InstantiateCamera(Scene scene, LoadSceneMode mode) {
         cameraObject = Instantiate(cameraPrefab);
         lookAtObject = Instantiate(lookAtPrefab);
+	}
 
-		cam = cameraObject.GetComponent<Camera>();
+    void Start()
+    {
+        cam = cameraObject.GetComponent<Camera>();
         baseZoom = cam.orthographicSize;
         scrollGoal = cam.orthographicSize;
 
         lookAtObject.transform.LookAt(cam.transform);
-        PlaceCam();
-        //x coordinate = lookAt.x + distance * cos (180 - angle)
-        //y coordinate = lookAt.y + distance * sin (180 - angle)
-	}
-
-    private void PlaceCam() {
-        //assumes look at point has been moved
         cam.transform.position = new Vector3(
             lookAtObject.transform.position.x + distanceFromLookAtCoordinates * (float)Math.Cos(lookAtObject.transform.rotation.eulerAngles.y), 
             cam.transform.position.y, 
             lookAtObject.transform.position.z + distanceFromLookAtCoordinates * (float)Math.Sin(lookAtObject.transform.rotation.eulerAngles.y));
         cam.transform.LookAt(lookAtObject.transform);
-
     }
 
     public void DoPan() {
