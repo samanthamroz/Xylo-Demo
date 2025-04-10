@@ -45,12 +45,8 @@ public class CameraManager : MonoBehaviour
         baseZoom = cam.orthographicSize;
         scrollGoal = cam.orthographicSize;
 
-        
-        cam.transform.position = new Vector3(
-            lookAtObject.transform.position.x + distanceFromLookAtCoordinates * (float)Math.Cos(lookAtObject.transform.rotation.eulerAngles.y), 
-            cam.transform.position.y, 
-            lookAtObject.transform.position.z + distanceFromLookAtCoordinates * (float)Math.Sin(lookAtObject.transform.rotation.eulerAngles.y));
-        cam.transform.LookAt(lookAtObject.transform);
+        lookAtObject.transform.LookAt(cam.transform);
+        PlaceCam();
         //x coordinate = lookAt.x + distance * cos (180 - angle)
         //y coordinate = lookAt.y + distance * sin (180 - angle)
 	}
@@ -59,9 +55,10 @@ public class CameraManager : MonoBehaviour
         //assumes look at point has been moved
         cam.transform.position = new Vector3(
             lookAtObject.transform.position.x + distanceFromLookAtCoordinates * (float)Math.Cos(lookAtObject.transform.rotation.eulerAngles.y), 
-            10, 
+            cam.transform.position.y, 
             lookAtObject.transform.position.z + distanceFromLookAtCoordinates * (float)Math.Sin(lookAtObject.transform.rotation.eulerAngles.y));
         cam.transform.LookAt(lookAtObject.transform);
+
     }
 
     public void DoPan() {
@@ -92,7 +89,9 @@ public class CameraManager : MonoBehaviour
 
                 //Move camera and the place it is facing
                 lookAtObject.transform.position += howMuchToMove;
-                PlaceCam();
+                cam.transform.position += howMuchToMove;
+                //PlaceCam();
+                //lookAtObject.transform.LookAt(cam.transform);
 
                 //Update variables for next loop
                 lastPositionInWorld = newPositioninWorld;
@@ -121,7 +120,7 @@ public class CameraManager : MonoBehaviour
             
             cam.transform.RotateAround(lookAtObject.transform.position, new Vector3(0, 1, 0), rotateDistancePerFrame * mouseDeltaX);
             cam.transform.LookAt(lookAtObject.transform);
-
+            lookAtObject.transform.LookAt(cam.transform);
             lastMousePosition = mousePosition;
 
             yield return null;
