@@ -51,9 +51,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraPrefab: {fileID: 6637513072474089607, guid: e2534d2040cf2634ca6c7439432e6772, type: 3}
   cameraObject: {fileID: 6637513072474089607, guid: e2534d2040cf2634ca6c7439432e6772, type: 3}
+  lookAtPrefab: {fileID: 4270330739806824873, guid: e12c0c2ae03821846a54820a4c4faa7f, type: 3}
+  lookAtObject: {fileID: 0}
   isRotating: 0
   isPanning: 0
-  panDistancePerFrame: 0.05
+  panDistancePerFrame: 0.5
   rotateDistancePerFrame: 0.1
   scrollDistancePerFrame: 0.05
 --- !u!114 &5613111966735843151
