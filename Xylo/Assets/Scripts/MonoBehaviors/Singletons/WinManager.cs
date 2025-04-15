@@ -81,6 +81,8 @@ public class WinManager : MonoBehaviour
         attemptStarted = false;
         Debug.Log("Win = " + IsWin());
         attemptList = new();
+
+        ControlsManager.self.ExitCinematicMode();
     }
 
     private void printNoteList(List<NoteTrigger> list) {

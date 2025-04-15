@@ -7,11 +7,12 @@ public class CameraManager : MonoBehaviour
 {
     public static CameraManager self;
 	[SerializeField] private GameObject cameraPrefab, lookAtPrefab;
-    private GameObject cameraObject, lookAtObject;
+    private GameObject cameraObject, lookAtObject, cinematicLookAtObject;
 	private Camera cam;
 
     private Vector3 mousePosition { get { return ControlsManager.self.mousePosition; } }
 
+    [HideInInspector] public bool isCinematicCamera;
     [HideInInspector] public bool isRotating;
     [HideInInspector] public bool isPanning;
 
@@ -52,9 +53,30 @@ public class CameraManager : MonoBehaviour
         cam.transform.LookAt(lookAtObject.transform);
 	}
 
-    void Start()
-    {
-        
+    void Update() {
+
+    }
+
+    public void EnterCinematicMode(GameObject newLookAtObject = null) {
+        cam.transform.position = new Vector3(0, 5, 16);
+        if (newLookAtObject == null) {
+            StartCoroutine(CinematicCam(lookAtObject));
+        } else {
+            StartCoroutine(CinematicCam(newLookAtObject));
+        }
+    }
+    public void ExitCinematicMode() {
+        isCinematicCamera = false;
+    }
+    private IEnumerator CinematicCam(GameObject cinematicLookAtObject) {
+        isCinematicCamera = true;
+        while(isCinematicCamera) {
+            cam.transform.LookAt(cinematicLookAtObject.transform);
+            yield return null;    
+        }
+        lookAtObject.transform.position = new Vector3(cinematicLookAtObject.transform.position.x, lookAtObject.transform.position.y, cinematicLookAtObject.transform.position.z);
+        lookAtObject.transform.LookAt(cam.transform);
+        isCinematicCamera = false;
     }
 
     public void DoPan() {
@@ -62,7 +84,6 @@ public class CameraManager : MonoBehaviour
         lastMousePosition = mousePosition;
         StartCoroutine(Pan());
     }
-
     private IEnumerator Pan() {
         isPanning = true;
         while(isPanning) {
@@ -85,12 +106,11 @@ public class CameraManager : MonoBehaviour
                 //Move camera and the place it is facing
                 lookAtObject.transform.position += howMuchToMove;
                 cam.transform.position += howMuchToMove;
-                //PlaceCam();
-                //lookAtObject.transform.LookAt(cam.transform);
+                cam.transform.LookAt(lookAtObject.transform);
 
                 //Update variables for next loop
                 lastPositionInWorld = newPositioninWorld;
-
+                
                 //Loop
             }
             lastMousePosition = mousePosition;
@@ -103,7 +123,6 @@ public class CameraManager : MonoBehaviour
         lastMousePosition = mousePosition;
         StartCoroutine(Rotate());
     }
-
     private IEnumerator Rotate() {
         isRotating = true;
 

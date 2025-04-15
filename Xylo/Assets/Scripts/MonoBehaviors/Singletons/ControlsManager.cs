@@ -14,6 +14,9 @@ public class ControlsManager : MonoBehaviour
     private InputActionAsset inputActions;
     private InputActionMap mainMap;
     private InputActionMap menuMap;
+    private InputActionMap cinematicMap;
+    private InputActionMap currentActionMap;
+    public string currentActionMapName { get { return currentActionMap.name; } }
 
     
     [HideInInspector] public Vector3 mousePosition;
@@ -39,6 +42,7 @@ public class ControlsManager : MonoBehaviour
             inputActions = GetComponent<PlayerInput>().actions;
             mainMap = inputActions.FindActionMap("Main");
             menuMap = inputActions.FindActionMap("Menus");
+            cinematicMap = inputActions.FindActionMap("Cinematic");
             SceneManager.sceneLoaded += InitializeActionMap;
 			DontDestroyOnLoad(gameObject);
 		} else {
@@ -52,21 +56,48 @@ public class ControlsManager : MonoBehaviour
     
     private void InitializeActionMap(Scene scene, LoadSceneMode mode) {
         if (scene.buildIndex <= 1) {
-			mainMap.Disable();
-            menuMap.Enable();
+			ChangeActionMap("menu");
 		} else {
-            menuMap.Disable();
-            mainMap.Enable();
+            ChangeActionMap("main");
         }
     }
 
-    public void ToggleActionMap() {
+    private void ChangeActionMap(string mapName) {
+        mainMap.Disable();
+        menuMap.Disable();
+        cinematicMap.Disable();
+        switch (mapName.ToLower()) {
+            case "main":
+                mainMap.Enable();
+                currentActionMap = mainMap;
+                break;
+            case "menu":
+                menuMap.Enable();
+                currentActionMap = menuMap;
+                break;
+            case "cinematic":
+                menuMap.Enable();
+                currentActionMap = cinematicMap;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void EnterCinematicMode() {
+        ChangeActionMap("cinematic");
+    }
+
+    public void ExitCinematicMode() {
+        ChangeActionMap("main");
+        CameraManager.self.ExitCinematicMode();
+    }
+
+    private void ToggleMenuActionMap() {
         if (mainMap.enabled) {
-            mainMap.Disable();
-            menuMap.Enable();
+            ChangeActionMap("menu");
         } else {
-            menuMap.Disable();
-            mainMap.Enable();
+            ChangeActionMap("main");
         }
     }
 
@@ -116,14 +147,20 @@ public class ControlsManager : MonoBehaviour
     void OnPiano(InputValue value) {
         if (value.Get<float>() == 1) {
 			GUIManager.self.TogglePiano();
-            ToggleActionMap();
+            ToggleMenuActionMap();
 		}
     }
 
 	void OnPause(InputValue value) {
 		if (value.Get<float>() == 1) {
 			GUIManager.self.TogglePause();
-            ToggleActionMap();
+            ToggleMenuActionMap();
 		}
 	}
+
+    void OnDebug1(InputValue value) {
+        if (value.Get<float>() == 1) {
+			EnterCinematicMode();
+		}
+    }
 }
