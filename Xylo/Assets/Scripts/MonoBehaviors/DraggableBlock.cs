@@ -126,11 +126,11 @@ public class DraggableBlock : MonoBehaviour
         if (other.gameObject.CompareTag("Marble")) {
             GetComponent<AudioSource>().Play();
             if (startsAttempt) {
-                Conductor.self.StartAttempt();
+                WinManager.self.StartAttempt();
             }
-            Conductor.self.TriggerNote(note);
+            WinManager.self.TriggerNote(note);
             if (endsAttempt) {
-                Conductor.self.EndAttempt();
+                WinManager.self.EndAttempt();
             }
         }
     }

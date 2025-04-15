@@ -16,7 +16,7 @@ class NoteTrigger
     }
 }
 
-public class Conductor : MonoBehaviour
+public class WinManager : MonoBehaviour
 {   
     private List<NoteTrigger> solutionList = new() 
     {
@@ -31,10 +31,10 @@ public class Conductor : MonoBehaviour
         new NoteTrigger(Note.D, 9f),
     };
     private List<NoteTrigger> attemptList;
-    public static Conductor self;
+    public static WinManager self;
     public float songBpm, forgivenessBetweenBeats;
     private float secPerBeat, songPosInSec, songPosInBeats, dspSongTime;
-    private bool isPlaying = false;
+    private bool attemptStarted = false;
     private AudioSource musicSource;
 
     void Awake() {
@@ -50,27 +50,40 @@ public class Conductor : MonoBehaviour
         attemptList = new List<NoteTrigger>();
         //Record the time when the music starts
         dspSongTime = (float)AudioSettings.dspTime;
+
         //musicSource.Play();
-        isPlaying = true;
+        attemptStarted = true;
     }
 
     void Update()
     {
-        if (isPlaying) {
-            songPosInSec = (float)(AudioSettings.dspTime - dspSongTime);
-            songPosInBeats = songPosInSec / secPerBeat;
+        if (!attemptStarted) {
+            return;
         }
+        
+        songPosInSec = (float)(AudioSettings.dspTime - dspSongTime);
+        songPosInBeats = songPosInSec / secPerBeat;
     }
 
     public void TriggerNote(Note note) {
+        if (!attemptStarted) {
+            return;
+        }
+        
         attemptList.Add(new NoteTrigger(note, songPosInBeats));
     }
 
     public void EndAttempt() {
+        if (!attemptStarted) {
+            return;
+        }
+
+        attemptStarted = false;
         Debug.Log("Win = " + IsWin());
+        attemptList = new();
     }
 
-    private void printList(List<NoteTrigger> list) {
+    private void printNoteList(List<NoteTrigger> list) {
         string str = "";
         foreach (var thing in list) {
             str += "(" + thing.note + ", " + thing.beatTriggered + ") ";
@@ -79,11 +92,12 @@ public class Conductor : MonoBehaviour
     }
 
     private bool IsWin() {
-        float distanceBetweenAttemptNotes, distanceBetweenSolutionNotes;
-        
         if (attemptList[0].note != solutionList[0].note) {
             return false;
         }
+
+        float distanceBetweenAttemptNotes, distanceBetweenSolutionNotes;
+
         for (int i = 1; i < attemptList.Count; i++) {
             if (attemptList[i].note != solutionList[i].note) {
                 return false;
