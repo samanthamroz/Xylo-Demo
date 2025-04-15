@@ -5,6 +5,8 @@ using UnityEngine;
 public class DraggableBlock : MonoBehaviour
 {
     [SerializeField] private bool isMultipleParts = false;
+    [SerializeField] private bool startsAttempt = false;
+    [SerializeField] private bool endsAttempt = false;
     public Note note;
     private Vector3 mousePosition { get { return ControlsManager.self.mousePosition; } }
     private Vector3 originalPosition;
@@ -123,7 +125,13 @@ public class DraggableBlock : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Marble")) {
             GetComponent<AudioSource>().Play();
-            //WinManager.self.TriggerNote(note);
+            if (startsAttempt) {
+                Conductor.self.StartAttempt();
+            }
+            Conductor.self.TriggerNote(note);
+            if (endsAttempt) {
+                Conductor.self.EndAttempt();
+            }
         }
     }
 }

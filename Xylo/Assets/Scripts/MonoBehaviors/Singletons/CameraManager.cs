@@ -72,7 +72,6 @@ public class CameraManager : MonoBehaviour
                 //float z = Camera.main.WorldToScreenPoint(lookAtWorldCoordinates).z;
                 Vector3 newPositioninWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, distanceFromLookAtCoordinates));
 
-                print(newPositioninWorld);
                 //Calculate how far to move the camera to get to the new world position
                 Vector3 deltaPosition = lastPositionInWorld - newPositioninWorld;
                 

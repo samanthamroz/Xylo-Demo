@@ -12,7 +12,6 @@ public class PlayerMarble : MonoBehaviour
 
     void OnMouseDown() {
         GetComponent<Rigidbody>().isKinematic = false;
-        WinManager.self.TriggerNewAttempt();
     }
     
     void OnCollisionEnter(Collision other)

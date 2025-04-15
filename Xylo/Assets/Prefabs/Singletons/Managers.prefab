@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8055374676600721168}
   - component: {fileID: 3132996666077616317}
-  - component: {fileID: 5613111966735843151}
   - component: {fileID: -4638047356350007426}
   - component: {fileID: 4835543353819988492}
   - component: {fileID: 8656076606089612730}
@@ -57,18 +56,6 @@ MonoBehaviour:
   panDistancePerFrame: 0.5
   rotateDistancePerFrame: 0.1
   scrollDistancePerFrame: 0.05
---- !u!114 &5613111966735843151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4482233062752134391}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4688dc1b8c6db0442b72bb0a3ca6dc5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-4638047356350007426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,7 +96,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02ff9d680431fce4aa4f9cf1e07601fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputActions: {fileID: -944628639613478452, guid: ba21d0a90af6b1d44b70ca46120e3f4f, type: 3}
   mousePosition: {x: 0, y: 0, z: 0}
 --- !u!114 &8558856008816538421
 MonoBehaviour:

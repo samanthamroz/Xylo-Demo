@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -54,6 +55,8 @@ public class LoadingManager : MonoBehaviour
     }
 
     public static void LoadCurrentScene(Scene scene, LoadSceneMode mode) {
-        var saveData = SaveManager.Load<SceneSaveData>(scene.name).saveData;
+        try {
+            var saveData = SaveManager.Load<SceneSaveData>(scene.name).saveData;
+        } catch {}
     }
 }
