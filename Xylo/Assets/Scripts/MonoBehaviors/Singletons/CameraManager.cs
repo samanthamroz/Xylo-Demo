@@ -40,10 +40,7 @@ public class CameraManager : MonoBehaviour
     private void InstantiateCamera(Scene scene, LoadSceneMode mode) {
         cameraObject = Instantiate(cameraPrefab);
         lookAtObject = Instantiate(lookAtPrefab);
-	}
 
-    void Start()
-    {
         cam = cameraObject.GetComponent<Camera>();
         baseZoom = cam.orthographicSize;
         scrollGoal = cam.orthographicSize;
@@ -53,6 +50,11 @@ public class CameraManager : MonoBehaviour
             cam.transform.position.y, 
             lookAtObject.transform.position.z + distanceFromLookAtCoordinates * (float)Math.Sin(lookAtObject.transform.rotation.eulerAngles.y));
         cam.transform.LookAt(lookAtObject.transform);
+	}
+
+    void Start()
+    {
+        
     }
 
     public void DoPan() {
