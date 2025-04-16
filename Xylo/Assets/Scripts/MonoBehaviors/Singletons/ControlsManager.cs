@@ -147,7 +147,6 @@ public class ControlsManager : MonoBehaviour
     void OnPiano(InputValue value) {
         if (value.Get<float>() == 1) {
 			GUIManager.self.TogglePiano();
-            ToggleMenuActionMap();
 		}
     }
 
@@ -161,6 +160,12 @@ public class ControlsManager : MonoBehaviour
     void OnDebug1(InputValue value) {
         if (value.Get<float>() == 1) {
 			EnterCinematicMode();
+		}
+    }
+
+    void OnSpace(InputValue value) {
+        if (value.Get<float>() == 1) {
+			AudioManager.self.PlayMelody();
 		}
     }
 }
