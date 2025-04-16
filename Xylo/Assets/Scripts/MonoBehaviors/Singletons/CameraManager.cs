@@ -7,7 +7,7 @@ public class CameraManager : MonoBehaviour
 {
     public static CameraManager self;
 	[SerializeField] private GameObject cameraPrefab, lookAtPrefab;
-    private GameObject cameraObject, lookAtObject, cinematicLookAtObject;
+    private GameObject cameraObject, lookAtObject;
 	private Camera cam;
 
     private Vector3 mousePosition { get { return ControlsManager.self.mousePosition; } }
@@ -18,15 +18,16 @@ public class CameraManager : MonoBehaviour
 
     private Vector3 lastPositionInWorld;
     private Vector3 lastMousePosition;
-    [SerializeField] private float distanceFromLookAtCoordinates = 20f;
+    private float baseZoom;
+    [SerializeField] private float currentZoom = 20f;
 
     [SerializeField] private float panDistancePerFrame = .005f;    
     [SerializeField] private float rotateDistancePerFrame = .1f;
 
-    private float zoomAllowance = 4;
-    private float baseZoom;
-    [SerializeField] private float scrollDistancePerFrame = 0.05f;
-    private float scrollGoal;
+    private float zoomMin = 5f;
+    private float zoomMax = 40f;
+    [SerializeField] private float zoomDistancePerFrame = 0.05f;
+    private float zoomGoal;
 
 	void Awake() {
 		if (self == null) {
@@ -43,15 +44,26 @@ public class CameraManager : MonoBehaviour
         lookAtObject = Instantiate(lookAtPrefab);
 
         cam = cameraObject.GetComponent<Camera>();
-        baseZoom = cam.orthographicSize;
-        scrollGoal = cam.orthographicSize;
+        baseZoom = currentZoom;
+        zoomGoal = currentZoom;
         
-        cam.transform.position = new Vector3(
-            lookAtObject.transform.position.x + distanceFromLookAtCoordinates * (float)Math.Cos(lookAtObject.transform.rotation.eulerAngles.y), 
-            cam.transform.position.y, 
-            lookAtObject.transform.position.z + distanceFromLookAtCoordinates * (float)Math.Sin(lookAtObject.transform.rotation.eulerAngles.y));
-        cam.transform.LookAt(lookAtObject.transform);
+        PlaceCamera();
 	}
+
+    private void PlaceCamera() {
+        //assumes lookAtObject has been placed already
+        float yRotationRadians = lookAtObject.transform.rotation.eulerAngles.y * Mathf.Deg2Rad;
+
+        // Calculate offset in x/z plane
+        float xOffset = currentZoom * Mathf.Sin(yRotationRadians);
+        float zOffset = currentZoom * Mathf.Cos(yRotationRadians);
+
+        cam.transform.position = new Vector3(
+            lookAtObject.transform.position.x + xOffset, 
+            cam.transform.position.y, 
+            lookAtObject.transform.position.z + zOffset);
+        cam.transform.LookAt(lookAtObject.transform);
+    }
 
     void Update() {
 
@@ -80,7 +92,7 @@ public class CameraManager : MonoBehaviour
     }
 
     public void DoPan() {
-        lastPositionInWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, distanceFromLookAtCoordinates));;
+        lastPositionInWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, currentZoom));;
         lastMousePosition = mousePosition;
         StartCoroutine(Pan());
     }
@@ -91,7 +103,7 @@ public class CameraManager : MonoBehaviour
             if (lastMousePosition != mousePosition) {
                 //Calculate new world position for camera at mouse point
                 //float z = Camera.main.WorldToScreenPoint(lookAtWorldCoordinates).z;
-                Vector3 newPositioninWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, distanceFromLookAtCoordinates));
+                Vector3 newPositioninWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, currentZoom));
 
                 //Calculate how far to move the camera to get to the new world position
                 Vector3 deltaPosition = lastPositionInWorld - newPositioninWorld;
@@ -143,21 +155,27 @@ public class CameraManager : MonoBehaviour
     }
 
     public void DoScroll(float scrollInput) {
-        if ((scrollInput < 0 && scrollGoal >= baseZoom - zoomAllowance)
-                || (scrollInput > 0 && scrollGoal <= baseZoom + zoomAllowance)) {
-            scrollGoal += scrollInput;
+        scrollInput *= -1;
+        if ((scrollInput < 0 && zoomGoal >= zoomMin)
+                || (scrollInput > 0 && zoomGoal <= zoomMax)) {
+            zoomGoal += scrollInput;
         }
         StartCoroutine(Scroll(scrollInput));
     }
     private IEnumerator Scroll(float scrollInput) {
+        print(currentZoom);
         if (scrollInput == 1) {
-            while (cam.orthographicSize <= scrollGoal) {
-                cam.orthographicSize += scrollDistancePerFrame;
+            while (currentZoom <= zoomGoal) {
+                currentZoom += zoomDistancePerFrame;
+                PlaceCamera();
+
                 yield return null;
             }
         } else {
-            while (cam.orthographicSize >= scrollGoal) {
-                cam.orthographicSize -= scrollDistancePerFrame;
+            while (currentZoom >= zoomGoal) {
+                currentZoom -= zoomDistancePerFrame;
+                PlaceCamera();
+
                 yield return null;
             }
         }
