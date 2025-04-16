@@ -1,8 +1,0 @@
-Mouse Manager
-
-OnClick - 
-   store current mouse position and check if clicked thing can be interacted with
-   if isDraggable - start dragging
-   if isRotateable - start rotating
-
-OnRightClick
