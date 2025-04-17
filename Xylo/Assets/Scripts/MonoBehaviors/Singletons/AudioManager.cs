@@ -20,7 +20,9 @@ public class AudioManager : MonoBehaviour
 
 	void LoadSounds(Scene scene, LoadSceneMode mode) {
 		if (scene.buildIndex > 1) {
-			audioSource.clip = melodies[scene.buildIndex - 2];
+			try {
+				audioSource.clip = melodies[scene.buildIndex - 2];
+			} catch {}
 		}
 	}
 

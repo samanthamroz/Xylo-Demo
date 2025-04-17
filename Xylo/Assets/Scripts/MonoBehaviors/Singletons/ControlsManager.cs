@@ -20,17 +20,17 @@ public class ControlsManager : MonoBehaviour
 
     
     [HideInInspector] public Vector3 mousePosition;
-    private DraggableBlock currentInteractable;
+    [SerializeField] private InteractableObject currentInteractable;
     private bool isInteractable {
         get {
             Ray ray = Camera.main.ScreenPointToRay(mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                try
-                {
-                    currentInteractable = hit.collider.gameObject.GetComponent<DraggableBlock>();
+                InteractableObject testIfInteractable = hit.collider.gameObject.GetComponent<InteractableObject>();
+                if (testIfInteractable != null) {
+                    currentInteractable = testIfInteractable;
                     return true;
-                } finally {}
+                } 
             }
             return false;
         }
@@ -110,12 +110,13 @@ public class ControlsManager : MonoBehaviour
             CameraManager.self.isRotating = false;
             CameraManager.self.isPanning = false;
 			if (isInteractable) {
+                //lastInteractable = DoCLickAway();
                 currentInteractable.DoClick();
             }
 		} else { //click released
-            try {
-                currentInteractable.isDragging = false;
-            } catch {} finally {
+            if (currentInteractable != null) {
+                currentInteractable.DoRelease();
+                //lastInteractable = currentInteractable
                 currentInteractable = null;
             }
         }

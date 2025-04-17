@@ -163,7 +163,6 @@ public class CameraManager : MonoBehaviour
         StartCoroutine(Scroll(scrollInput));
     }
     private IEnumerator Scroll(float scrollInput) {
-        print(currentZoom);
         if (scrollInput == 1) {
             while (currentZoom <= zoomGoal) {
                 currentZoom += zoomDistancePerFrame;
