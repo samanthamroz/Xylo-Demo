@@ -5,12 +5,7 @@ using UnityEngine;
 
 public class DraggableBlock : InteractableObject
 {
-    [HideInInspector] public Vector3 parentPosition { 
-        get { return transform.parent.position; }
-        set { transform.parent.position }
-    }
     [SerializeField] private List<DraggableBlockHandle> handles = new();
-    [HideInInspector] public GameObject graphics;
     public bool isMultipleParts = false;
     [SerializeField] private bool startsAttempt = false;
     [SerializeField] private bool endsAttempt = false;
@@ -21,7 +16,6 @@ public class DraggableBlock : InteractableObject
     private bool isDragging;
     void Start()
     {
-        graphics = transform.GetChild(0).gameObject;
         isDragging = false;
         ToggleAllHandles(false);
         originalPosition = GetRoundedVector(transform.position);

@@ -94,10 +94,11 @@ public class WinManager : MonoBehaviour
     }
 
     private bool IsWin() {
+        printNoteList(solutionList);
+        printNoteList(attemptList);
         if (attemptList[0].note != solutionList[0].note) {
             return false;
         }
-
         float distanceBetweenAttemptNotes, distanceBetweenSolutionNotes;
 
         for (int i = 1; i < attemptList.Count; i++) {

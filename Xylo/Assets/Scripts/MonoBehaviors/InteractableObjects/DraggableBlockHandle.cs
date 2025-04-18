@@ -5,7 +5,6 @@ using UnityEngine;
 public class DraggableBlockHandle : InteractableObject
 {
     public DraggableBlock parentBlock;
-    private Transform parentPosition;
     private Vector2 mousePosition { get { return ControlsManager.self.mousePosition; } }
     private Vector2 originalMousePosition;
     private Vector3 originalPosition;
@@ -13,12 +12,16 @@ public class DraggableBlockHandle : InteractableObject
     private bool isDragging;
 
     void Start()
-    {
-        parentPosition = parentBlock.gameObject;
+    {   
+        direction = (parentBlock.transform.rotation * direction).normalized;
+        direction = GetRoundedVector(direction);
+        direction = GetAbsVector(direction);
         
-        direction = direction.normalized;
         isDragging = false;
         originalPosition = GetRoundedVector(transform.position);
+    }
+    private Vector3 GetAbsVector(Vector3 vec) {
+        return new Vector3(Math.Abs(vec.x), Math.Abs(vec.y), Math.Abs(vec.z));
     }
     private Vector3 GetRoundedVector(Vector3 vec) {
         return new Vector3((float)Math.Round(vec.x), (float)(Math.Round(vec.y * 2)/2), (float)Math.Round(vec.z));
@@ -37,7 +40,6 @@ public class DraggableBlockHandle : InteractableObject
     }
     private IEnumerator Drag() {
         isDragging = true;
-        Vector3 newWorldPosition;
         while(isDragging) {
             /*float z = Camera.main.WorldToScreenPoint(transform.position).z;
             Vector3 unroundedNewWorldPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, z));
@@ -89,7 +91,6 @@ public class DraggableBlockHandle : InteractableObject
                 }
             }
             newBlockPosition = GetRoundedVector(newBlockPosition);
-            print(newBlockPosition);
 
             if (!IsBlockCollidingAtPosition(newBlockPosition) && IsNotJumpingBlocks(newBlockPosition))
             {

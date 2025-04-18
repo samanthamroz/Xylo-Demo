@@ -1,12 +1,18 @@
 Interactable object - abstract class
 - children must define an OnClick() becuase MouseManager just checks for types of InteractableObjects
   and does the OnClick()
-- change MouseManager to call OnUnclick() on the last object clicked as well
+- change MouseManager to call OnClickAway() on the last object clicked as well
+- and OnRelease()
 
 Draggable block
-- OnClick() - spawns handles
-- OnUnclick() - despawns handles
+- OnClick() - spawns all handles
+- OnClickAway() - despawns all handles
 
 Handles
-- OnClick() - start dragging coroutine
-- OnRelease() - 
+- OnClick() 
+	- start dragging coroutine
+	- despawn other sets of handles
+- OnRelease()
+	- isDragging = false (stops dragging coroutine)
+	- respawn other sets of handles
+	

@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   songBpm: 180
-  forgivenessBetweenBeats: 0.38
+  forgivenessBetweenBeats: 0.4
 --- !u!82 &3852005788152787290
 AudioSource:
   m_ObjectHideFlags: 0
