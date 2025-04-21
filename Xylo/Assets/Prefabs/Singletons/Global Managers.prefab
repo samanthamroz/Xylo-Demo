@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mousePosition: {x: 0, y: 0, z: 0}
+  currentInteractable: {fileID: 0}
 --- !u!114 &8002695882329786161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,7 +90,7 @@ GameObject:
   - component: {fileID: -4638047356350007426}
   - component: {fileID: 4835543353819988492}
   m_Layer: 0
-  m_Name: Managers
+  m_Name: Global Managers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
