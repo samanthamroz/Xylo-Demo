@@ -130,8 +130,8 @@ MonoBehaviour:
   isCinematicCamera: 0
   isRotating: 0
   isPanning: 0
-  currentZoom: 20
-  panDistancePerFrame: 0.5
+  currentZoom: 35
+  panDistancePerFrame: 0.7
   rotateDistancePerFrame: 0.1
   zoomDistancePerFrame: 0.05
 --- !u!114 &-4638047356350007426

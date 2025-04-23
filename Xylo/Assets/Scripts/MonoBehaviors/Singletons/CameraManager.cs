@@ -7,7 +7,7 @@ public class CameraManager : MonoBehaviour
 {
     public static CameraManager self;
 	[SerializeField] private GameObject cameraPrefab, lookAtPrefab;
-    private GameObject cameraObject, lookAtObject;
+    private GameObject cameraObject, lookAtObject, cinematicLookAtObject;
 	private Camera cam;
 
     private Vector3 mousePosition { get { return ControlsManager.self.mousePosition; } }
@@ -16,10 +16,12 @@ public class CameraManager : MonoBehaviour
     [HideInInspector] public bool isRotating;
     [HideInInspector] public bool isPanning;
 
+    private Vector3 lookAtPointResetPos = Vector3.zero;
+    [SerializeField] float cameraHeight = 2f;
+
     private Vector3 lastPositionInWorld;
     private Vector3 lastMousePosition;
-    private float baseZoom;
-    [SerializeField] private float currentZoom = 20f;
+    [SerializeField] private float currentZoom = 35f;
 
     [SerializeField] private float panDistancePerFrame = .005f;    
     [SerializeField] private float rotateDistancePerFrame = .1f;
@@ -38,20 +40,24 @@ public class CameraManager : MonoBehaviour
 			Destroy(gameObject);
 		}
     }
-
     private void InstantiateCamera(Scene scene, LoadSceneMode mode) {
         cameraObject = Instantiate(cameraPrefab);
         lookAtObject = Instantiate(lookAtPrefab);
 
         cam = cameraObject.GetComponent<Camera>();
-        baseZoom = currentZoom;
         zoomGoal = currentZoom;
-        
-        PlaceCamera();
+
+        ResetCamera();
 	}
 
+    private void ResetCamera() {
+        lookAtObject.transform.position = lookAtPointResetPos;
+        lookAtObject.transform.LookAt(cam.transform);
+        PlaceCamera();
+    }
     private void PlaceCamera() {
         //assumes lookAtObject has been placed already
+
         float yRotationRadians = lookAtObject.transform.rotation.eulerAngles.y * Mathf.Deg2Rad;
 
         // Calculate offset in x/z plane
@@ -60,7 +66,7 @@ public class CameraManager : MonoBehaviour
 
         cam.transform.position = new Vector3(
             lookAtObject.transform.position.x + xOffset, 
-            cam.transform.position.y, 
+            lookAtObject.transform.position.y + cameraHeight, 
             lookAtObject.transform.position.z + zOffset);
         cam.transform.LookAt(lookAtObject.transform);
     }
@@ -72,22 +78,31 @@ public class CameraManager : MonoBehaviour
     public void EnterCinematicMode(GameObject newLookAtObject = null) {
         cam.transform.position = new Vector3(0, 5, 16);
         if (newLookAtObject == null) {
-            StartCoroutine(CinematicCam(lookAtObject));
+            StartCoroutine(DoCinematicCam(lookAtObject));
         } else {
-            StartCoroutine(CinematicCam(newLookAtObject));
+            cinematicLookAtObject = newLookAtObject;
+            StartCoroutine(DoCinematicCam(cinematicLookAtObject));
         }
     }
-    public void ExitCinematicMode() {
+    public void ExitCinematicMode(bool isDeathPlane = false) {
         isCinematicCamera = false;
+        if (isDeathPlane) {
+            ResetCamera();
+        } else {
+            currentZoom = Vector3.Distance(cam.transform.position, lookAtObject.transform.position);
+            zoomGoal = currentZoom;
+            PlaceCamera();
+        }
     }
-    private IEnumerator CinematicCam(GameObject cinematicLookAtObject) {
+    private IEnumerator DoCinematicCam(GameObject lookHere) {
         isCinematicCamera = true;
         while(isCinematicCamera) {
-            cam.transform.LookAt(cinematicLookAtObject.transform);
+            lookAtObject.transform.position = lookHere.transform.position;
+            lookAtObject.transform.LookAt(cam.transform);
+            cam.transform.LookAt(lookAtObject.transform);
             yield return null;    
         }
-        lookAtObject.transform.position = new Vector3(cinematicLookAtObject.transform.position.x, lookAtObject.transform.position.y, cinematicLookAtObject.transform.position.z);
-        lookAtObject.transform.LookAt(cam.transform);
+        
         isCinematicCamera = false;
     }
 
