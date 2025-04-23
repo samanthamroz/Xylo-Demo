@@ -468,7 +468,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8260573749599896176}
   m_Layer: 0
-  m_Name: Grass 2x2 Edge
+  m_Name: Grass 2x2 - 2 Edge Horizontal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
