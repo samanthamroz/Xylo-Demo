@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class PlayerMarble : MonoBehaviour
+public class PlayerMarble : InteractableObject
 {
-    void OnMouseDown() {
+    public override void DoClick() {
         GetComponent<Rigidbody>().isKinematic = false;
         ControlsManager.self.EnterCinematicMode();
         CameraManager.self.EnterCinematicMode(gameObject);
