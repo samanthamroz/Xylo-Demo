@@ -172,7 +172,7 @@ public class ControlsManager : MonoBehaviour
 
     void OnRestart(InputValue value){
         if (value.Get<float>() == 1) {
-			LevelManager.self.retryLevel();
+			LevelManager.self.RetryLevel();
 		}
     }
 }

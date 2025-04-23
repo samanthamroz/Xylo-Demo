@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 //inspo: https://www.gamedeveloper.com/audio/coding-to-the-beat---under-the-hood-of-a-rhythm-game-in-unity
@@ -18,6 +17,7 @@ class NoteTrigger
 
 public class LevelManager : MonoBehaviour
 {   
+    public GameObject marbleReference;
     private List<NoteTrigger> solutionList = new() 
     {
         new NoteTrigger(Note.G, 0f),
@@ -42,6 +42,11 @@ public class LevelManager : MonoBehaviour
     }
 
     void Start() {
+        GameObject[] marbles = GameObject.FindGameObjectsWithTag("Marble");
+        if (marbles.Length == 0 || marbles.Length > 1) {
+            throw new Exception("Too many marbles!");
+        }
+
         musicSource = GetComponent<AudioSource>();
         secPerBeat = 60f / songBpm;
     }
@@ -88,7 +93,7 @@ public class LevelManager : MonoBehaviour
         ControlsManager.self.ExitCinematicMode(isDeathPlane);
     }
 
-    private void printNoteList(List<NoteTrigger> list) {
+    private void PrintNoteList(List<NoteTrigger> list) {
         string str = "";
         foreach (var thing in list) {
             str += "(" + thing.note + ", " + thing.beatTriggered + ") ";
@@ -97,8 +102,8 @@ public class LevelManager : MonoBehaviour
     }
 
     private bool IsWin() {
-        printNoteList(solutionList);
-        printNoteList(attemptList);
+        PrintNoteList(solutionList);
+        PrintNoteList(attemptList);
         if (attemptList[0].note != solutionList[0].note) {
             return false;
         }
@@ -118,12 +123,7 @@ public class LevelManager : MonoBehaviour
         return true;
     }
 
-    public void retryLevel() {
-        GameObject[] marbles = GameObject.FindGameObjectsWithTag("Marble");
-        if (marbles.Length == 0 || marbles.Length > 1) {
-            throw new Exception("Too many marbles!");
-        } else {
-            marbles[0].transform.position = marbles[0].GetComponent<PlayerMarble>().resetPosition;
-        }
+    public void RetryLevel() {
+        marbleReference.transform.position = marbleReference.GetComponent<PlayerMarble>().resetPosition;
     }
 }
