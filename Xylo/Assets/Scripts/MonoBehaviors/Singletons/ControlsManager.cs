@@ -76,7 +76,7 @@ public class ControlsManager : MonoBehaviour
                 currentActionMap = menuMap;
                 break;
             case "cinematic":
-                menuMap.Enable();
+                cinematicMap.Enable();
                 currentActionMap = cinematicMap;
                 break;
             default:
