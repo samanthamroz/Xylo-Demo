@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 133484656282774611}
   m_Layer: 0
-  m_Name: Grass 2x2 - 2 Edge Corner - Inner Corner
+  m_Name: Grass 2x2 - 2 Edge Inner Corner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57,7 +57,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8260573749599896176, guid: 1abc224326b88a944a6b98cced346ed0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8260573749599896176, guid: 1abc224326b88a944a6b98cced346ed0, type: 3}
       propertyPath: m_LocalPosition.z
@@ -92,7 +92,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4037844463058128103, guid: 1abc224326b88a944a6b98cced346ed0, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1abc224326b88a944a6b98cced346ed0, type: 3}
@@ -119,7 +120,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8260573749599896176, guid: 0b0371c4b0fc005408a7c537d294db4c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8260573749599896176, guid: 0b0371c4b0fc005408a7c537d294db4c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -153,8 +154,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9114446121778316514, guid: 0b0371c4b0fc005408a7c537d294db4c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.20082821
+      objectReference: {fileID: 0}
+    - target: {fileID: 9114446121778316514, guid: 0b0371c4b0fc005408a7c537d294db4c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.057947103
+      objectReference: {fileID: 0}
+    - target: {fileID: 9114446121778316514, guid: 0b0371c4b0fc005408a7c537d294db4c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.9395803
+      objectReference: {fileID: 0}
+    - target: {fileID: 9114446121778316514, guid: 0b0371c4b0fc005408a7c537d294db4c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.2711071
+      objectReference: {fileID: 0}
+    - target: {fileID: 9114446121778316514, guid: 0b0371c4b0fc005408a7c537d294db4c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 204.13
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4037844463058128103, guid: 0b0371c4b0fc005408a7c537d294db4c, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b0371c4b0fc005408a7c537d294db4c, type: 3}
@@ -185,7 +207,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8260573749599896176, guid: 8ea8b42b5b6187b45a7ba3651351344e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8260573749599896176, guid: 8ea8b42b5b6187b45a7ba3651351344e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -220,7 +242,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4037844463058128103, guid: 8ea8b42b5b6187b45a7ba3651351344e, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8ea8b42b5b6187b45a7ba3651351344e, type: 3}
@@ -247,7 +270,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8260573749599896176, guid: 0b0371c4b0fc005408a7c537d294db4c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8260573749599896176, guid: 0b0371c4b0fc005408a7c537d294db4c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -282,7 +305,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8446172182064193112, guid: 0b0371c4b0fc005408a7c537d294db4c, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b0371c4b0fc005408a7c537d294db4c, type: 3}
