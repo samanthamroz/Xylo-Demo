@@ -467,7 +467,7 @@ GameObject:
   - component: {fileID: 8975967715039464276}
   - component: {fileID: 7051347032367365831}
   - component: {fileID: 6413013653422894672}
-  - component: {fileID: 736268025136204953}
+  - component: {fileID: 7907790290723795741}
   m_Layer: 5
   m_Name: Restart
   m_TagString: Untagged
@@ -577,10 +577,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 736268025136204953}
-        m_TargetAssemblyTypeName: LevelSelectButtons, Assembly-CSharp
-        m_MethodName: Load
-        m_Mode: 5
+      - m_Target: {fileID: 7907790290723795741}
+        m_TargetAssemblyTypeName: RetryButton, Assembly-CSharp
+        m_MethodName: retryLevel
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -589,7 +589,7 @@ MonoBehaviour:
           m_StringArgument: Prototyping
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &736268025136204953
+--- !u!114 &7907790290723795741
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -598,7 +598,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3560071209385952559}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b3001f0467ad3f418a2e832cf219293, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a377d7f6ae3f3a4ebd7329ca7ec0bce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5089126134429360514

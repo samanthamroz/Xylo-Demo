@@ -16,7 +16,7 @@ class NoteTrigger
     }
 }
 
-public class WinManager : MonoBehaviour
+public class LevelManager : MonoBehaviour
 {   
     private List<NoteTrigger> solutionList = new() 
     {
@@ -31,7 +31,7 @@ public class WinManager : MonoBehaviour
         new NoteTrigger(Note.D, 9f),
     };
     private List<NoteTrigger> attemptList;
-    public static WinManager self;
+    public static LevelManager self;
     public float songBpm, forgivenessBetweenBeats;
     private float secPerBeat, songPosInSec, songPosInBeats, dspSongTime;
     private bool attemptStarted = false;
@@ -73,16 +73,19 @@ public class WinManager : MonoBehaviour
         attemptList.Add(new NoteTrigger(note, songPosInBeats));
     }
 
-    public void EndAttempt() {
+    public void EndAttempt(bool isDeathPlane = false) {
         if (!attemptStarted) {
+            if (isDeathPlane) {
+                ControlsManager.self.ExitCinematicMode(isDeathPlane);
+            }
             return;
         }
 
         attemptStarted = false;
         Debug.Log("Win = " + IsWin());
         attemptList = new();
-
-        ControlsManager.self.ExitCinematicMode();
+        
+        ControlsManager.self.ExitCinematicMode(isDeathPlane);
     }
 
     private void printNoteList(List<NoteTrigger> list) {
@@ -113,5 +116,14 @@ public class WinManager : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public void retryLevel() {
+        GameObject[] marbles = GameObject.FindGameObjectsWithTag("Marble");
+        if (marbles.Length == 0 || marbles.Length > 1) {
+            throw new Exception("Too many marbles!");
+        } else {
+            marbles[0].transform.position = marbles[0].GetComponent<PlayerMarble>().resetPosition;
+        }
     }
 }

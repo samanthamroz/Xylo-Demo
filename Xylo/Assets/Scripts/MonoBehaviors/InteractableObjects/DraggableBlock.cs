@@ -13,10 +13,8 @@ public class DraggableBlock : InteractableObject
     private Vector3 mousePosition { get { return ControlsManager.self.mousePosition; } }
     [HideInInspector] public Vector3 originalPosition;
     private Vector3 direction = Vector3.one;
-    private bool isDragging;
     void Start()
     {
-        isDragging = false;
         ToggleAllHandles(false);
         originalPosition = GetRoundedVector(transform.position);
     }
@@ -53,11 +51,11 @@ public class DraggableBlock : InteractableObject
         if (other.gameObject.CompareTag("Marble")) {
             GetComponent<AudioSource>().Play();
             if (startsAttempt) {
-                WinManager.self.StartAttempt();
+                LevelManager.self.StartAttempt();
             }
-            WinManager.self.TriggerNote(note);
+            LevelManager.self.TriggerNote(note);
             if (endsAttempt) {
-                WinManager.self.EndAttempt();
+                LevelManager.self.EndAttempt();
             }
         }
     }

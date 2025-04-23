@@ -88,9 +88,9 @@ public class ControlsManager : MonoBehaviour
         ChangeActionMap("cinematic");
     }
 
-    public void ExitCinematicMode() {
+    public void ExitCinematicMode(bool isDeathPlane = false) {
         ChangeActionMap("main");
-        CameraManager.self.ExitCinematicMode();
+        CameraManager.self.ExitCinematicMode(isDeathPlane);
     }
 
     private void ToggleMenuActionMap() {
@@ -167,6 +167,12 @@ public class ControlsManager : MonoBehaviour
     void OnSpace(InputValue value) {
         if (value.Get<float>() == 1) {
 			AudioManager.self.PlayMelody();
+		}
+    }
+
+    void OnRestart(InputValue value){
+        if (value.Get<float>() == 1) {
+			LevelManager.self.retryLevel();
 		}
     }
 }

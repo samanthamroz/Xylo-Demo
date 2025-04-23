@@ -29,12 +29,6 @@ public class LoadingManager : MonoBehaviour
         }
     }
 
-    void OnRestart(InputValue value) {
-        if (value.Get<float>() == 1) {
-            LoadNewScene(SceneManager.GetActiveScene().name);
-        }
-    }
-
 	public void LoadNewScene(string sceneName) {
 		SaveCurrentScene();
 		SceneManager.LoadScene(sceneName);
