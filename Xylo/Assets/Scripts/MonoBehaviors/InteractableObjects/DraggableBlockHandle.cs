@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DraggableBlockHandle : InteractableObject
 {
+    public Material regularMaterial, greyedMaterial;
     public DraggableBlock parentBlock;
     private Vector2 mousePosition { get { return ControlsManager.self.mousePosition; } }
     private Vector2 originalMousePosition;
@@ -15,7 +16,6 @@ public class DraggableBlockHandle : InteractableObject
     {   
         direction = (parentBlock.transform.rotation * direction).normalized;
         direction = GetRoundedVector(direction);
-        direction = GetAbsVector(direction);
         
         isDragging = false;
         originalPosition = GetRoundedVector(transform.position);
@@ -31,45 +31,40 @@ public class DraggableBlockHandle : InteractableObject
         originalMousePosition = mousePosition;
         StartCoroutine(Drag());
     }
+    public override void DoClickAway()
+    {
+        parentBlock.DoClickAway();
+    }
     public override void DoRelease()
     {
         originalPosition = GetRoundedVector(transform.position);
         parentBlock.originalPosition = GetRoundedVector(parentBlock.transform.position);
-        parentBlock.ToggleAllHandles(true);
+        parentBlock.ToggleAllHandles(true, false);
         isDragging = false;
     }
+
+    public void ToggleGrey(bool isGrey) {
+        gameObject.GetComponent<MeshRenderer>().enabled = true;
+        if (isGrey) {
+            gameObject.GetComponent<MeshRenderer>().material = greyedMaterial;
+        } else {
+            gameObject.GetComponent<MeshRenderer>().material = regularMaterial;
+        }
+    }
+
+    public void ToggleInvisible(bool isInvisible) {
+        if (isInvisible) {
+            gameObject.GetComponent<MeshRenderer>().enabled = false;
+        } else {
+            gameObject.GetComponent<MeshRenderer>().enabled = true;
+        }
+    }
+
     private IEnumerator Drag() {
         isDragging = true;
-        while(isDragging) {
-            /*float z = Camera.main.WorldToScreenPoint(transform.position).z;
-            Vector3 unroundedNewWorldPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, z));
-            newWorldPosition = GetRoundedVector(unroundedNewWorldPos);
 
-            //don't let it move except in correct direction
-            if (direction.x == 0) {
-                newWorldPosition.x = originalPosition.x;
-            }
-            if (direction.y == 0) {
-                newWorldPosition.y = originalPosition.y;
-            }
-            if (direction.z == 0) {
-                newWorldPosition.z = originalPosition.z;
-            }
-                
-            Vector3 newBlockPosition = parentBlock.originalPosition; //should overwrite below
-            float distanceFromOriginalPosition;
-            if (direction.x == 1) {
-                distanceFromOriginalPosition = newWorldPosition.x - originalPosition.x;
-                newBlockPosition = new(parentBlock.originalPosition.x + distanceFromOriginalPosition, parentBlock.originalPosition.y, parentBlock.originalPosition.z);
-            }
-            if (direction.y == 1) {
-                distanceFromOriginalPosition = newWorldPosition.y - originalPosition.y;
-                newBlockPosition = new(parentBlock.originalPosition.x, parentBlock.originalPosition.y + distanceFromOriginalPosition, parentBlock.originalPosition.z);
-            }
-            if (direction.z == 1) {
-                distanceFromOriginalPosition = newWorldPosition.z - originalPosition.z;
-                newBlockPosition = new(parentBlock.originalPosition.x, parentBlock.originalPosition.y, parentBlock.originalPosition.z + distanceFromOriginalPosition);
-            }*/
+        while(isDragging) {
+            
 
             float z = Camera.main.WorldToScreenPoint(transform.position).z;
             Vector3 originalMousePositionInWorld = Camera.main.ScreenToWorldPoint(new Vector3(originalMousePosition.x, originalMousePosition.y, z));
@@ -78,15 +73,15 @@ public class DraggableBlockHandle : InteractableObject
             float mouseDelta;
             Vector3 newBlockPosition = parentBlock.originalPosition;
 
-            if (direction.y == 1) {
+            if (GetAbsVector(direction).y == 1) {
                 mouseDelta = mousePositionInWorld.y - originalMousePositionInWorld.y;
                 newBlockPosition.y += mouseDelta;
             } else {
                 mouseDelta = (mousePositionInWorld.x + mousePositionInWorld.z) - (originalMousePositionInWorld.x + originalMousePositionInWorld.z);
-                if (direction.x == 1) {
+                if (GetAbsVector(direction).x == 1) {
                     newBlockPosition.x += mouseDelta;
                 }
-                if (direction.z == 1) {
+                if (GetAbsVector(direction).z == 1) {
                     newBlockPosition.z += mouseDelta;
                 }
             }
@@ -96,6 +91,7 @@ public class DraggableBlockHandle : InteractableObject
             {
                 if (!parentBlock.isMultipleParts) {
                     parentBlock.transform.position = newBlockPosition;
+                    parentBlock.TurnOffHandlesNotInDirection(direction);
                 } else {
                     //STUFF FOR MULTIPLE PARTS
                     /*Vector3 offset = newWorldPosition - transform.position;
@@ -120,7 +116,7 @@ public class DraggableBlockHandle : InteractableObject
         }
     }
 
-    private bool IsBlockCollidingAtPosition(Vector3 targetPosition)
+    public bool IsBlockCollidingAtPosition(Vector3 targetPosition)
     {
         Collider[] colliders = Physics.OverlapBox(targetPosition, parentBlock.GetComponent<Collider>().bounds.extents, Quaternion.identity);
 

@@ -12,37 +12,14 @@ public class ControlsManager : MonoBehaviour
     public static ControlsManager self;
     
     private InputActionAsset inputActions;
-    private InputActionMap mainMap;
-    private InputActionMap menuMap;
-    private InputActionMap cinematicMap;
-    private InputActionMap currentActionMap;
+    private InputActionMap mainMap, menuMap, cinematicMap, currentActionMap;
     public string currentActionMapName { get { return currentActionMap.name; } }
-
-    
     [HideInInspector] public Vector3 mousePosition;
-    [SerializeField] private InteractableObject currentInteractable;
-    private bool isInteractable {
-        get {
-            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                InteractableObject testIfInteractable = hit.collider.gameObject.GetComponent<InteractableObject>();
-                if (testIfInteractable != null) {
-                    currentInteractable = testIfInteractable;
-                    return true;
-                } 
-            }
-            return false;
-        }
-    }
+    [SerializeField] private InteractableObject currentInteractable, lastInteractable;
     
     void Awake() {
 		if (self == null) {
 			self = this;
-            inputActions = GetComponent<PlayerInput>().actions;
-            mainMap = inputActions.FindActionMap("Main");
-            menuMap = inputActions.FindActionMap("Menus");
-            cinematicMap = inputActions.FindActionMap("Cinematic");
             SceneManager.sceneLoaded += InitializeActionMap;
 			DontDestroyOnLoad(gameObject);
 		} else {
@@ -55,6 +32,11 @@ public class ControlsManager : MonoBehaviour
     }
     
     private void InitializeActionMap(Scene scene, LoadSceneMode mode) {
+        inputActions = GetComponent<PlayerInput>().actions;
+        mainMap = inputActions.FindActionMap("Main");
+        menuMap = inputActions.FindActionMap("Menus");
+        cinematicMap = inputActions.FindActionMap("Cinematic");
+
         if (scene.buildIndex <= 1) {
 			ChangeActionMap("menu");
 		} else {
@@ -105,20 +87,39 @@ public class ControlsManager : MonoBehaviour
         mousePosition = value.Get<Vector2>();
     }
     
+    private InteractableObject FindInteractableObjectAtMouse() {
+        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            InteractableObject testIfInteractable = hit.collider.gameObject.GetComponent<InteractableObject>();
+            if (testIfInteractable != null) {
+                return testIfInteractable;
+            } 
+        }
+        return null;
+    }
     void OnMouseClick(InputValue value) {
         if (value.Get<float>() == 1) { //click down
             CameraManager.self.isRotating = false;
             CameraManager.self.isPanning = false;
-			if (isInteractable) {
-                //lastInteractable = DoCLickAway();
+            
+            
+            currentInteractable = FindInteractableObjectAtMouse();
+
+            if (lastInteractable != null) {
+                lastInteractable.DoClickAway();
+            }
+
+			if (currentInteractable != null) {
                 currentInteractable.DoClick();
+            } else { //clicked on empty space
+                currentInteractable = null;
             }
 		} else { //click released
             if (currentInteractable != null) {
                 currentInteractable.DoRelease();
-                //lastInteractable = currentInteractable
-                currentInteractable = null;
-            }
+            } 
+            lastInteractable = currentInteractable;
         }
     }
 
@@ -158,12 +159,6 @@ public class ControlsManager : MonoBehaviour
 		}
 	}
 
-    void OnDebug1(InputValue value) {
-        if (value.Get<float>() == 1) {
-			EnterCinematicMode();
-		}
-    }
-
     void OnSpace(InputValue value) {
         if (value.Get<float>() == 1) {
 			AudioManager.self.PlayMelody();
@@ -173,6 +168,12 @@ public class ControlsManager : MonoBehaviour
     void OnRestart(InputValue value){
         if (value.Get<float>() == 1) {
 			LevelManager.self.RetryLevel();
+		}
+    }
+
+    void OnDebug1(InputValue value) {
+        if (value.Get<float>() == 1) {
+			EnterCinematicMode();
 		}
     }
 }
