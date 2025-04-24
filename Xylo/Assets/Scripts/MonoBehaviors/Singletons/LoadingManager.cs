@@ -17,16 +17,18 @@ public class LoadingManager : MonoBehaviour
 			Destroy(gameObject);
 		}
     }
+    public static void LoadCurrentScene(Scene scene, LoadSceneMode mode) {
+        CameraManager.self.InstantiateCamera();
+        ControlsManager.self.InitializeActionMap(scene.buildIndex == 0);
+        
+        if (scene.buildIndex > 0) {
+			GUIManager.self.InstantiateLevelUI();
+            AudioManager.self.LoadSounds(SceneManager.GetActiveScene());
+		}
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L)) {
-            LoadCurrentScene(SceneManager.GetActiveScene(), LoadSceneMode.Single);
-        }
-
-        if (Input.GetKeyDown(KeyCode.V)) {
-            SaveCurrentScene();
-        }
+        try {
+            var saveData = SaveManager.Load<SceneSaveData>(scene.name).saveData;
+        } catch {}
     }
 
 	public void LoadNewScene(string sceneName) {
@@ -46,11 +48,5 @@ public class LoadingManager : MonoBehaviour
         //save to file
         var saveProfile  = new SaveProfile<SceneSaveData>(sceneSave, sceneSave.scene.name);
         SaveManager.Save(saveProfile);
-    }
-
-    public static void LoadCurrentScene(Scene scene, LoadSceneMode mode) {
-        try {
-            var saveData = SaveManager.Load<SceneSaveData>(scene.name).saveData;
-        } catch {}
     }
 }

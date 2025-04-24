@@ -34,13 +34,12 @@ public class CameraManager : MonoBehaviour
 	void Awake() {
 		if (self == null) {
 			self = this;
-			SceneManager.sceneLoaded += InstantiateCamera;
 			DontDestroyOnLoad(gameObject);
 		} else {
 			Destroy(gameObject);
 		}
     }
-    private void InstantiateCamera(Scene scene, LoadSceneMode mode) {
+    public void InstantiateCamera() {
         cameraObject = Instantiate(cameraPrefab);
         lookAtObject = Instantiate(lookAtPrefab);
 

@@ -20,7 +20,6 @@ public class ControlsManager : MonoBehaviour
     void Awake() {
 		if (self == null) {
 			self = this;
-            SceneManager.sceneLoaded += InitializeActionMap;
 			DontDestroyOnLoad(gameObject);
 		} else {
 			Destroy(gameObject);
@@ -31,15 +30,15 @@ public class ControlsManager : MonoBehaviour
 
     }
     
-    private void InitializeActionMap(Scene scene, LoadSceneMode mode) {
+    public void InitializeActionMap(bool isLevelSelect) {
         inputActions = GetComponent<PlayerInput>().actions;
         mainMap = inputActions.FindActionMap("Main");
         menuMap = inputActions.FindActionMap("Menus");
         cinematicMap = inputActions.FindActionMap("Cinematic");
 
-        if (scene.buildIndex <= 1) {
-			ChangeActionMap("menu");
-		} else {
+        if (isLevelSelect) {
+            ChangeActionMap("menu");
+        } else {
             ChangeActionMap("main");
         }
     }

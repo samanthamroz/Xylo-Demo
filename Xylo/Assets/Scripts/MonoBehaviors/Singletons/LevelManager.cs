@@ -35,7 +35,6 @@ public class LevelManager : MonoBehaviour
     public float songBpm, forgivenessBetweenBeats;
     private float secPerBeat, songPosInSec, songPosInBeats, dspSongTime;
     private bool attemptStarted = false;
-    private AudioSource musicSource;
 
     void Awake() {
         self = this;
@@ -47,7 +46,6 @@ public class LevelManager : MonoBehaviour
             throw new Exception("Too many marbles!");
         }
 
-        musicSource = GetComponent<AudioSource>();
         secPerBeat = 60f / songBpm;
     }
 
