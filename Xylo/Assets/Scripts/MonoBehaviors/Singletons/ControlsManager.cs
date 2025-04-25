@@ -74,7 +74,7 @@ public class ControlsManager : MonoBehaviour
         CameraManager.self.ExitCinematicMode(isDeathPlane);
     }
 
-    private void ToggleMenuActionMap() {
+    public void ToggleMenuActionMap() {
         if (mainMap.enabled) {
             ChangeActionMap("menu");
         } else {

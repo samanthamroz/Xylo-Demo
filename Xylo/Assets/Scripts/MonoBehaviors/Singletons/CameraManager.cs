@@ -9,6 +9,7 @@ public class CameraManager : MonoBehaviour
 	[SerializeField] private GameObject cameraPrefab, lookAtPrefab;
     private GameObject cameraObject, lookAtObject, cinematicLookAtObject;
 	private Camera cam;
+    [HideInInspector] public Vector3 camPosition { get { return cameraObject.transform.position; } }
 
     private Vector3 mousePosition { get { return ControlsManager.self.mousePosition; } }
 
@@ -16,12 +17,13 @@ public class CameraManager : MonoBehaviour
     [HideInInspector] public bool isRotating;
     [HideInInspector] public bool isPanning;
 
-    private Vector3 lookAtPointResetPos = Vector3.zero;
+    private Vector3 lookAtPointResetPos;
     [SerializeField] float cameraHeight = 2f;
 
     private Vector3 lastPositionInWorld;
     private Vector3 lastMousePosition;
-    [SerializeField] private float currentZoom = 35f;
+    [SerializeField] private float startingZoom = 35f;
+    [SerializeField] private float currentZoom;
 
     [SerializeField] private float panDistancePerFrame = .005f;    
     [SerializeField] private float rotateDistancePerFrame = .1f;
@@ -39,11 +41,23 @@ public class CameraManager : MonoBehaviour
 			Destroy(gameObject);
 		}
     }
-    public void InstantiateCamera() {
+    public void InstantiateCamera(int levelNumber) {
         cameraObject = Instantiate(cameraPrefab);
+        cam = cameraObject.GetComponent<Camera>();
+
         lookAtObject = Instantiate(lookAtPrefab);
 
-        cam = cameraObject.GetComponent<Camera>();
+        switch(levelNumber) {
+            case 0:
+                lookAtPointResetPos = new Vector3(0, 15f, 0);
+                startingZoom = 20f;
+                break;
+            case 1:
+                lookAtPointResetPos = new Vector3(0, 0, 0);
+                break;
+        }
+
+        currentZoom = startingZoom;
         zoomGoal = currentZoom;
 
         ResetCamera();
@@ -70,8 +84,9 @@ public class CameraManager : MonoBehaviour
         cam.transform.LookAt(lookAtObject.transform);
     }
 
-    void Update() {
-
+    public void SwitchLookAtObject(GameObject newLookAtPoint) {
+        lookAtObject = newLookAtPoint;
+        PlaceCamera();
     }
 
     public void EnterCinematicMode(GameObject newLookAtObject = null) {

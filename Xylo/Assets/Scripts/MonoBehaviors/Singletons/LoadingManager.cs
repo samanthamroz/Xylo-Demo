@@ -18,7 +18,7 @@ public class LoadingManager : MonoBehaviour
 		}
     }
     public static void LoadCurrentScene(Scene scene, LoadSceneMode mode) {
-        CameraManager.self.InstantiateCamera();
+        CameraManager.self.InstantiateCamera(scene.buildIndex);
         ControlsManager.self.InitializeActionMap(scene.buildIndex == 0);
         
         if (scene.buildIndex > 0) {
