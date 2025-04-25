@@ -533,15 +533,6 @@
             "id": "5de6d142-1ddd-4ca9-bf26-a7eb74f415c5",
             "actions": [
                 {
-                    "name": "Piano",
-                    "type": "Button",
-                    "id": "a28b0d57-e208-430d-ab67-20d9404bd45b",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Pause",
                     "type": "Button",
                     "id": "12f8b01b-095a-4227-ac7b-42b09bf23cd4",
@@ -570,17 +561,6 @@
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "608da19b-ce7c-4b07-bf12-5a784627261e",
-                    "path": "<Keyboard>/p",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Piano",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "c1db6ffe-0042-498a-97b5-c7164bbeefc1",

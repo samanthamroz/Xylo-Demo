@@ -6,6 +6,7 @@ public class GUIManager : MonoBehaviour
     public static GUIManager self;
 	public GameObject UICanvasPrefab, pauseMenuPrefab, pianoMenuPrefab;
 	private GameObject UICanvas, pauseMenu, pianoMenu;
+	private Vector3 pianoMenuStartPos;
 
 	void Awake() {
 		if (self == null) {
@@ -16,20 +17,20 @@ public class GUIManager : MonoBehaviour
 		}
     }
 
-	void Start() {
-		
-	}
-
 	public void InstantiateLevelUI() {
 		UICanvas = Instantiate(UICanvasPrefab);
 		pianoMenu = Instantiate(pianoMenuPrefab, UICanvas.transform);
-		pianoMenu.SetActive(false);
+		pianoMenuStartPos = pianoMenu.transform.position;
 		pauseMenu = Instantiate(pauseMenuPrefab, UICanvas.transform);
 		pauseMenu.SetActive(false);
 	}
 
 	public void TogglePiano() {
-        pianoMenu.SetActive(!pianoMenu.activeSelf);
+		if (pianoMenu.transform.position == pianoMenuStartPos) {
+			pianoMenu.transform.Translate(0, 250, 0);
+		} else {
+			pianoMenu.transform.position = pianoMenuStartPos;
+		}
     }
 
 	public void TogglePause() {

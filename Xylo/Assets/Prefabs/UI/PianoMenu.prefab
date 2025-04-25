@@ -190,7 +190,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -418}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!82 &2835776933596157699
@@ -380,6 +380,7 @@ GameObject:
   - component: {fileID: 8225432953580359223}
   - component: {fileID: 3961564309921204167}
   - component: {fileID: 6991244251706612538}
+  - component: {fileID: 6627754829826292910}
   m_Layer: 5
   m_Name: Button (1)
   m_TagString: Untagged
@@ -488,18 +489,30 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 6627754829826292910}
+        m_TargetAssemblyTypeName: PlayMusicButton, Assembly-CSharp
+        m_MethodName: PlayMusic
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6627754829826292910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3346335844933199126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78d64339c5113af4db7437a13e390abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4450521679406143762
 GameObject:
   m_ObjectHideFlags: 0
@@ -676,8 +689,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: -361}
-  m_SizeDelta: {x: 2000, y: 120}
+  m_AnchoredPosition: {x: 0, y: -556.4}
+  m_SizeDelta: {x: 2000, y: 210.9}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &6206289892652427994
 CanvasRenderer:
@@ -791,6 +804,7 @@ GameObject:
   - component: {fileID: 6821806113085399045}
   - component: {fileID: 1245925557594518018}
   - component: {fileID: 310293083800298094}
+  - component: {fileID: 9056787257712369049}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -899,18 +913,30 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 9056787257712369049}
+        m_TargetAssemblyTypeName: PianoMenuButton, Assembly-CSharp
+        m_MethodName: TogglePiano
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &9056787257712369049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8784925143564155084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b0bb64e7f60cdc4b9b88934838fb7f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8973316660499569633
 GameObject:
   m_ObjectHideFlags: 0

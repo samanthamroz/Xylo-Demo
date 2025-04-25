@@ -1880,6 +1880,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 58005158}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &64734528 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1985733370118950983, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
+  m_PrefabInstance: {fileID: 676602282}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &65064630
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12269,9 +12274,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5322458809031601944, guid: 8a16526d1f5653640b1d4c819b5c0ab3, type: 3}
+      propertyPath: marbleReference
+      value: 
+      objectReference: {fileID: 64734528}
     - target: {fileID: 8380723151180478354, guid: 8a16526d1f5653640b1d4c819b5c0ab3, type: 3}
       propertyPath: m_Name
-      value: Conductor - Level0
+      value: Level Manager - Level0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

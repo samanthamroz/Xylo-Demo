@@ -97,6 +97,7 @@ public class ControlsManager : MonoBehaviour
         }
         return null;
     }
+    
     void OnMouseClick(InputValue value) {
         if (value.Get<float>() == 1) { //click down
             CameraManager.self.isRotating = false;
