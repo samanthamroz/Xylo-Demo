@@ -19,8 +19,8 @@ public class LevelManager : MonoBehaviour
 {   
     public static LevelManager self;
 
-    private bool hasWon;
-    [SerializeField] private GameObject marbleReference;
+    public GameObject marblePrefab;
+    private GameObject marble;
     private List<NoteTrigger> solutionList = new() 
     {
         new NoteTrigger(Note.G, 0f),
@@ -34,28 +34,25 @@ public class LevelManager : MonoBehaviour
         new NoteTrigger(Note.D, 9f),
     };
     private List<NoteTrigger> attemptList;
+    [HideInInspector] public Vector3 marbleStartPos = new(-14.67694f, 7.25f, 1.5f);
     public float songBpm, forgivenessBetweenBeats; //idk why but these have to be public
     private float secPerBeat, songPosInSec, songPosInBeats, dspSongTime;
-    private bool attemptStarted;
+    [HideInInspector] public bool attemptStarted;
+    private bool attemptCountingStarted, hasWon;
 
     void Awake() {
         self = this;
     }
-
     void Start() {
         attemptStarted = false;
 
-        GameObject[] marbles = GameObject.FindGameObjectsWithTag("Marble");
-        if (marbles.Length == 0 || marbles.Length > 1) {
-            throw new Exception("Too many marbles!");
-        }
+        marble = Instantiate(marblePrefab, marbleStartPos, Quaternion.identity);
 
         secPerBeat = 60f / songBpm;
     }
-
     void Update()
     {
-        if (!attemptStarted) {
+        if (!attemptCountingStarted) {
             return;
         }
         
@@ -64,33 +61,52 @@ public class LevelManager : MonoBehaviour
     }
     
     public void StartAttempt() {
+        attemptStarted = true;
         attemptList = new List<NoteTrigger>();
+
+        GUIManager.self.TogglePlayButtonImage(false);
+    
+        CameraManager.self.EnterCinematicMode(marble);
+
+        //for when StartAttempt() isn't called by the marble itself
+        marble.GetComponent<Rigidbody>().isKinematic = false;
+    }
+    public void StartCountingForAttempt() {
         //Record the time when the music starts
         dspSongTime = (float)AudioSettings.dspTime;
-
-        //musicSource.Play();
-        attemptStarted = true;
+        attemptCountingStarted = true;
     }
-    public void EndAttempt(bool isDeathPlane = false) {
+    public void EndAttempt(bool retryLevel = false, bool resetCamera = false) {
         if (!attemptStarted) {
             if (!hasWon) {
-                ControlsManager.self.ExitCinematicMode(isDeathPlane);
+                ControlsManager.self.ExitCinematicMode(resetCamera);
             }
             return;
         }
 
         attemptStarted = false;
-        hasWon = IsWin();
-        Debug.Log("Win = " + hasWon);
+        attemptCountingStarted = false;
+
+        try {
+            hasWon = IsWin();
+            Debug.Log("Win = " + hasWon);
+        } catch (NullReferenceException) {} //occurs when restart is triggered before first note block is triggered
+
+        if (hasWon) {
+            //do something
+        }
+
         attemptList = new();
-        
-        if (hasWon && isDeathPlane) {
-            ControlsManager.self.ExitCinematicMode(false);
-        } else {
-            ControlsManager.self.ExitCinematicMode(isDeathPlane);
+        ControlsManager.self.ExitCinematicMode(resetCamera);
+        if (retryLevel) {
+            RetryLevel();
         }
     }
     private bool IsWin() {
+        if (attemptList.Count < 1) {
+            return false;
+        }
+
         PrintNoteList(solutionList);
         PrintNoteList(attemptList);
         if (attemptList[0].note != solutionList[0].note) {
@@ -126,11 +142,9 @@ public class LevelManager : MonoBehaviour
         }
         print (str);
     }
-
-    public void LaunchMarble() {
-        marbleReference.GetComponent<PlayerMarble>().DoClick();
-    }
-    public void RetryLevel() {
-        marbleReference.transform.position = marbleReference.GetComponent<PlayerMarble>().resetPosition;
+ 
+    private void RetryLevel() {
+        GUIManager.self.TogglePlayButtonImage(true);
+        marble.GetComponent<PlayerMarble>().ResetSelf();
     }
 }

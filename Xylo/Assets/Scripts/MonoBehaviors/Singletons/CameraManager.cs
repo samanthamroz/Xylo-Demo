@@ -90,6 +90,8 @@ public class CameraManager : MonoBehaviour
     }
 
     public void EnterCinematicMode(GameObject newLookAtObject = null) {
+        ControlsManager.self.EnterCinematicMode();
+
         cam.transform.position = new Vector3(0, 5, 16);
         if (newLookAtObject == null) {
             StartCoroutine(DoCinematicCam(lookAtObject));

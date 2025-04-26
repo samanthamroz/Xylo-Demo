@@ -1,10 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayButton : MonoBehaviour
 {
-    public void StartMarble() {
-        LevelManager.self.LaunchMarble();
+    public void PressButton() {
+        if (!LevelManager.self.attemptStarted) {
+            print("launching");
+            LevelManager.self.StartAttempt();
+        } else {
+            LevelManager.self.EndAttempt(true);
+        }
     }
 }

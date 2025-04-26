@@ -3,6 +3,6 @@ using UnityEngine;
 public class RetryButton : MonoBehaviour
 {
     public void RetryLevel() {
-        LevelManager.self.RetryLevel();
+        LevelManager.self.EndAttempt(true);
     }
 }

@@ -9,8 +9,12 @@ public class PlayerMarble : InteractableObject
     }
     public override void DoClick() {
         GetComponent<Rigidbody>().isKinematic = false;
-        ControlsManager.self.EnterCinematicMode();
-        CameraManager.self.EnterCinematicMode(gameObject);
+        LevelManager.self.StartAttempt();
+    }
+    
+    public void ResetSelf() {
+        GetComponent<Rigidbody>().isKinematic = true;
+        transform.position = resetPosition;
     }
     
     void OnCollisionEnter(Collision other)

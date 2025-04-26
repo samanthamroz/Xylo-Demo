@@ -6,6 +6,6 @@ public class DeathPlane : MonoBehaviour
 {
     void OnCollisionEnter(Collision other)
     {
-        LevelManager.self.EndAttempt(true);
+        LevelManager.self.EndAttempt(true, true);
     }
 }

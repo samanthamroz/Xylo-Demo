@@ -1880,11 +1880,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 58005158}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &64734528 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1985733370118950983, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
-  m_PrefabInstance: {fileID: 676602282}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &65064630
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12274,10 +12269,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5322458809031601944, guid: 8a16526d1f5653640b1d4c819b5c0ab3, type: 3}
-      propertyPath: marbleReference
-      value: 
-      objectReference: {fileID: 64734528}
     - target: {fileID: 8380723151180478354, guid: 8a16526d1f5653640b1d4c819b5c0ab3, type: 3}
       propertyPath: m_Name
       value: Level Manager - Level0
@@ -18886,68 +18877,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eccd0402692272f49985ddbada1f6b30, type: 3}
---- !u!1001 &676602282
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1373896935}
-    m_Modifications:
-    - target: {fileID: 1985733370118950983, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
-      propertyPath: m_Name
-      value: Marble
-      objectReference: {fileID: 0}
-    - target: {fileID: 7197524480006316958, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -12.625
-      objectReference: {fileID: 0}
-    - target: {fileID: 7197524480006316958, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.6284866
-      objectReference: {fileID: 0}
-    - target: {fileID: 7197524480006316958, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7197524480006316958, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7197524480006316958, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7197524480006316958, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7197524480006316958, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7197524480006316958, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7197524480006316958, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7197524480006316958, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
---- !u!4 &676602283 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7197524480006316958, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
-  m_PrefabInstance: {fileID: 676602282}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &679573195 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: eccd0402692272f49985ddbada1f6b30, type: 3}
@@ -37247,7 +37176,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 676602283}
   - {fileID: 87177138}
   - {fileID: 1189817061}
   m_Father: {fileID: 0}

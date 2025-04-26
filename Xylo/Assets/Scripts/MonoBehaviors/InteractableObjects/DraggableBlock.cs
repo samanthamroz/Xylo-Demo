@@ -66,7 +66,7 @@ public class DraggableBlock : InteractableObject
         if (other.gameObject.CompareTag("Marble")) {
             GetComponent<AudioSource>().Play();
             if (startsAttempt) {
-                LevelManager.self.StartAttempt();
+                LevelManager.self.StartCountingForAttempt();
             }
             LevelManager.self.TriggerNote(note);
             if (endsAttempt) {
