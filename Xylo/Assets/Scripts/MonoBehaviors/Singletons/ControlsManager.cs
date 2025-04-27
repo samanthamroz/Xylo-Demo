@@ -75,7 +75,7 @@ public class ControlsManager : MonoBehaviour
     }
 
     public void ToggleMenuActionMap() {
-        if (mainMap.enabled) {
+        if (!menuMap.enabled) {
             ChangeActionMap("menu");
         } else {
             ChangeActionMap("main");
@@ -155,7 +155,6 @@ public class ControlsManager : MonoBehaviour
 	void OnPause(InputValue value) {
 		if (value.Get<float>() == 1) {
 			GUIManager.self.TogglePause();
-            ToggleMenuActionMap();
 		}
 	}
 
@@ -171,9 +170,9 @@ public class ControlsManager : MonoBehaviour
 		}
     }
 
-    void OnDebug1(InputValue value) {
+    void OnDebug1(InputValue value) { //shift + D + 1
         if (value.Get<float>() == 1) {
-			EnterCinematicMode();
+			//anything you need
 		}
     }
 }

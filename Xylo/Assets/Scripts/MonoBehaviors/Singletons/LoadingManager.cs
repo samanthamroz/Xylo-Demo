@@ -19,9 +19,9 @@ public class LoadingManager : MonoBehaviour
     }
     public static void LoadCurrentScene(Scene scene, LoadSceneMode mode) {
         CameraManager.self.InstantiateCamera(scene.buildIndex);
-        ControlsManager.self.InitializeActionMap(scene.buildIndex == 0);
+        ControlsManager.self.InitializeActionMap(scene.buildIndex < 2);
         
-        if (scene.buildIndex > 0) {
+        if (scene.buildIndex >=2 ) {
 			GUIManager.self.InstantiateLevelUI();
             AudioManager.self.LoadSounds(SceneManager.GetActiveScene());
 		}

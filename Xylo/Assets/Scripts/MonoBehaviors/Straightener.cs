@@ -6,6 +6,10 @@ public class Straightener : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent<Rigidbody>(out var rb)) {
+            if (rb.isKinematic) {
+                return;
+            }
+
             //Debug.Log("velocity at enter: " + rb.velocity + " magnitude: " + rb.velocity.magnitude);
             Vector3 maskedVelocity = new Vector3(
                 rb.velocity.x * straightenTo.x, 

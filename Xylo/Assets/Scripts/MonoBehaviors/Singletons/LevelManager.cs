@@ -93,13 +93,14 @@ public class LevelManager : MonoBehaviour
         } catch (NullReferenceException) {} //occurs when restart is triggered before first note block is triggered
 
         if (hasWon) {
-            //do something
-        }
-
-        attemptList = new();
-        ControlsManager.self.ExitCinematicMode(resetCamera);
-        if (retryLevel) {
-            RetryLevel();
+            ControlsManager.self.ExitCinematicMode(true);
+            GUIManager.self.ToggleWinMenu();
+        } else {
+            attemptList = new();
+            ControlsManager.self.ExitCinematicMode(resetCamera);
+            if (retryLevel) {
+                RetryLevel();
+            }
         }
     }
     private bool IsWin() {
