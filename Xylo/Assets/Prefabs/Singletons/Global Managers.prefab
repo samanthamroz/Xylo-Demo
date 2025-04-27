@@ -90,6 +90,7 @@ MonoBehaviour:
   pianoMenuPrefab: {fileID: 1124015546929853332, guid: 818232f8154b22a408d2c345101e5a69, type: 3}
   playButtonPrefab: {fileID: 6125771204600431308, guid: 00a29abfd72c3cc45a46f406b1e2c96f, type: 3}
   winMenuPrefab: {fileID: 316279160850296835, guid: 8a17df82435c7f94aad92a7fa8a29ba8, type: 3}
+  tutorialBoxPrefab: {fileID: 951197782328589403, guid: 7161428e8df03614db3c6786aff302f5, type: 3}
   playButtonImage: {fileID: 21300000, guid: 222a70cb64ff844468d862a2671d9ed6, type: 3}
   retryButtonImage: {fileID: 21300000, guid: 86ecc4d6c356892498f652eb95f67274, type: 3}
 --- !u!114 &153861391970441436

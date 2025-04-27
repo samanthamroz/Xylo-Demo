@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 public class GUIManager : MonoBehaviour
 {
     public static GUIManager self;
-	public GameObject UICanvasPrefab, pauseMenuPrefab, pianoMenuPrefab, playButtonPrefab, winMenuPrefab;
-	private GameObject UICanvas, pauseMenu, pianoMenu, playButton, winMenu;
+	public GameObject UICanvasPrefab, pauseMenuPrefab, pianoMenuPrefab, playButtonPrefab, winMenuPrefab, tutorialBoxPrefab;
+	private GameObject UICanvas, pauseMenu, pianoMenu, playButton, winMenu, tutorialBox;
 	private Vector3 pianoMenuStartPos;
 	public Sprite playButtonImage, retryButtonImage;
 
@@ -19,7 +19,7 @@ public class GUIManager : MonoBehaviour
 		}
     }
 
-	public void InstantiateLevelUI() {
+	public void InstantiateLevelUI(bool isTutorial) {
 		UICanvas = Instantiate(UICanvasPrefab);
 		winMenu = Instantiate(winMenuPrefab, UICanvas.transform);
 		winMenu.SetActive(false);
@@ -28,6 +28,10 @@ public class GUIManager : MonoBehaviour
 		pauseMenu = Instantiate(pauseMenuPrefab, UICanvas.transform);
 		pauseMenu.SetActive(false);
 		playButton = Instantiate(playButtonPrefab, UICanvas.transform);
+		
+		if (isTutorial) {
+			tutorialBox = Instantiate(tutorialBoxPrefab, UICanvas.transform);
+		}
 	}
 
 	public void TogglePiano() {

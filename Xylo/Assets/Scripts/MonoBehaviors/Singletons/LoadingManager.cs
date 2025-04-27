@@ -21,9 +21,14 @@ public class LoadingManager : MonoBehaviour
         CameraManager.self.InstantiateCamera(scene.buildIndex);
         ControlsManager.self.InitializeActionMap(scene.buildIndex < 2);
         
-        if (scene.buildIndex >=2 ) {
-			GUIManager.self.InstantiateLevelUI();
-            AudioManager.self.LoadSounds(SceneManager.GetActiveScene());
+        if (scene.buildIndex == 2) { //for tutorial only
+            GUIManager.self.InstantiateLevelUI(true);
+            AudioManager.self.LoadSounds(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        if (scene.buildIndex > 2) {
+			GUIManager.self.InstantiateLevelUI(false);
+            AudioManager.self.LoadSounds(SceneManager.GetActiveScene().buildIndex);
 		}
 
         try {

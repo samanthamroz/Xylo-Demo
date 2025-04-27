@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -21,10 +20,10 @@ public class AudioManager : MonoBehaviour
 		
 	}
 
-	public void LoadSounds(Scene scene) {
+	public void LoadSounds(int sceneNumber) {
 		audioSource = GetComponent<AudioSource>();
 		try {
-			audioSource.clip = melodies[scene.buildIndex - 1];
+			audioSource.clip = melodies[sceneNumber - 1];
 		} catch {}
 	}
 
