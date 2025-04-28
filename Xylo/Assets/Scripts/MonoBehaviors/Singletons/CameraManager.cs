@@ -49,7 +49,7 @@ public class CameraManager : MonoBehaviour
 
         switch(levelNumber) {
             case 0:
-                lookAtPointResetPos = new Vector3(0, 15f, 0);
+                lookAtPointResetPos = new Vector3(0, 100f, 0);
                 startingZoom = 20f;
                 break;
             case 1:
