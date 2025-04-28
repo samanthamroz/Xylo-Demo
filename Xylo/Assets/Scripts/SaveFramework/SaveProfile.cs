@@ -17,7 +17,7 @@ public sealed class SaveProfile<T> where T : SaveProfileData {
 public abstract record SaveProfileData { }
 
 public record GlobalSaveData : SaveProfileData {
-    public List<bool> levelCompletionStatusList;
+    public List<bool> levelCompletionStatusList = new();
 }
 
 public record SceneSaveData : SaveProfileData {

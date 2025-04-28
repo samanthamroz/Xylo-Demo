@@ -172,7 +172,7 @@ public class ControlsManager : MonoBehaviour
 
     void OnDebug1(InputValue value) { //shift + D + 1
         if (value.Get<float>() == 1) {
-			//anything you need
+			SaveManager.DeleteAll();
 		}
     }
 }

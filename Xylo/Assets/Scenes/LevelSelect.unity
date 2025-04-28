@@ -23633,9 +23633,9 @@ GameObject:
   - component: {fileID: 1151727159}
   - component: {fileID: 1151727158}
   - component: {fileID: 1151727157}
-  - component: {fileID: 1151727156}
+  - component: {fileID: 1151727160}
   m_Layer: 5
-  m_Name: Settings Button
+  m_Name: Quit Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23660,18 +23660,6 @@ RectTransform:
   m_AnchoredPosition: {x: 60, y: -60}
   m_SizeDelta: {x: 206, y: 206}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1151727156
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1151727154}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5fa96dcefa9af04587cc0fc65f15890, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1151727157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23716,9 +23704,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1151727156}
-        m_TargetAssemblyTypeName: PauseButton, Assembly-CSharp
-        m_MethodName: TogglePauseMenu
+      - m_Target: {fileID: 1151727160}
+        m_TargetAssemblyTypeName: QuitButton, Assembly-CSharp
+        m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -23766,6 +23754,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1151727154}
   m_CullTransparentMesh: 1
+--- !u!114 &1151727160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1151727154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a703389922797fe43bbf5f375aa5483e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1157877080 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8260573749599896176, guid: 1abc224326b88a944a6b98cced346ed0, type: 3}

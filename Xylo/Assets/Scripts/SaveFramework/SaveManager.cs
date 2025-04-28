@@ -65,5 +65,6 @@ public static class SaveManager {
         }
 
         Save(new SaveProfile<GlobalSaveData>(new GlobalSaveData()));
+        Debug.Log("Data deleted successfully");
     }
 }
