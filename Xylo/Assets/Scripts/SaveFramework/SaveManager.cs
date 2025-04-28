@@ -32,13 +32,16 @@ public static class SaveManager {
         return JsonConvert.DeserializeObject<SaveProfile<T>>(fileContents);
     }
 
-    public static SaveProfile<T> Load<T>() where T : PlayerSaveData {
+    public static SaveProfile<T> Load<T>() where T : GlobalSaveData {
         if (!File.Exists($"{saveFolder}/global")) {
-            throw new Exception($"Save profile not found");
+            Save(new SaveProfile<GlobalSaveData>(new GlobalSaveData())); //make a new global save
+            if (!File.Exists($"{saveFolder}/global")) {
+                throw new Exception($"Save profile still not found");
+            }
         }
 
         var fileContents = File.ReadAllText($"{saveFolder}/global");
-        //Debug.Log($"Successfully loaded {saveFolder}/{profileName}");
+        //Debug.Log($"Successfully loaded {saveFolder}/global");
 
         return JsonConvert.DeserializeObject<SaveProfile<T>>(fileContents);
     }
@@ -61,6 +64,6 @@ public static class SaveManager {
             Directory.Delete($"{saveFolder}", true);
         }
 
-        Save(new SaveProfile<PlayerSaveData>(new PlayerSaveData()));
+        Save(new SaveProfile<GlobalSaveData>(new GlobalSaveData()));
     }
 }

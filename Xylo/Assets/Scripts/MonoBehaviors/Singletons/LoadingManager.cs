@@ -1,23 +1,32 @@
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System;
 
 public class LoadingManager : MonoBehaviour
 {
     public static LoadingManager self;
+    public GlobalSaveData saveData { get { return SaveManager.Load<GlobalSaveData>().saveData;} }
+    public SceneSaveData sceneData;
 
     void Awake() {
 		if (self == null) {
 			self = this;
+            if (!SaveManager.GameDataExists()) {
+                print(Application.persistentDataPath);
+                GlobalSaveData newSave = new()
+                {
+                    levelCompletionStatusList = new List<bool>()
+                };
+                SaveManager.Save(new SaveProfile<GlobalSaveData>(newSave));
+            }
 			SceneManager.sceneLoaded += LoadCurrentScene;
 			DontDestroyOnLoad(gameObject);
 		} else {
 			Destroy(gameObject);
 		}
     }
-    public static void LoadCurrentScene(Scene scene, LoadSceneMode mode) {
+    private void LoadCurrentScene(Scene scene, LoadSceneMode mode) {
         CameraManager.self.InstantiateCamera(scene.buildIndex);
         ControlsManager.self.InitializeActionMap(scene.buildIndex < 2);
         
@@ -32,26 +41,48 @@ public class LoadingManager : MonoBehaviour
 		}
 
         try {
-            var saveData = SaveManager.Load<SceneSaveData>(scene.name).saveData;
-        } catch {}
+            sceneData = SaveManager.Load<SceneSaveData>(scene.name).saveData;
+        } catch { }
     }
-
 	public void LoadNewScene(string sceneName) {
 		SaveCurrentScene();
 		SceneManager.LoadScene(sceneName);
 	}
+    private void SaveCurrentScene() {
 
-    public static void SaveCurrentScene() {
+
         //create blank sceneSave
         var sceneSave = new SceneSaveData {
-            scene = SceneManager.GetActiveScene(),
-            objectPositions = new List<Vector3>(),
-            objectRotations = new List<Quaternion>(),
-            objectStates = new List<bool>()
+            scene = SceneManager.GetActiveScene()
         };
         
         //save to file
         var saveProfile  = new SaveProfile<SceneSaveData>(sceneSave, sceneSave.scene.name);
         SaveManager.Save(saveProfile);
+    }
+    
+    public void SetLevelCompleted(int levelNumber) {
+        GlobalSaveData temp;
+        try {
+            temp = SaveManager.Load<GlobalSaveData>().saveData;
+            temp.levelCompletionStatusList.Insert(levelNumber, true);
+        } catch {
+            temp = new GlobalSaveData {
+                levelCompletionStatusList = new()
+            };
+            temp.levelCompletionStatusList.Insert(levelNumber, true);
+        }
+        SaveManager.Save(new SaveProfile<GlobalSaveData>(temp));
+    }
+
+    public bool IsLevelCompleted(int checkLevelNumber) {
+        bool isCompleted = false;
+        try {
+            isCompleted = saveData.levelCompletionStatusList[checkLevelNumber];
+        } catch (ArgumentOutOfRangeException) { 
+            print("Level status unknown"); 
+        }
+        
+        return isCompleted;
     }
 }

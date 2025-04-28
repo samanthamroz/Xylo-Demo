@@ -89,10 +89,10 @@ public class LevelManager : MonoBehaviour
 
         try {
             hasWon = IsWin();
-            Debug.Log("Win = " + hasWon);
         } catch (NullReferenceException) {} //occurs when restart is triggered before first note block is triggered
 
         if (hasWon) {
+            LoadingManager.self.SetLevelCompleted(0);
             ControlsManager.self.ExitCinematicMode(true);
             GUIManager.self.ToggleWinMenu();
         } else {
@@ -103,13 +103,21 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
+    
+    private void PrintNoteList(List<NoteTrigger> list) {
+        string str = "";
+        foreach (var thing in list) {
+            str += "(" + thing.note + ", " + thing.beatTriggered + ") ";
+        }
+        print (str);
+    }
     private bool IsWin() {
         if (attemptList.Count < 1) {
             return false;
         }
 
-        PrintNoteList(solutionList);
-        PrintNoteList(attemptList);
+        //PrintNoteList(solutionList);
+        //PrintNoteList(attemptList);
         if (attemptList[0].note != solutionList[0].note) {
             return false;
         }
@@ -136,14 +144,7 @@ public class LevelManager : MonoBehaviour
         
         attemptList.Add(new NoteTrigger(note, songPosInBeats));
     }
-    private void PrintNoteList(List<NoteTrigger> list) {
-        string str = "";
-        foreach (var thing in list) {
-            str += "(" + thing.note + ", " + thing.beatTriggered + ") ";
-        }
-        print (str);
-    }
- 
+    
     private void RetryLevel() {
         GUIManager.self.TogglePlayButtonImage(true);
         marble.GetComponent<PlayerMarble>().ResetSelf();
