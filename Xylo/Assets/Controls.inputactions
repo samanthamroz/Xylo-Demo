@@ -280,7 +280,7 @@
                 {
                     "name": "MouseClick",
                     "type": "Button",
-                    "id": "c13a4041-f6ad-4881-a6cf-6f05f93c8ed8",
+                    "id": "0e24f1ae-e5c3-49aa-a7c1-24ecc61b75a0",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Press(behavior=2)",
@@ -350,34 +350,12 @@
                 },
                 {
                     "name": "",
-                    "id": "bead7c5a-10d1-4aa8-bb41-476c27f5a04e",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MouseClick",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "55c41392-ef5d-4077-84a5-6c2fedfc97af",
                     "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "MouseMove",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "945e4c0c-a7b2-475a-9533-b701b9d9c7ba",
-                    "path": "<Mouse>/middleButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MiddleMouseClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -424,6 +402,28 @@
                     "action": "Debug1",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "945e4c0c-a7b2-475a-9533-b701b9d9c7ba",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MiddleMouseClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "123c1968-e73f-41f1-94e4-d9ec08fe7a0c",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },

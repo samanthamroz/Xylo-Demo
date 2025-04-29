@@ -41,12 +41,10 @@ public class GUIManager : MonoBehaviour
 			pianoMenu.transform.position = pianoMenuStartPos;
 		}
     }
-
 	public void TogglePause() {
 		ControlsManager.self.ToggleMenuActionMap();
 		pauseMenu.SetActive(!pauseMenu.activeSelf);
 	}
-
 	public void ToggleWinMenu() {
 		ControlsManager.self.ToggleMenuActionMap();
 		winMenu.SetActive(!winMenu.activeSelf);

@@ -49,12 +49,13 @@ public class CameraManager : MonoBehaviour
 
         switch(levelNumber) {
             case 0:
-                lookAtPointResetPos = new Vector3(0, 100f, 0);
-                startingZoom = 20f;
+                lookAtPointResetPos = new Vector3(0, 0f, 0);
+                cameraHeight = 0f;
+                startingZoom = 25f;
                 break;
             case 1:
                 lookAtPointResetPos = new Vector3(0, 40f, 0);
-                cameraHeight = 0f;
+                cameraHeight = -2f;
                 startingZoom = 10f;
                 break;
             case 2:
@@ -91,6 +92,10 @@ public class CameraManager : MonoBehaviour
 
     public void SwitchLookAtObject(GameObject newLookAtPoint) {
         lookAtObject = newLookAtPoint;
+        PlaceCamera();
+    }
+    public void SwitchLookAtPosition(Vector3 newPostion) {
+        lookAtObject.transform.position = newPostion;
         PlaceCamera();
     }
 
