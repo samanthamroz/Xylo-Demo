@@ -13,25 +13,19 @@ public class CameraManager : MonoBehaviour
 
     private Vector3 mousePosition { get { return ControlsManager.self.mousePosition; } }
 
-    [HideInInspector] public bool isCinematicCamera;
-    [HideInInspector] public bool isRotating;
-    [HideInInspector] public bool isPanning;
+    [HideInInspector] public bool isCinematicCamera, isRotating, isPanning;
 
-    private Vector3 lookAtPointResetPos;
-    [SerializeField] float cameraHeight = 2f;
-
-    private Vector3 lastPositionInWorld;
-    private Vector3 lastMousePosition;
-    [SerializeField] private float startingZoom = 35f;
-    [SerializeField] private float currentZoom;
+    private Vector3 lookAtPointResetPos; //this is the position the lookAtObject is reset to
+    private float startingZoom, cameraHeight; //this is the difference in height between the lookAtObject and the camera
 
     [SerializeField] private float panDistancePerFrame = .005f;    
     [SerializeField] private float rotateDistancePerFrame = .1f;
+    private Vector3 lastPositionInWorld, lastMousePosition;
 
     private float zoomMin = 5f;
     private float zoomMax = 40f;
     [SerializeField] private float zoomDistancePerFrame = 0.05f;
-    private float zoomGoal;
+    private float zoomGoal, currentZoom;
 
 	void Awake() {
 		if (self == null) {
@@ -54,12 +48,9 @@ public class CameraManager : MonoBehaviour
                 startingZoom = 25f;
                 break;
             case 1:
-                lookAtPointResetPos = new Vector3(0, 40f, 0);
-                cameraHeight = -2f;
-                startingZoom = 10f;
-                break;
-            case 2:
                 lookAtPointResetPos = new Vector3(0, 0, 0);
+                cameraHeight = 2f;
+                startingZoom = 35f;
                 break;
         }
 

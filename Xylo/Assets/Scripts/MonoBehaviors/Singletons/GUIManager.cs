@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 public class GUIManager : MonoBehaviour
 {
     public static GUIManager self;
-	public GameObject UICanvasPrefab, pauseMenuPrefab, pianoMenuPrefab, playButtonPrefab, winMenuPrefab, tutorialBoxPrefab;
-	private GameObject UICanvas, pauseMenu, pianoMenu, playButton, winMenu, tutorialBox;
+	public GameObject titleScreenCanvasPrefab, UICanvasPrefab, pauseMenuPrefab, pianoMenuPrefab, playButtonPrefab, winMenuPrefab, tutorialBoxPrefab;
+	private GameObject titleScreenCanvas, UICanvas, pauseMenu, pianoMenu, playButton, winMenu, tutorialBox;
 	private Vector3 pianoMenuStartPos;
 	public Sprite playButtonImage, retryButtonImage;
 
@@ -18,6 +18,12 @@ public class GUIManager : MonoBehaviour
 			Destroy(gameObject);
 		}
     }
+
+	public void InstantiateTitleUI() {
+		if (!SaveManager.GameDataExists()) {
+			titleScreenCanvas = Instantiate(titleScreenCanvasPrefab);
+		}
+	}
 
 	public void InstantiateLevelUI(bool isTutorial) {
 		UICanvas = Instantiate(UICanvasPrefab);

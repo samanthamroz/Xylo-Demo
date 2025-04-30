@@ -28,14 +28,16 @@ public class LoadingManager : MonoBehaviour
     }
     private void LoadCurrentScene(Scene scene, LoadSceneMode mode) {
         CameraManager.self.InstantiateCamera(scene.buildIndex);
-        ControlsManager.self.InitializeActionMap(scene.buildIndex < 2);
+        ControlsManager.self.InitializeActionMap(scene.buildIndex == 0);
         
-        if (scene.buildIndex == 2) { //for tutorial only
+        if (scene.buildIndex == 0) { //for title only 
+            GUIManager.self.InstantiateTitleUI();
+        }
+        if (scene.buildIndex == 1) { //for tutorial only
             GUIManager.self.InstantiateLevelUI(true);
             AudioManager.self.LoadSounds(SceneManager.GetActiveScene().buildIndex);
         }
-
-        if (scene.buildIndex > 2) {
+        if (scene.buildIndex > 1) {
 			GUIManager.self.InstantiateLevelUI(false);
             AudioManager.self.LoadSounds(SceneManager.GetActiveScene().buildIndex);
 		}

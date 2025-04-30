@@ -12,7 +12,7 @@ public class ControlsManager : MonoBehaviour
     public static ControlsManager self;
     
     private InputActionAsset inputActions;
-    private InputActionMap mainMap, menuMap, cinematicMap, currentActionMap;
+    private InputActionMap mainMap, levelSelectMap, menuMap, cinematicMap, currentActionMap;
     public string currentActionMapName { get { return currentActionMap.name; } }
     [HideInInspector] public Vector3 mousePosition;
     [SerializeField] private InteractableObject currentInteractable, lastInteractable;
@@ -33,11 +33,12 @@ public class ControlsManager : MonoBehaviour
     public void InitializeActionMap(bool isLevelSelect) {
         inputActions = GetComponent<PlayerInput>().actions;
         mainMap = inputActions.FindActionMap("Main");
-        menuMap = inputActions.FindActionMap("Menus");
+        levelSelectMap = inputActions.FindActionMap("LevelSelect");
+        menuMap = inputActions.FindActionMap("LevelMenus");
         cinematicMap = inputActions.FindActionMap("Cinematic");
 
         if (isLevelSelect) {
-            ChangeActionMap("menu");
+            ChangeActionMap("levelSelect");
         } else {
             ChangeActionMap("main");
         }
@@ -45,12 +46,17 @@ public class ControlsManager : MonoBehaviour
 
     private void ChangeActionMap(string mapName) {
         mainMap.Disable();
+        levelSelectMap.Disable();
         menuMap.Disable();
         cinematicMap.Disable();
         switch (mapName.ToLower()) {
             case "main":
                 mainMap.Enable();
                 currentActionMap = mainMap;
+                break;
+            case "levelselect":
+                levelSelectMap.Enable();
+                currentActionMap = levelSelectMap;
                 break;
             case "menu":
                 menuMap.Enable();

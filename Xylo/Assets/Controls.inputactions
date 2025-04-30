@@ -265,7 +265,7 @@
             ]
         },
         {
-            "name": "MainFixedCamera",
+            "name": "LevelSelect",
             "id": "1b2475d8-fe73-4b20-91f2-58eda9a261a7",
             "actions": [
                 {
@@ -529,7 +529,7 @@
             ]
         },
         {
-            "name": "Menus",
+            "name": "LevelMenus",
             "id": "5de6d142-1ddd-4ca9-bf26-a7eb74f415c5",
             "actions": [
                 {
