@@ -66,7 +66,7 @@ public class LevelManager : MonoBehaviour
 
         GUIManager.self.TogglePlayButtonImage(false);
     
-        StartCoroutine(CameraManager.self.EnterCinematicMode(marble));
+        CameraManager.self.EnterCinematicMode(marble);
 
         //for when StartAttempt() isn't called by the marble itself
         marble.GetComponent<Rigidbody>().isKinematic = false;
