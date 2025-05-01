@@ -31,13 +31,12 @@ public class LoadingManager : MonoBehaviour
         
         if (scene.buildIndex == 0) { //for title only 
             if (!hasTitleLoaded) {
-                print("test");
-                GUIManager.self.InstantiateTitleUI();
+                GUIManager.self.InstantiateTitleUI(true);
                 CameraManager.self.InstantiateTitleCamera();
                 hasTitleLoaded = true;
                 return;
             } else {
-                
+                GUIManager.self.InstantiateTitleUI(false);
             }
         }
         if (scene.buildIndex == 1) { //for tutorial only

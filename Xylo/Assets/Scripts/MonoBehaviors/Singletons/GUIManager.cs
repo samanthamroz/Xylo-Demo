@@ -19,10 +19,10 @@ public class GUIManager : MonoBehaviour
 		}
     }
 
-	public void InstantiateTitleUI() {
+	public void InstantiateTitleUI(bool keepOpen) {
 		titleScreenCanvas = Instantiate(titleScreenCanvasPrefab);
+		if (!keepOpen) titleScreenCanvas.SetActive(false);
 	}
-
 	public void InstantiateLevelUI(bool isTutorial) {
 		UICanvas = Instantiate(UICanvasPrefab);
 		winMenu = Instantiate(winMenuPrefab, UICanvas.transform);
@@ -38,6 +38,9 @@ public class GUIManager : MonoBehaviour
 		}
 	}
 
+	public void ToggleTitleScreen() {
+		titleScreenCanvas.SetActive(!titleScreenCanvas.activeSelf);
+	}
 	public void TogglePiano() {
 		if (pianoMenu.transform.position == pianoMenuStartPos) {
 			pianoMenu.transform.Translate(0, 250, 0);
