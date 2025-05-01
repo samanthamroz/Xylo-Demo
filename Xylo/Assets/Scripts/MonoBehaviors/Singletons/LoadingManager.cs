@@ -6,6 +6,7 @@ using System;
 public class LoadingManager : MonoBehaviour
 {
     public static LoadingManager self;
+    public static bool hasTitleLoaded = false;
     public GlobalSaveData saveData { get { return SaveManager.Load<GlobalSaveData>().saveData;} }
     public SceneSaveData sceneData;
 
@@ -13,7 +14,6 @@ public class LoadingManager : MonoBehaviour
 		if (self == null) {
 			self = this;
             if (!SaveManager.GameDataExists()) {
-                print(Application.persistentDataPath);
                 GlobalSaveData newSave = new()
                 {
                     levelCompletionStatusList = new List<bool>()
@@ -27,11 +27,18 @@ public class LoadingManager : MonoBehaviour
 		}
     }
     private void LoadCurrentScene(Scene scene, LoadSceneMode mode) {
-        CameraManager.self.InstantiateCamera(scene.buildIndex);
         ControlsManager.self.InitializeActionMap(scene.buildIndex == 0);
         
         if (scene.buildIndex == 0) { //for title only 
-            GUIManager.self.InstantiateTitleUI();
+            if (!hasTitleLoaded) {
+                print("test");
+                GUIManager.self.InstantiateTitleUI();
+                CameraManager.self.InstantiateTitleCamera();
+                hasTitleLoaded = true;
+                return;
+            } else {
+                
+            }
         }
         if (scene.buildIndex == 1) { //for tutorial only
             GUIManager.self.InstantiateLevelUI(true);
@@ -41,6 +48,7 @@ public class LoadingManager : MonoBehaviour
 			GUIManager.self.InstantiateLevelUI(false);
             AudioManager.self.LoadSounds(SceneManager.GetActiveScene().buildIndex);
 		}
+        CameraManager.self.InstantiateCamera(scene.buildIndex);
 
         try {
             sceneData = SaveManager.Load<SceneSaveData>(scene.name).saveData;

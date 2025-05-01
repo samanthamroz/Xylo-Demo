@@ -63,8 +63,6 @@ public static class SaveManager {
         if (Directory.Exists($"{saveFolder}")) {
             Directory.Delete($"{saveFolder}", true);
         }
-
-        Save(new SaveProfile<GlobalSaveData>(new GlobalSaveData()));
         Debug.Log("Data deleted successfully");
     }
 }

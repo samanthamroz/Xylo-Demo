@@ -20,9 +20,7 @@ public class GUIManager : MonoBehaviour
     }
 
 	public void InstantiateTitleUI() {
-		if (!SaveManager.GameDataExists()) {
-			titleScreenCanvas = Instantiate(titleScreenCanvasPrefab);
-		}
+		titleScreenCanvas = Instantiate(titleScreenCanvasPrefab);
 	}
 
 	public void InstantiateLevelUI(bool isTutorial) {

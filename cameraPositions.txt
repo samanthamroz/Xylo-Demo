@@ -1,3 +1,13 @@
+LEVEL SELECT SCENE
+Height = 0, Zoom = 25
+*Starting: 0.0275, 100, 11.255
 Title: 0.0275, 100, 11.255
 Credits: 32.1, -3.75, -44.6875
 Level0: 0.0275, -0.255, 11.255
+
+CREDITS SCENE
+*Starting: 0, 40, 0
+
+LEVEL 0
+Height = 2, Zoom = 35
+*Starting: 0, 0, 0

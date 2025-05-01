@@ -1,10 +1,15 @@
 using UnityEngine;
-using System;
 using System.Collections;
-using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class CameraManager : MonoBehaviour
 {
+    private Dictionary<string, Vector3> levelSelectCameraPositions = new() {
+        {"title", new Vector3(.03f, 100, 11.3f)},
+        {"credits", new Vector3(32.1f, -3.75f, -44.7f)},
+        {"level0", new Vector3(.03f, -0.25f, 11.3f)},
+    };
+
     public static CameraManager self;
 	[SerializeField] private GameObject cameraPrefab, lookAtPrefab;
     private GameObject cameraObject, lookAtObject, cinematicLookAtObject;
@@ -43,7 +48,7 @@ public class CameraManager : MonoBehaviour
 
         switch(levelNumber) {
             case 0:
-                lookAtPointResetPos = new Vector3(0, 100f, 0);
+                lookAtPointResetPos = levelSelectCameraPositions["level0"];
                 cameraHeight = 0f;
                 startingZoom = 25f;
                 break;
@@ -59,6 +64,22 @@ public class CameraManager : MonoBehaviour
 
         ResetCamera();
 	}
+    public void InstantiateTitleCamera() {
+        cameraObject = Instantiate(cameraPrefab);
+        cam = cameraObject.GetComponent<Camera>();
+        lookAtObject = Instantiate(lookAtPrefab);
+
+        ReturnToTitle();
+    }
+    private void ReturnToTitle() {
+        lookAtPointResetPos = levelSelectCameraPositions["title"];
+        cameraHeight = 0f;
+        startingZoom = 25f;
+        currentZoom = startingZoom;
+        zoomGoal = currentZoom;
+
+        ResetCamera();
+    }
 
     private void ResetCamera() {
         lookAtObject.transform.position = lookAtPointResetPos;
@@ -88,6 +109,9 @@ public class CameraManager : MonoBehaviour
     public void SwitchLookAtPosition(Vector3 newPostion) {
         lookAtObject.transform.position = newPostion;
         PlaceCamera();
+    }
+    public void SwitchLevelSelectIsland(string islandName) {
+        SwitchLookAtPosition(levelSelectCameraPositions[islandName]);
     }
 
     public void EnterCinematicMode(GameObject newLookAtObject = null) {
