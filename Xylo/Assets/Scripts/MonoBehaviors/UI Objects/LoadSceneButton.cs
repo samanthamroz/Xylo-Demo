@@ -5,6 +5,6 @@ using UnityEngine;
 public class LoadSceneButton : MonoBehaviour
 {
     public void Load(string sceneName) {
-        LoadingManager.self.LoadNewScene(sceneName);
+        StartCoroutine(LoadingManager.self.LoadNewScene(sceneName));
     }
 }

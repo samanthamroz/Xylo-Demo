@@ -82,6 +82,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe6d5257d775e824bb220fcffac6e221, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadingBannerPrefab: {fileID: 1151846191262160879, guid: 8787468aa7b471d4494654c69655c196, type: 3}
   titleScreenCanvasPrefab: {fileID: 170928176031393510, guid: c4c0b103e640aba4c96fa7a31e54902f, type: 3}
   UICanvasPrefab: {fileID: 294021580391262558, guid: 4a4cdaf2da88e274bb2585a50d8ceaaf, type: 3}
   pauseMenuPrefab: {fileID: 307899990964232635, guid: 00e992796fb4364478762aa339a9c119, type: 3}

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using System.Collections;
 
 public class LoadingManager : MonoBehaviour
 {
@@ -52,10 +53,18 @@ public class LoadingManager : MonoBehaviour
         try {
             sceneData = SaveManager.Load<SceneSaveData>(scene.name).saveData;
         } catch { }
+
+        GUIManager.self.LoadMiddleToRight(.25f);
     }
-	public void LoadNewScene(string sceneName) {
+	public IEnumerator LoadNewScene(string sceneName) {
 		SaveCurrentScene();
+        float time = .25f;
+        GUIManager.self.LoadLeftToMiddle(time);
+        
+        yield return new WaitForSeconds(time);
+
 		SceneManager.LoadScene(sceneName);
+        yield return null; //fixes coroutine running during scene load
 	}
     private void SaveCurrentScene() {
 

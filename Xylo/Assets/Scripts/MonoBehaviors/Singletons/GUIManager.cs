@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class GUIManager : MonoBehaviour
 {
     public static GUIManager self;
-	public GameObject titleScreenCanvasPrefab, UICanvasPrefab, pauseMenuPrefab, pianoMenuPrefab, playButtonPrefab, winMenuPrefab, tutorialBoxPrefab;
+	public GameObject loadingBannerPrefab, titleScreenCanvasPrefab, UICanvasPrefab, pauseMenuPrefab, pianoMenuPrefab, playButtonPrefab, winMenuPrefab, tutorialBoxPrefab;
 	private GameObject titleScreenCanvas, UICanvas, pauseMenu, pianoMenu, playButton, winMenu, tutorialBox;
 	private Vector3 pianoMenuStartPos;
 	public Sprite playButtonImage, retryButtonImage;
@@ -63,5 +63,16 @@ public class GUIManager : MonoBehaviour
         } else {
             playButton.GetComponent<Image>().sprite = retryButtonImage;
         }
+	}
+
+	public void LoadLeftToMiddle(float time) {
+		GameObject loadingBanner = Instantiate(loadingBannerPrefab).transform.GetChild(0).gameObject;
+		loadingBanner.transform.position = new Vector3(-2210f, loadingBanner.transform.position.y, loadingBanner.transform.position.z);
+		LeanTween.moveLocalX(loadingBanner, 0f, time);
+	}
+	public void LoadMiddleToRight(float time) {
+		GameObject loadingBanner = Instantiate(loadingBannerPrefab).transform.GetChild(0).gameObject;
+		LeanTween.moveLocalX(loadingBanner, 2210f, time);
+		Destroy(loadingBanner, time);
 	}
 }

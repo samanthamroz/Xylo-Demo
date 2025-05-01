@@ -84,9 +84,9 @@ public class CameraManager : MonoBehaviour
     private void ResetCamera() {
         lookAtObject.transform.position = lookAtPointResetPos;
         lookAtObject.transform.LookAt(cam.transform);
-        PlaceCamera();
+        StartCoroutine(PlaceCamera());
     }
-    private void PlaceCamera() {
+    private IEnumerator PlaceCamera() {
         //assumes lookAtObject has been placed already
 
         float yRotationRadians = lookAtObject.transform.rotation.eulerAngles.y * Mathf.Deg2Rad;
@@ -95,29 +95,43 @@ public class CameraManager : MonoBehaviour
         float xOffset = currentZoom * Mathf.Sin(yRotationRadians);
         float zOffset = currentZoom * Mathf.Cos(yRotationRadians);
 
-        cam.transform.position = new Vector3(
+
+        Vector3 newCameraPosition = new Vector3(
             lookAtObject.transform.position.x + xOffset, 
             lookAtObject.transform.position.y + cameraHeight, 
             lookAtObject.transform.position.z + zOffset);
+
+        float time = 1f;
+        LeanTween.move(cameraObject, newCameraPosition, time);
+
+        float elapsed = 0f;
+        while (elapsed < time)
+        {
+            cam.transform.LookAt(lookAtObject.transform); // keep looking during movement
+            elapsed += Time.deltaTime;
+            yield return null; // wait for next frame
+        }
         cam.transform.LookAt(lookAtObject.transform);
     }
 
     public void SwitchLookAtObject(GameObject newLookAtPoint) {
         lookAtObject = newLookAtPoint;
-        PlaceCamera();
+        StartCoroutine(PlaceCamera());
     }
     public void SwitchLookAtPosition(Vector3 newPostion) {
         lookAtObject.transform.position = newPostion;
-        PlaceCamera();
+        StartCoroutine(PlaceCamera());
     }
     public void SwitchLevelSelectIsland(string islandName) {
         SwitchLookAtPosition(levelSelectCameraPositions[islandName]);
     }
 
-    public void EnterCinematicMode(GameObject newLookAtObject = null) {
+    public IEnumerator EnterCinematicMode(GameObject newLookAtObject = null) {
         ControlsManager.self.EnterCinematicMode();
 
-        cam.transform.position = new Vector3(0, 5, 16);
+        LeanTween.moveLocal(cameraObject, new Vector3(0, 5, 16), .25f);
+        yield return new WaitForSeconds(.25f);
+
         if (newLookAtObject == null) {
             StartCoroutine(DoCinematicCam(lookAtObject));
         } else {
@@ -132,7 +146,7 @@ public class CameraManager : MonoBehaviour
         } else {
             currentZoom = Vector3.Distance(cam.transform.position, lookAtObject.transform.position);
             zoomGoal = currentZoom;
-            PlaceCamera();
+            StartCoroutine(PlaceCamera());
         }
     }
     private IEnumerator DoCinematicCam(GameObject lookHere) {
@@ -222,15 +236,13 @@ public class CameraManager : MonoBehaviour
         if (scrollInput == 1) {
             while (currentZoom <= zoomGoal) {
                 currentZoom += zoomDistancePerFrame;
-                PlaceCamera();
-
+                StartCoroutine(PlaceCamera());
                 yield return null;
             }
         } else {
             while (currentZoom >= zoomGoal) {
                 currentZoom -= zoomDistancePerFrame;
-                PlaceCamera();
-
+                StartCoroutine(PlaceCamera());
                 yield return null;
             }
         }
