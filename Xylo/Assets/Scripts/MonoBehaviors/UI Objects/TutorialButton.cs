@@ -20,6 +20,9 @@ public class TutorialButton : MonoBehaviour
             gameObject.SetActive(false);
             return;
         }
+        if (currentFrameNumber == 3) {
+            AudioManager.self.PlayMelody();
+        }
         currentFrame = frames[currentFrameNumber];
         currentFrame.SetActive(true);
         currentFrameNumber += 1;

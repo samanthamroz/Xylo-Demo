@@ -52,10 +52,6 @@ public class LevelManager : MonoBehaviour
     }
     void Update()
     {
-        if (!attemptCountingStarted) {
-            return;
-        }
-        
         songPosInSec = (float)(AudioSettings.dspTime - dspSongTime);
         songPosInBeats = songPosInSec / secPerBeat;
     }
@@ -116,9 +112,10 @@ public class LevelManager : MonoBehaviour
             return false;
         }
 
-        //PrintNoteList(solutionList);
-        //PrintNoteList(attemptList);
-        if (attemptList[0].note != solutionList[0].note) {
+        PrintNoteList(solutionList);
+        PrintNoteList(attemptList);
+        if ((attemptList[0].note != solutionList[0].note) ||
+            (attemptList.Count != solutionList.Count)) {
             return false;
         }
         float distanceBetweenAttemptNotes, distanceBetweenSolutionNotes;
@@ -138,7 +135,7 @@ public class LevelManager : MonoBehaviour
     }
     
     public void TriggerNote(Note note) {
-        if (!attemptStarted) {
+        if (!attemptCountingStarted) {
             return;
         }
         

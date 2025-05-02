@@ -18,13 +18,23 @@ public class DraggableBlockHandle : InteractableObject
         direction = GetRoundedVector(direction);
         
         isDragging = false;
-        originalPosition = GetRoundedVector(transform.position);
+        
     }
     private Vector3 GetAbsVector(Vector3 vec) {
         return new Vector3(Math.Abs(vec.x), Math.Abs(vec.y), Math.Abs(vec.z));
     }
     private Vector3 GetRoundedVector(Vector3 vec) {
         return new Vector3((float)Math.Round(vec.x), (float)(Math.Round(vec.y * 2)/2), (float)Math.Round(vec.z));
+    }
+    private Vector3 GetSnapToGridVector(Vector3 originalPosition, Vector3 targetVector) {
+        float Yincrement = 0.5f;
+        float XZincrement = 1f;
+
+        float snappedX = originalPosition.x + Mathf.Round((targetVector.x - originalPosition.x) / XZincrement) * XZincrement;
+        float snappedY = originalPosition.y + Mathf.Round((targetVector.y - originalPosition.y) / Yincrement) * Yincrement;
+        float snappedZ = originalPosition.z + Mathf.Round((targetVector.z - originalPosition.z) / XZincrement) * XZincrement;
+
+        return new Vector3(snappedX, snappedY, snappedZ);
     }
     public override void DoClick() {
         parentBlock.TurnOffHandlesNotInDirection(direction);
@@ -37,8 +47,8 @@ public class DraggableBlockHandle : InteractableObject
     }
     public override void DoRelease()
     {
-        originalPosition = GetRoundedVector(transform.position);
-        parentBlock.originalPosition = GetRoundedVector(parentBlock.transform.position);
+        parentBlock.originalPosition = GetSnapToGridVector(parentBlock.originalPosition, parentBlock.transform.position);
+        
         parentBlock.ToggleAllHandles(true, false);
         isDragging = false;
     }
@@ -64,8 +74,6 @@ public class DraggableBlockHandle : InteractableObject
         isDragging = true;
 
         while(isDragging) {
-            
-
             float z = Camera.main.WorldToScreenPoint(transform.position).z;
             Vector3 originalMousePositionInWorld = Camera.main.ScreenToWorldPoint(new Vector3(originalMousePosition.x, originalMousePosition.y, z));
             Vector3 mousePositionInWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, z));
@@ -85,30 +93,32 @@ public class DraggableBlockHandle : InteractableObject
                     newBlockPosition.z += mouseDelta;
                 }
             }
-            newBlockPosition = GetRoundedVector(newBlockPosition);
 
-            if (!IsBlockCollidingAtPosition(newBlockPosition) && IsNotJumpingBlocks(newBlockPosition))
+            newBlockPosition = GetSnapToGridVector(parentBlock.originalPosition, newBlockPosition);
+            
+
+            if (!IsParentBlockCollidingAtPosition(newBlockPosition) && IsNotJumpingBlocks(newBlockPosition))
             {
                 if (!parentBlock.isMultipleParts) {
                     parentBlock.transform.position = newBlockPosition;
                     parentBlock.TurnOffHandlesNotInDirection(direction);
                 } else {
-                    //STUFF FOR MULTIPLE PARTS
-                    /*Vector3 offset = newWorldPosition - transform.position;
+                    Vector3 howMuchToMove = newBlockPosition - parentBlock.transform.position;
+                    
                     bool isAnyChildrenColliding = false;
-                    foreach (Transform child in transform.parent) {
-                        if (child.gameObject.GetComponent<DraggableBlock>().IsCollidingAtPosition(child.position + offset)) {
+                    foreach (Transform child in parentBlock.transform.parent) {
+                        if (child.gameObject.GetComponent<DraggableBlock>().IsBlockCollidingAtPosition(child.position + howMuchToMove)) {
                             isAnyChildrenColliding = true;
                         }
                     }
 
                     if (!isAnyChildrenColliding)
                     {
-                        foreach (Transform child in transform.parent) {
-                            child.position += offset;
+                        foreach (Transform child in parentBlock.transform.parent) {
+                            child.position += howMuchToMove;
                         }
-                        transform.position = newWorldPosition;
-                    }*/
+                        parentBlock.TurnOffHandlesNotInDirection(direction);
+                    }
                 }
             }
 
@@ -116,7 +126,7 @@ public class DraggableBlockHandle : InteractableObject
         }
     }
 
-    public bool IsBlockCollidingAtPosition(Vector3 targetPosition)
+    public bool IsParentBlockCollidingAtPosition(Vector3 targetPosition)
     {
         Collider[] colliders = Physics.OverlapBox(targetPosition, parentBlock.GetComponent<Collider>().bounds.extents, Quaternion.identity);
 
