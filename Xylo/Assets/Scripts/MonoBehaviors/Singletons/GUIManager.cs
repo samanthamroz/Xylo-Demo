@@ -5,8 +5,12 @@ using UnityEngine.SceneManagement;
 public class GUIManager : MonoBehaviour
 {
     public static GUIManager self;
-	public GameObject loadingBannerPrefab, titleScreenCanvasPrefab, UICanvasPrefab, pauseMenuPrefab, pianoMenuPrefab, playButtonPrefab, winMenuPrefab, tutorialBoxPrefab;
-	private GameObject titleScreenCanvas, UICanvas, pauseMenu, pianoMenu, playButton, winMenu, tutorialBox;
+
+	public GameObject loadingBannerPrefab, titleScreenCanvasPrefab, levelSelectCanvasPrefab;
+	private GameObject titleScreenCanvas, levelSelectCanvas;
+
+	public GameObject UICanvasPrefab, pauseMenuPrefab, pianoMenuPrefab, playButtonPrefab, winMenuPrefab, tutorialBoxPrefab;
+	private GameObject UICanvas, pauseMenu, pianoMenu, playButton, winMenu, tutorialBox;
 	private Vector3 pianoMenuStartPos;
 	public Sprite playButtonImage, retryButtonImage;
 
@@ -21,7 +25,13 @@ public class GUIManager : MonoBehaviour
 
 	public void InstantiateTitleUI(bool keepOpen) {
 		titleScreenCanvas = Instantiate(titleScreenCanvasPrefab);
-		if (!keepOpen) titleScreenCanvas.SetActive(false);
+		levelSelectCanvas = Instantiate(levelSelectCanvasPrefab);
+
+		if (keepOpen) {
+			levelSelectCanvas.SetActive(false);
+		} else {
+			titleScreenCanvas.SetActive(false);
+		}
 	}
 	public void InstantiateLevelUI(bool isTutorial) {
 		UICanvas = Instantiate(UICanvasPrefab);
@@ -40,6 +50,7 @@ public class GUIManager : MonoBehaviour
 
 	public void ToggleTitleScreen() {
 		titleScreenCanvas.SetActive(!titleScreenCanvas.activeSelf);
+		levelSelectCanvas.SetActive(!levelSelectCanvas.activeSelf);
 	}
 	public void TogglePiano() {
 		if (pianoMenu.transform.position == pianoMenuStartPos) {

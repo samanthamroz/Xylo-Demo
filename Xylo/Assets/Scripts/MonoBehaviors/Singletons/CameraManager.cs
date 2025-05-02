@@ -62,33 +62,33 @@ public class CameraManager : MonoBehaviour
         currentZoom = startingZoom;
         zoomGoal = currentZoom;
 
-        ResetCamera(true);
+        ResetCamera();
 	}
     public void InstantiateTitleCamera() {
         cameraObject = Instantiate(cameraPrefab);
         cam = cameraObject.GetComponent<Camera>();
         lookAtObject = Instantiate(lookAtPrefab);
 
-        ReturnToTitle(true);
+        ReturnToTitle();
     }
-    private void ReturnToTitle(bool isInstant) {
+    private void ReturnToTitle(float time = 0f) {
         lookAtPointResetPos = levelSelectCameraPositions["title"];
         cameraHeight = 0f;
         startingZoom = 25f;
         currentZoom = startingZoom;
         zoomGoal = currentZoom;
 
-        ResetCamera(isInstant);
+        ResetCamera(time);
     }
 
-    private void ResetCamera(bool isInstant) {
+    private void ResetCamera(float time = 0f) {
         lookAtObject.transform.position = lookAtPointResetPos;
         lookAtObject.transform.LookAt(cam.transform);
-        StartCoroutine(PlaceCamera(isInstant));
+        StartCoroutine(PlaceCamera(time));
     }
 
     //this function assumes the lookAtObject has been placed already
-    private IEnumerator PlaceCamera(bool isInstant) { 
+    private IEnumerator PlaceCamera(float time = 0f) { 
         //get rotation of lookAtObject
         float yRotationRadians = lookAtObject.transform.rotation.eulerAngles.y * Mathf.Deg2Rad;
 
@@ -110,12 +110,9 @@ public class CameraManager : MonoBehaviour
         cam.transform.SetPositionAndRotation(originalPosition, originalRotation);
 
         //do tween
-        float time = 1f;
-        if (isInstant) {
-            time = 0f;
-        }
-        LeanTween.move(cameraObject, newCameraPosition, time).setEase(LeanTweenType.easeInOutSine);;
-        LeanTween.rotate(cameraObject, newRotation, time).setEase(LeanTweenType.easeInOutSine);;
+        LeanTween.cancel(cameraObject);
+        LeanTween.move(cameraObject, newCameraPosition, time).setEase(LeanTweenType.easeInOutSine);
+        LeanTween.rotate(cameraObject, newRotation, time).setEase(LeanTweenType.easeInOutSine);
         yield return new WaitForSeconds(time);
 
         cam.transform.LookAt(lookAtObject.transform);
@@ -123,12 +120,12 @@ public class CameraManager : MonoBehaviour
 
     public void SwitchLookAtObject(GameObject newLookAtPoint) {
         lookAtObject = newLookAtPoint;
-        StartCoroutine(PlaceCamera(false));
+        StartCoroutine(PlaceCamera());
     }
     public void SwitchLookAtPosition(Vector3 newPostion) {
         lookAtObject.transform.position = newPostion;
         lookAtObject.transform.eulerAngles = new Vector3(0, 0, 0);
-        StartCoroutine(PlaceCamera(false));
+        StartCoroutine(PlaceCamera(1f));
     }
     public void SwitchLevelSelectIsland(string islandName) {
         SwitchLookAtPosition(levelSelectCameraPositions[islandName]);
@@ -147,14 +144,9 @@ public class CameraManager : MonoBehaviour
         isCinematicCamera = true;
 
         cam.transform.GetPositionAndRotation(out Vector3 originalPosition, out Quaternion originalRotation);
-        /*cam.transform.position = new Vector3(0, 5, 16);
-        cam.transform.LookAt(lookHere.transform);
-        Vector3 newRotation = cam.transform.eulerAngles;
-        cam.transform.SetPositionAndRotation(originalPosition, originalRotation);*/
         float time = 1f;
 
         LeanTween.moveLocal(cameraObject, new Vector3(0, 5, 16), time).setEase(LeanTweenType.easeInOutSine);
-        //LeanTween.rotate(cameraObject, newRotation, time);
 
         float elapsed = 0f;
         while (elapsed < time)
@@ -187,11 +179,11 @@ public class CameraManager : MonoBehaviour
     public void ExitCinematicMode(bool isDeathPlane = false) {
         isCinematicCamera = false;
         if (isDeathPlane) {
-            ResetCamera(false);
+            ResetCamera();
         } else {
             currentZoom = Vector3.Distance(cam.transform.position, lookAtObject.transform.position);
             zoomGoal = currentZoom;
-            StartCoroutine(PlaceCamera(false));
+            StartCoroutine(PlaceCamera());
         }
     }
 
@@ -217,12 +209,11 @@ public class CameraManager : MonoBehaviour
                 float mouseSpeed = mouseDelta.magnitude;
 
                 //Scale by speed of mouse
-                Vector3 howMuchToMove = deltaPosition * panDistancePerFrame;// * mouseSpeed;
+                Vector3 howMuchToMove = deltaPosition * panDistancePerFrame;// * (zoomMax / currentZoom);
 
                 //Move camera and the place it is facing
                 lookAtObject.transform.position += howMuchToMove;
-                cam.transform.position += howMuchToMove;
-                cam.transform.LookAt(lookAtObject.transform);
+                StartCoroutine(PlaceCamera());
 
                 //Update variables for next loop
                 lastPositionInWorld = newPositioninWorld;
@@ -270,13 +261,13 @@ public class CameraManager : MonoBehaviour
         if (scrollInput == 1) {
             while (currentZoom <= zoomGoal) {
                 currentZoom += zoomDistancePerFrame;
-                StartCoroutine(PlaceCamera(true));
+                StartCoroutine(PlaceCamera(0f));
                 yield return null;
             }
         } else {
             while (currentZoom >= zoomGoal) {
                 currentZoom -= zoomDistancePerFrame;
-                StartCoroutine(PlaceCamera(true));
+                StartCoroutine(PlaceCamera(0f));
                 yield return null;
             }
         }

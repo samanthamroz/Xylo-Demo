@@ -55,7 +55,7 @@ MonoBehaviour:
   isCinematicCamera: 0
   isRotating: 0
   isPanning: 0
-  panDistancePerFrame: 0.8
+  panDistancePerFrame: 0.5
   rotateDistancePerFrame: 0.1
   zoomDistancePerFrame: 0.05
 --- !u!114 &-4638047356350007426
@@ -84,6 +84,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadingBannerPrefab: {fileID: 1151846191262160879, guid: 8787468aa7b471d4494654c69655c196, type: 3}
   titleScreenCanvasPrefab: {fileID: 170928176031393510, guid: c4c0b103e640aba4c96fa7a31e54902f, type: 3}
+  levelSelectCanvasPrefab: {fileID: 6841579628535729681, guid: 5f5bd0a6dae2b234dae42bf56bb39119, type: 3}
   UICanvasPrefab: {fileID: 294021580391262558, guid: 4a4cdaf2da88e274bb2585a50d8ceaaf, type: 3}
   pauseMenuPrefab: {fileID: 307899990964232635, guid: 00e992796fb4364478762aa339a9c119, type: 3}
   pianoMenuPrefab: {fileID: 1124015546929853332, guid: 818232f8154b22a408d2c345101e5a69, type: 3}
