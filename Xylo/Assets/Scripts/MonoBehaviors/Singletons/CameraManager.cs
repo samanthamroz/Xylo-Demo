@@ -111,8 +111,8 @@ public class CameraManager : MonoBehaviour
 
         //do tween
         LeanTween.cancel(cameraObject);
-        LeanTween.move(cameraObject, newCameraPosition, time).setEase(LeanTweenType.easeInOutSine);
-        LeanTween.rotate(cameraObject, newRotation, time).setEase(LeanTweenType.easeInOutSine);
+        LeanTween.move(cameraObject, newCameraPosition, time).setEaseInOutSine();
+        LeanTween.rotate(cameraObject, newRotation, time).setEaseInOutSine();
         yield return new WaitForSeconds(time);
 
         cam.transform.LookAt(lookAtObject.transform);
@@ -133,7 +133,7 @@ public class CameraManager : MonoBehaviour
 
     public void EnterCinematicMode(GameObject newLookAtObject = null) {
         ControlsManager.self.EnterCinematicMode();
-
+        StartCoroutine(GUIManager.self.ActivateCinematicUI());
         if (newLookAtObject == null) {
             StartCoroutine(DoCinematicCam(lookAtObject));
         } else {
@@ -146,7 +146,7 @@ public class CameraManager : MonoBehaviour
         cam.transform.GetPositionAndRotation(out Vector3 originalPosition, out Quaternion originalRotation);
         float time = 1f;
 
-        LeanTween.moveLocal(cameraObject, new Vector3(0, 5, 16), time).setEase(LeanTweenType.easeInOutSine);
+        LeanTween.moveLocal(cameraObject, new Vector3(0, 5, 16), time).setEaseInOutSine();
 
         float elapsed = 0f;
         while (elapsed < time)
@@ -178,6 +178,7 @@ public class CameraManager : MonoBehaviour
     }
     public void ExitCinematicMode(bool isDeathPlane = false) {
         isCinematicCamera = false;
+        StartCoroutine(GUIManager.self.DeactivateCinematicUI());
         if (isDeathPlane) {
             ResetCamera();
         } else {

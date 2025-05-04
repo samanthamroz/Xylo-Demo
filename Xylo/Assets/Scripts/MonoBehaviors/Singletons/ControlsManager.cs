@@ -186,7 +186,7 @@ public class ControlsManager : MonoBehaviour
         if (value.Get<float>() == 1) {
             LoadingManager.self.SetLevelCompleted(0);
             ControlsManager.self.ExitCinematicMode(true);
-            GUIManager.self.ToggleWinMenu();
+            GUIManager.self.ActivateWinMenuUI();
         }
     }
 }

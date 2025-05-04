@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GUIManager : MonoBehaviour
 {
@@ -9,8 +10,8 @@ public class GUIManager : MonoBehaviour
 	public GameObject loadingBannerPrefab, titleScreenCanvasPrefab, levelSelectCanvasPrefab;
 	private GameObject titleScreenCanvas, levelSelectCanvas;
 
-	public GameObject UICanvasPrefab, pauseMenuPrefab, pianoMenuPrefab, playButtonPrefab, winMenuCanvasPrefab, tutorialBoxPrefab;
-	private GameObject UICanvas, pauseMenu, pianoMenu, playButton, winMenuCanvas, tutorialBox;
+	public GameObject UICanvasPrefab, pauseMenuPrefab, pianoMenuPrefab, playButtonPrefab, winMenuCanvasPrefab, tutorialBoxPrefab, cinematicBarsPrefab;
+	private GameObject UICanvas, pauseMenu, pianoMenu, playButton, winMenuCanvas, tutorialBox, cinematicBarsCanvas;
 	private Vector3 pianoMenuStartPos;
 	public Sprite playButtonImage, retryButtonImage;
 
@@ -35,17 +36,24 @@ public class GUIManager : MonoBehaviour
 	}
 	public void InstantiateLevelUI(bool isTutorial) {
 		UICanvas = Instantiate(UICanvasPrefab);
-		winMenuCanvas = Instantiate(winMenuCanvasPrefab);
-		winMenuCanvas.SetActive(false);
+
 		pianoMenu = Instantiate(pianoMenuPrefab, UICanvas.transform);
-		pianoMenuStartPos = pianoMenu.transform.position;
+		ActivatePiano(false, 0f);
+
 		pauseMenu = Instantiate(pauseMenuPrefab, UICanvas.transform);
 		pauseMenu.SetActive(false);
+
 		playButton = Instantiate(playButtonPrefab, UICanvas.transform);
-		
+
 		if (isTutorial) {
 			tutorialBox = Instantiate(tutorialBoxPrefab, UICanvas.transform);
 		}
+
+		winMenuCanvas = Instantiate(winMenuCanvasPrefab);
+		winMenuCanvas.SetActive(false);
+
+		cinematicBarsCanvas = Instantiate(cinematicBarsPrefab);
+		ActivateCinematicBars(false, 0f);
 	}
 
 	public void ToggleTitleScreen() {
@@ -53,22 +61,51 @@ public class GUIManager : MonoBehaviour
 		levelSelectCanvas.SetActive(!levelSelectCanvas.activeSelf);
 	}
 	public void TogglePianoPosition() {
-		if (pianoMenu.transform.position == pianoMenuStartPos) {
-			pianoMenu.transform.Translate(0, 250, 0);
-		} else {
-			pianoMenu.transform.position = pianoMenuStartPos;
-		}
+		ActivatePiano(pianoMenu.transform.localPosition.y == (-60f + -(Screen.height / 2)), .1f);
     }
-	public void TogglePiano() {
-		pauseMenu.SetActive(!pauseMenu.activeSelf);
+	public void ActivatePiano(bool turnOn, float animationTime) {
+		if (turnOn) {
+			LeanTween.moveLocalY(pianoMenu, 200f + -(Screen.height / 2), animationTime).setEaseInOutSine();
+		} else {
+			LeanTween.moveLocalY(pianoMenu, -60f + -(Screen.height / 2), animationTime).setEaseInOutSine();
+		}
+	}
+	private void ActivateCinematicBars(bool turnOn, float animationTime) {
+		GameObject top = cinematicBarsCanvas.transform.GetChild(0).gameObject;
+		GameObject bottom = cinematicBarsCanvas.transform.GetChild(1).gameObject;
+
+		if (turnOn) {
+			LeanTween.moveLocalY(top, Screen.height / 2, animationTime).setEaseInOutSine();
+			LeanTween.moveLocalY(bottom, -(Screen.height / 2), animationTime).setEaseInOutSine();
+			LeanTween.moveLocalY(playButton, playButton.transform.localPosition.y + 150f, animationTime).setEaseInOutSine();
+		} else {
+			LeanTween.moveLocalY(top, Screen.height / 2 + 150, animationTime).setEaseInOutSine();
+			LeanTween.moveLocalY(bottom, -(Screen.height / 2) - 150, animationTime).setEaseInOutSine();
+			LeanTween.moveLocalY(playButton, playButton.transform.localPosition.y - 150f, animationTime).setEaseInOutSine();
+		}
+	}
+	private void SetPianoActive(bool isActive) {
+		pianoMenu.SetActive(isActive);
 	}
 	public void TogglePause() {
 		ControlsManager.self.ToggleMenuActionMap();
 		pauseMenu.SetActive(!pauseMenu.activeSelf);
 	}
-	public void ToggleWinMenu() {
+	
+	public IEnumerator ActivateCinematicUI(float animationTime = .5f) {
+		ActivatePiano(false, animationTime);
+		ActivateCinematicBars(true, animationTime);
+		yield return new WaitForSeconds(animationTime);
+		SetPianoActive(false);
+	}
+	public IEnumerator DeactivateCinematicUI(float animationTime = .5f) {
+		SetPianoActive(true);
+		ActivateCinematicBars(false, animationTime);
+		yield return new WaitForSeconds(animationTime);
+	}
+	public void ActivateWinMenuUI() {
 		UICanvas.SetActive(false);
-		winMenuCanvas.SetActive(!winMenuCanvas.activeSelf);
+		winMenuCanvas.SetActive(true);
 		ControlsManager.self.ToggleMenuActionMap();
 	}
 
@@ -83,11 +120,11 @@ public class GUIManager : MonoBehaviour
 	public void LoadLeftToMiddle(float time) {
 		GameObject loadingBanner = Instantiate(loadingBannerPrefab).transform.GetChild(0).gameObject;
 		loadingBanner.transform.position = new Vector3(-2210f, loadingBanner.transform.position.y, loadingBanner.transform.position.z);
-		LeanTween.moveLocalX(loadingBanner, 0f, time);
+		LeanTween.moveLocalX(loadingBanner, 0f, time).setEaseInOutSine();
 	}
 	public void LoadMiddleToRight(float time) {
 		GameObject loadingBanner = Instantiate(loadingBannerPrefab).transform.GetChild(0).gameObject;
-		LeanTween.moveLocalX(loadingBanner, 2210f, time);
+		LeanTween.moveLocalX(loadingBanner, 2210f, time).setEaseInOutSine();
 		Destroy(loadingBanner, time);
 	}
 }

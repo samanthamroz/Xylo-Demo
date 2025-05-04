@@ -90,7 +90,7 @@ public class LevelManager : MonoBehaviour
         if (hasWon) {
             LoadingManager.self.SetLevelCompleted(0);
             ControlsManager.self.ExitCinematicMode(true);
-            GUIManager.self.ToggleWinMenu();
+            GUIManager.self.ActivateWinMenuUI();
         } else {
             attemptList = new();
             ControlsManager.self.ExitCinematicMode(resetCamera);

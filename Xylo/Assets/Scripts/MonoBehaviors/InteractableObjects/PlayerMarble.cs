@@ -14,7 +14,7 @@ public class PlayerMarble : InteractableObject
     
     public void ResetSelf() {
         GetComponent<Rigidbody>().isKinematic = true;
-        transform.position = resetPosition;
+        LeanTween.move(gameObject, resetPosition, .5f).setEaseInOutSine();
     }
     
     void OnCollisionEnter(Collision other)
