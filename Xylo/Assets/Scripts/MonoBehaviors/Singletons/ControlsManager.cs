@@ -16,6 +16,9 @@ public class ControlsManager : MonoBehaviour
     public string currentActionMapName { get { return currentActionMap.name; } }
     [HideInInspector] public Vector3 mousePosition;
     [SerializeField] private InteractableObject currentInteractable, lastInteractable;
+
+    public bool isGamePaused;
+
     
     void Awake() {
 		if (self == null) {
@@ -86,6 +89,15 @@ public class ControlsManager : MonoBehaviour
         } else {
             ChangeActionMap("main");
         }
+    }
+
+    public void PauseGameTime(bool doPause) {
+        if (doPause) {
+            Time.timeScale = 0f;
+        } else {
+            Time.timeScale = 1f;
+        }
+        isGamePaused = doPause;
     }
 
     void OnMouseMove(InputValue value) {

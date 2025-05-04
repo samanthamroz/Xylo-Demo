@@ -39,11 +39,12 @@ public class GUIManager : MonoBehaviour
 
 		pianoMenu = Instantiate(pianoMenuPrefab, UICanvas.transform);
 		ActivatePiano(false, 0f);
-
+		
+		playButton = Instantiate(playButtonPrefab, UICanvas.transform);
+		
+		//pause menu has to be instantiated last so that it covers the other buttons when paused
 		pauseMenu = Instantiate(pauseMenuPrefab, UICanvas.transform);
 		pauseMenu.SetActive(false);
-
-		playButton = Instantiate(playButtonPrefab, UICanvas.transform);
 
 		if (isTutorial) {
 			tutorialBox = Instantiate(tutorialBoxPrefab, UICanvas.transform);
@@ -75,21 +76,26 @@ public class GUIManager : MonoBehaviour
 		GameObject bottom = cinematicBarsCanvas.transform.GetChild(1).gameObject;
 
 		if (turnOn) {
-			LeanTween.moveLocalY(top, Screen.height / 2, animationTime).setEaseInOutSine();
-			LeanTween.moveLocalY(bottom, -(Screen.height / 2), animationTime).setEaseInOutSine();
-			LeanTween.moveLocalY(playButton, playButton.transform.localPosition.y + 150f, animationTime).setEaseInOutSine();
+			LeanTween.moveLocalY(top, Screen.height / 2 - 75, animationTime).setEaseInOutSine().setIgnoreTimeScale(true);;
+			LeanTween.moveLocalY(bottom, -(Screen.height / 2) + 75, animationTime).setEaseInOutSine().setIgnoreTimeScale(true);;
+			LeanTween.moveLocalY(playButton, playButton.transform.localPosition.y + 150f, animationTime).setEaseInOutSine().setIgnoreTimeScale(true);;
 		} else {
-			LeanTween.moveLocalY(top, Screen.height / 2 + 150, animationTime).setEaseInOutSine();
-			LeanTween.moveLocalY(bottom, -(Screen.height / 2) - 150, animationTime).setEaseInOutSine();
-			LeanTween.moveLocalY(playButton, playButton.transform.localPosition.y - 150f, animationTime).setEaseInOutSine();
+			LeanTween.moveLocalY(top, Screen.height / 2 + 75, animationTime).setEaseInOutSine().setIgnoreTimeScale(true);;
+			LeanTween.moveLocalY(bottom, -(Screen.height / 2) - 75, animationTime).setEaseInOutSine().setIgnoreTimeScale(true);;
+			LeanTween.moveLocalY(playButton, playButton.transform.localPosition.y - 150f, animationTime).setEaseInOutSine().setIgnoreTimeScale(true);;
 		}
 	}
 	private void SetPianoActive(bool isActive) {
 		pianoMenu.SetActive(isActive);
 	}
 	public void TogglePause() {
-		ControlsManager.self.ToggleMenuActionMap();
 		pauseMenu.SetActive(!pauseMenu.activeSelf);
+
+		ControlsManager.self.ToggleMenuActionMap();
+		if (CameraManager.self.isCinematicCamera) {
+			ActivateCinematicBars(!pauseMenu.activeSelf, .25f);
+		}
+		ControlsManager.self.PauseGameTime(pauseMenu.activeSelf);
 	}
 	
 	public IEnumerator ActivateCinematicUI(float animationTime = .5f) {

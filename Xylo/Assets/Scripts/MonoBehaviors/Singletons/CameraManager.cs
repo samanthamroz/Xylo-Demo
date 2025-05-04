@@ -62,7 +62,7 @@ public class CameraManager : MonoBehaviour
         currentZoom = startingZoom;
         zoomGoal = currentZoom;
 
-        ResetCamera();
+        ResetCamera(0f);
 	}
     public void InstantiateTitleCamera() {
         cameraObject = Instantiate(cameraPrefab);
@@ -81,7 +81,7 @@ public class CameraManager : MonoBehaviour
         ResetCamera(time);
     }
 
-    private void ResetCamera(float time = 0f) {
+    private void ResetCamera(float time) {
         lookAtObject.transform.position = lookAtPointResetPos;
         lookAtObject.transform.LookAt(cam.transform);
         StartCoroutine(PlaceCamera(time));
@@ -180,11 +180,11 @@ public class CameraManager : MonoBehaviour
         isCinematicCamera = false;
         StartCoroutine(GUIManager.self.DeactivateCinematicUI());
         if (isDeathPlane) {
-            ResetCamera();
+            ResetCamera(.5f);
         } else {
             currentZoom = Vector3.Distance(cam.transform.position, lookAtObject.transform.position);
             zoomGoal = currentZoom;
-            StartCoroutine(PlaceCamera());
+            StartCoroutine(PlaceCamera(.5f));
         }
     }
 

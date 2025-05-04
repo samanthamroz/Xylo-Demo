@@ -50,10 +50,32 @@ public class LevelManager : MonoBehaviour
 
         secPerBeat = 60f / songBpm;
     }
-    void Update()
+    /*void Update()
     {
         songPosInSec = (float)(AudioSettings.dspTime - dspSongTime);
         songPosInBeats = songPosInSec / secPerBeat;
+    }*/
+
+    private double pauseStartDspTime = 0f, totalPausedTime = 0f;
+
+    void Update()
+    {
+        double currentDspTime = AudioSettings.dspTime;
+        if (!ControlsManager.self.isGamePaused)
+        {
+            if (pauseStartDspTime != 0) {
+                totalPausedTime += currentDspTime - pauseStartDspTime;
+            }
+            pauseStartDspTime = 0;
+            print(totalPausedTime);
+            
+            songPosInSec = (float)(currentDspTime - dspSongTime - totalPausedTime);
+            songPosInBeats = songPosInSec / secPerBeat;
+        } else {
+            if (pauseStartDspTime == 0) {
+                pauseStartDspTime = currentDspTime;
+            }
+        }
     }
     
     public void StartAttempt() {
