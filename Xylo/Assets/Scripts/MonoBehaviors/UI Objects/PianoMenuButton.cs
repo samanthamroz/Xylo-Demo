@@ -5,6 +5,6 @@ using UnityEngine;
 public class PianoMenuButton : MonoBehaviour
 {
     public void TogglePiano() {
-        GUIManager.self.TogglePiano();
+        GUIManager.self.TogglePianoPosition();
     }
 }

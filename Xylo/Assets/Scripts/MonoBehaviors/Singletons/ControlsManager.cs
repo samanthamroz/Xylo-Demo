@@ -154,7 +154,7 @@ public class ControlsManager : MonoBehaviour
 
     void OnPiano(InputValue value) {
         if (value.Get<float>() == 1) {
-			GUIManager.self.TogglePiano();
+			GUIManager.self.TogglePianoPosition();
 		}
     }
 
@@ -180,5 +180,13 @@ public class ControlsManager : MonoBehaviour
         if (value.Get<float>() == 1) {
 			SaveManager.DeleteAll();
 		}
+    }
+
+    void OnDebug2(InputValue value) { //shift + D + 2
+        if (value.Get<float>() == 1) {
+            LoadingManager.self.SetLevelCompleted(0);
+            ControlsManager.self.ExitCinematicMode(true);
+            GUIManager.self.ToggleWinMenu();
+        }
     }
 }

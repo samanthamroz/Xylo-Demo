@@ -78,6 +78,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Space",
+                    "type": "Button",
+                    "id": "db8fd680-bbf4-4766-914c-8c109ad213d9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Debug1",
                     "type": "Button",
                     "id": "e91673c1-9ad6-4059-be54-bda9aa0b5239",
@@ -87,9 +96,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Space",
+                    "name": "Debug2",
                     "type": "Button",
-                    "id": "db8fd680-bbf4-4766-914c-8c109ad213d9",
+                    "id": "26624d44-c44f-4e11-82ab-478265b2cce9",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -208,6 +217,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "695612c7-1bcb-4adc-a035-3e984c8a6f34",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Space",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "Two Modifiers",
                     "id": "90f97792-fd5a-4039-b773-9b15493b4b48",
                     "path": "TwoModifiers",
@@ -252,15 +272,48 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "",
-                    "id": "695612c7-1bcb-4adc-a035-3e984c8a6f34",
-                    "path": "<Keyboard>/space",
+                    "name": "Two Modifiers",
+                    "id": "b6f088cd-6a3f-4dec-9358-266df57c62e9",
+                    "path": "TwoModifiers",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Space",
-                    "isComposite": false,
+                    "action": "Debug2",
+                    "isComposite": true,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier1",
+                    "id": "9346bced-a9a4-4c40-b91c-1680316dddcf",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "modifier2",
+                    "id": "4d328ac7-6832-47ac-93fc-cda4a8dd3c83",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "9901b593-0f94-4fcb-9986-54e6838d8169",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },
@@ -308,6 +361,15 @@
                     "name": "Debug1",
                     "type": "Button",
                     "id": "a8f4a49d-d4c1-4691-a003-e6d496d27377",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Debug2",
+                    "type": "Button",
+                    "id": "3f5c36fd-023f-43eb-bd42-e9d60f661519",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -424,6 +486,50 @@
                     "action": "MouseClick",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "Two Modifiers",
+                    "id": "5cac5dd5-ec80-471f-8e77-d03070d49089",
+                    "path": "TwoModifiers",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier1",
+                    "id": "112f6b3e-872b-48f4-8d8d-67a84624298b",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "modifier2",
+                    "id": "bd12b68e-f8ed-47f6-afce-4e237ae30319",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "51022c3c-8668-4fee-8b37-8c0e59f0cd34",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },
@@ -453,6 +559,15 @@
                     "name": "Debug1",
                     "type": "Button",
                     "id": "051b63d0-f0d9-4266-b9cc-4dea65edba54",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Debug2",
+                    "type": "Button",
+                    "id": "76707061-a5b6-4d2c-98fc-6a25a0776cf5",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -525,6 +640,50 @@
                     "action": "Restart",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "Two Modifiers",
+                    "id": "232e4140-387a-4eac-ac84-09b7ad986fd8",
+                    "path": "TwoModifiers",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier1",
+                    "id": "771deef7-306e-4a82-b55e-db7f43006931",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "modifier2",
+                    "id": "db271d57-3830-468f-b8ff-d7b69ea0f44d",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "822bd3cf-e3b9-4a8a-8cf1-63d2f0333b30",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },
@@ -554,6 +713,15 @@
                     "name": "Debug1",
                     "type": "Button",
                     "id": "8bcd4310-7132-448a-95cd-a72ed94436fb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Debug2",
+                    "type": "Button",
+                    "id": "f06207bc-c34f-4cf7-8a8b-69326c41a3bf",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -624,6 +792,50 @@
                     "processors": "",
                     "groups": "",
                     "action": "Debug1",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Two Modifiers",
+                    "id": "05d4ac6e-4257-4487-a4a4-6b75c4f3677a",
+                    "path": "TwoModifiers",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier1",
+                    "id": "6a9bdc70-56a1-435a-9f78-b9dccc0f2d8a",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "modifier2",
+                    "id": "0b342c31-0244-48c2-9e6e-1cd97c5885d2",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "08986332-5284-4fef-8f74-6767ae1e898b",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }
