@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEditor.Animations;
 
 public class GUIManager : MonoBehaviour
 {
@@ -47,6 +48,9 @@ public class GUIManager : MonoBehaviour
 		pauseMenu.SetActive(false);
 
 		if (isTutorial) {
+			for (int i = 0; i < UICanvas.transform.childCount; i++) {
+				UICanvas.transform.GetChild(i).gameObject.SetActive(false);
+			}
 			tutorialBox = Instantiate(tutorialBoxPrefab, UICanvas.transform);
 		}
 
@@ -97,7 +101,30 @@ public class GUIManager : MonoBehaviour
 		}
 		ControlsManager.self.PauseGameTime(pauseMenu.activeSelf);
 	}
-	
+	public void ActivateLevelUI() {
+		GameObject curr;
+		Vector3 endingPosition;
+		for (int i = 0; i < UICanvas.transform.childCount; i++) {
+			curr = UICanvas.transform.GetChild(i).gameObject;
+			curr.SetActive(true);
+			endingPosition = curr.transform.position;
+			if (curr == pauseMenu) {
+				curr.SetActive(false);
+			} else if (curr == pianoMenu) {
+				curr.transform.Translate(0, -250f, 0);
+				LeanTween.move(curr, endingPosition, .25f);
+			} else if (curr == playButton) {
+				curr.transform.Translate(0, -200f, 0);
+				LeanTween.move(curr, endingPosition, .25f);
+			} else { //pause button
+				curr.transform.Translate(0, 150f, 0);
+				LeanTween.move(curr, endingPosition, .25f);
+			}
+		}
+
+		CameraManager.self.ManualZoom(-5f);
+	}
+
 	public IEnumerator ActivateCinematicUI(float animationTime = .5f) {
 		ActivatePiano(false, animationTime);
 		ActivateCinematicBars(true, animationTime);

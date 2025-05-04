@@ -66,6 +66,9 @@ public class LoadingManager : MonoBehaviour
 		SceneManager.LoadScene(sceneName);
         yield return null; //fixes coroutine running during scene load
 	}
+    public void ReloadCurrentScene() {
+        LoadNewScene(SceneManager.GetActiveScene().name);
+    }
     private void SaveCurrentScene() {
 
 

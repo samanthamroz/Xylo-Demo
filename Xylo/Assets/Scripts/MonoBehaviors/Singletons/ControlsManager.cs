@@ -184,7 +184,7 @@ public class ControlsManager : MonoBehaviour
 
     void OnRestart(InputValue value){
         if (value.Get<float>() == 1) {
-			LevelManager.self.EndAttempt(true, true);
+			LoadingManager.self.ReloadCurrentScene();
 		}
     }
 

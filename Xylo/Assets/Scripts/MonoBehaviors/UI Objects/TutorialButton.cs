@@ -17,8 +17,8 @@ public class TutorialButton : MonoBehaviour
     }
     public void AdvanceTutorial() {
         if (currentFrameNumber == frames.Count) {
-            gameObject.SetActive(false);
-            return;
+            GUIManager.self.ActivateLevelUI();
+            Destroy(gameObject);
         }
         if (currentFrameNumber == 3) {
             AudioManager.self.PlayMelody();

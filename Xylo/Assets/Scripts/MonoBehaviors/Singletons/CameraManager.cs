@@ -50,7 +50,7 @@ public class CameraManager : MonoBehaviour
             case 0:
                 lookAtPointResetPos = levelSelectCameraPositions["level0"];
                 cameraHeight = 0f;
-                startingZoom = 25f;
+                startingZoom = 30f;
                 break;
             case 1:
                 lookAtPointResetPos = new Vector3(0, 0, 0);
@@ -130,7 +130,10 @@ public class CameraManager : MonoBehaviour
     public void SwitchLevelSelectIsland(string islandName) {
         SwitchLookAtPosition(levelSelectCameraPositions[islandName]);
     }
-
+    public void ManualZoom(float amountToZoom, float animationTime = .5f) {
+        currentZoom += amountToZoom;
+        StartCoroutine(PlaceCamera(animationTime));
+    }
     public void EnterCinematicMode(GameObject newLookAtObject = null) {
         ControlsManager.self.EnterCinematicMode();
         StartCoroutine(GUIManager.self.ActivateCinematicUI());
