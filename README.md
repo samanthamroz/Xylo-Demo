@@ -1,6 +1,6 @@
 <ins>Controls:</ins>
 
-Xylo can be fully controlled with just the mouse, but there are a few useful hotkeys:
+<i>Xylo</i> can be fully controlled with just the mouse, but there are a few useful hotkeys:
 
 * ESC: Pause
 * Space: Replay the level's melody
