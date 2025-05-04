@@ -1,5 +1,5 @@
 <ins>Controls:</ins>
-Xylo can be fully controlled with just the mouse, but there are a few useful hotkeys:
+<p>Xylo can be fully controlled with just the mouse, but there are a few useful hotkeys:
 * ESC: Pause
 * Space: Replay the level's melody
 * P: Open the piano
