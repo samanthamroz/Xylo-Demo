@@ -78,12 +78,12 @@ public class CameraManager : MonoBehaviour
         currentZoom = startingZoom;
         zoomGoal = currentZoom;
 
-        ResetCamera(time);
+        ResetCamera(time, true);
     }
 
-    private void ResetCamera(float time) {
+    private void ResetCamera(float time, bool resetRotation = false) {
         lookAtObject.transform.position = lookAtPointResetPos;
-        lookAtObject.transform.LookAt(cam.transform);
+        if (resetRotation) lookAtObject.transform.LookAt(cam.transform);
         StartCoroutine(PlaceCamera(time));
     }
 
@@ -183,7 +183,9 @@ public class CameraManager : MonoBehaviour
         isCinematicCamera = false;
         StartCoroutine(GUIManager.self.DeactivateCinematicUI());
         if (isDeathPlane) {
-            ResetCamera(.5f);
+            currentZoom = startingZoom;
+            zoomGoal = currentZoom;
+            ResetCamera(.5f, true);
         } else {
             currentZoom = Vector3.Distance(cam.transform.position, lookAtObject.transform.position);
             zoomGoal = currentZoom;

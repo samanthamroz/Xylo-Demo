@@ -67,7 +67,7 @@ public class LoadingManager : MonoBehaviour
         yield return null; //fixes coroutine running during scene load
 	}
     public void ReloadCurrentScene() {
-        LoadNewScene(SceneManager.GetActiveScene().name);
+        StartCoroutine(LoadNewScene(SceneManager.GetActiveScene().name));
     }
     private void SaveCurrentScene() {
 
