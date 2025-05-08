@@ -17,13 +17,13 @@ There are also a few debug keys for testing:
 All code, art, sound, and design by Samantha Mroz unless specified otherwise
 
 Fonts Used:
-* [https://www.dafont.com/search.php?q=arista+pro](Arista Pro)
-* [https://www.dafont.com/altone.font](Altone Trial)
+* [Arista Pro](https://www.dafont.com/search.php?q=arista+pro)
+* [Altone Trial](https://www.dafont.com/altone.font)
 
 Art Credits:
-* [https://essssam.itch.io/3d-leap-land](3D Leap Land): Essssam via itch.io
-* [https://assetstore.unity.com/packages/vfx/shaders/simple-toon-185038](Simple Toon Shader): Dmitry Chalovskiy via Unity Asset Store
-* [https://assetstore.unity.com/packages/2d/textures-materials/sky/panoramic-cartoon-skybox-220659](Panoramic Cartoon Skybox): Awaii Studios via Unity Asset Store
+* [3D Leap Land](https://essssam.itch.io/3d-leap-land): Essssam via itch.io
+* [Simple Toon Shader](https://assetstore.unity.com/packages/vfx/shaders/simple-toon-185038): Dmitry Chalovskiy via Unity Asset Store
+* [Panoramic Cartoon Skybox](https://assetstore.unity.com/packages/2d/textures-materials/sky/panoramic-cartoon-skybox-220659): Awaii Studios via Unity Asset Store
 
 Code Credits:
-* [https://assetstore.unity.com/packages/tools/animation/leantween-3595?srsltid=AfmBOoqsmcbh6Z0t4ixhgweImlnU-jq2ws1UJZfidHzhO8qk8ICxaf4Y](LeanTween): DentedPixel via UnityAssetStore
+* [LeanTween](https://assetstore.unity.com/packages/tools/animation/leantween-3595?srsltid=AfmBOoqsmcbh6Z0t4ixhgweImlnU-jq2ws1UJZfidHzhO8qk8ICxaf4Y): DentedPixel via UnityAssetStore
