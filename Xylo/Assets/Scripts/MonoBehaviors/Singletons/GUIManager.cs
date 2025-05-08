@@ -96,6 +96,7 @@ public class GUIManager : MonoBehaviour
 
 		ControlsManager.self.ToggleMenuActionMap();
 		if (CameraManager.self.isCinematicCamera) {
+			ControlsManager.self.EnterCinematicMode();
 			ActivateCinematicBars(!pauseMenu.activeSelf, .25f);
 		}
 		ControlsManager.self.PauseGameTime(pauseMenu.activeSelf);
