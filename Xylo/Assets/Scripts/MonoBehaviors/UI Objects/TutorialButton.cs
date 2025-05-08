@@ -17,7 +17,7 @@ public class TutorialButton : MonoBehaviour
     }
     public void AdvanceTutorial() {
         if (currentFrameNumber == frames.Count) {
-            ControlsManager.self.ToggleMenuActionMap();
+            ControlsManager.self.ActivateMainMap();
             GUIManager.self.ActivateLevelUI();
             Destroy(transform.parent.gameObject);
             return;

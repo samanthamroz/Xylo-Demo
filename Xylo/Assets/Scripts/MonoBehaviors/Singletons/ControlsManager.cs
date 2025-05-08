@@ -12,7 +12,7 @@ public class ControlsManager : MonoBehaviour
     public static ControlsManager self;
     
     private InputActionAsset inputActions;
-    private InputActionMap mainMap, levelSelectMap, menuMap, cinematicMap, currentActionMap;
+    private InputActionMap mainMap, levelSelectMap, menuMap, cinematicMap, currentActionMap, lastActionMap;
     public string currentActionMapName { get { return currentActionMap.name; } }
     [HideInInspector] public Vector3 mousePosition;
     [SerializeField] private InteractableObject currentInteractable, lastInteractable;
@@ -44,6 +44,10 @@ public class ControlsManager : MonoBehaviour
     }
 
     private void ChangeActionMap(string mapName) {
+        if (currentActionMap != null) {
+            lastActionMap = currentActionMap;
+        }
+
         mainMap.Disable();
         levelSelectMap.Disable();
         menuMap.Disable();
@@ -57,7 +61,7 @@ public class ControlsManager : MonoBehaviour
                 levelSelectMap.Enable();
                 currentActionMap = levelSelectMap;
                 break;
-            case "menu":
+            case "levelmenus":
                 menuMap.Enable();
                 currentActionMap = menuMap;
                 break;
@@ -68,23 +72,26 @@ public class ControlsManager : MonoBehaviour
             default:
                 break;
         }
+        
+        if (lastActionMap == null) {
+            lastActionMap = currentActionMap;
+        }
     }
 
-    public void EnterCinematicMode() {
+    public void ActivateCinematicMap() {
         ChangeActionMap("cinematic");
     }
 
-    public void ExitCinematicMode(bool isDeathPlane = false) {
-        ChangeActionMap("main");
-        CameraManager.self.ExitCinematicMode(isDeathPlane);
+    public void ActivateMenuMap() {
+        ChangeActionMap("levelmenus");
     }
 
-    public void ToggleMenuActionMap() {
-        if (!menuMap.enabled) {
-            ChangeActionMap("menu");
-        } else {
-            ChangeActionMap("main");
-        }
+    public void ActivateMainMap() {
+        ChangeActionMap("main");
+    }
+
+    public void RevertToLastMap() {
+        ChangeActionMap(lastActionMap.name);
     }
 
     public void PauseGameTime(bool doPause) {
@@ -193,7 +200,8 @@ public class ControlsManager : MonoBehaviour
     void OnDebug2(InputValue value) { //shift + D + 2
         if (value.Get<float>() == 1) {
             LoadingManager.self.SetLevelCompleted(0);
-            ControlsManager.self.ExitCinematicMode(true);
+            ControlsManager.self.ActivateMainMap();
+            CameraManager.self.ExitCinematicMode(true);
             GUIManager.self.ActivateWinMenuUI();
         }
     }

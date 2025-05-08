@@ -41,7 +41,7 @@ public class LoadingManager : MonoBehaviour
             }
         }
         if (scene.buildIndex == 1) { //for tutorial only
-            ControlsManager.self.InitializeActionMap("menu");
+            ControlsManager.self.InitializeActionMap("levelmenus");
             GUIManager.self.InstantiateLevelUI(true);
             AudioManager.self.LoadSounds(SceneManager.GetActiveScene().buildIndex);
         }

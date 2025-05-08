@@ -135,7 +135,7 @@ public class CameraManager : MonoBehaviour
         StartCoroutine(PlaceCamera(animationTime));
     }
     public void EnterCinematicMode(GameObject newLookAtObject = null) {
-        ControlsManager.self.EnterCinematicMode();
+        ControlsManager.self.ActivateCinematicMap();
         StartCoroutine(GUIManager.self.ActivateCinematicUI());
         if (newLookAtObject == null) {
             StartCoroutine(DoCinematicCam(lookAtObject));

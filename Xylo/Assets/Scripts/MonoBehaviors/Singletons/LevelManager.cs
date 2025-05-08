@@ -97,8 +97,13 @@ public class LevelManager : MonoBehaviour
         if (!attemptStarted) {
             if (!hasWon) {
                 if (CameraManager.self.isCinematicCamera) {
-                    ControlsManager.self.ExitCinematicMode(resetCamera);
+                    ControlsManager.self.ActivateMainMap();
+                    CameraManager.self.ExitCinematicMode(resetCamera);
                 }
+            }
+            if (retryLevel) {
+                GUIManager.self.TogglePlayButtonImage(true);
+                RetryLevel();
             }
             return;
         }
@@ -113,15 +118,20 @@ public class LevelManager : MonoBehaviour
         if (hasWon) {
             LoadingManager.self.SetLevelCompleted(0);
             if (CameraManager.self.isCinematicCamera) {
-                ControlsManager.self.ExitCinematicMode(true);
+                ControlsManager.self.ActivateMainMap();
+                CameraManager.self.ExitCinematicMode(true);
             }
             GUIManager.self.ActivateWinMenuUI();
         } else {
             attemptList = new();
-            if (CameraManager.self.isCinematicCamera) {
-                ControlsManager.self.ExitCinematicMode(resetCamera);
-            }
+
             if (retryLevel) {
+                if (CameraManager.self.isCinematicCamera) {
+                    ControlsManager.self.ActivateMainMap();
+                    CameraManager.self.ExitCinematicMode(resetCamera);
+                }
+
+                GUIManager.self.TogglePlayButtonImage(true);
                 RetryLevel();
             }
         }
@@ -170,7 +180,6 @@ public class LevelManager : MonoBehaviour
     }
     
     private void RetryLevel() {
-        GUIManager.self.TogglePlayButtonImage(true);
         marble.GetComponent<PlayerMarble>().ResetSelf();
     }
 }

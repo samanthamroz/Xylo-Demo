@@ -93,12 +93,17 @@ public class GUIManager : MonoBehaviour
 	}
 	public void TogglePause() {
 		pauseMenu.SetActive(!pauseMenu.activeSelf);
-
-		ControlsManager.self.ToggleMenuActionMap();
+		if (pauseMenu.activeSelf) {
+			ControlsManager.self.ActivateMenuMap();
+		} else {
+			ControlsManager.self.RevertToLastMap();
+		}
+		
 		if (CameraManager.self.isCinematicCamera) {
-			ControlsManager.self.EnterCinematicMode();
+			//ControlsManager.self.ActivateCinematicMap();
 			ActivateCinematicBars(!pauseMenu.activeSelf, .25f);
 		}
+
 		ControlsManager.self.PauseGameTime(pauseMenu.activeSelf);
 	}
 	public void ActivateLevelUI() {
@@ -139,7 +144,7 @@ public class GUIManager : MonoBehaviour
 	public void ActivateWinMenuUI() {
 		UICanvas.SetActive(false);
 		winMenuCanvas.SetActive(true);
-		ControlsManager.self.ToggleMenuActionMap();
+		ControlsManager.self.ActivateMenuMap();
 	}
 
 	public void TogglePlayButtonImage(bool toPlayButton) {
