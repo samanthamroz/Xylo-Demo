@@ -41,10 +41,6 @@ public class GUIManager : MonoBehaviour
 		ActivatePiano(false, 0f);
 		
 		playButton = Instantiate(playButtonPrefab, UICanvas.transform);
-		
-		//pause menu has to be instantiated last so that it covers the other buttons when paused
-		pauseMenu = Instantiate(pauseMenuPrefab, UICanvas.transform);
-		pauseMenu.SetActive(false);
 
 		if (isTutorial) {
 			for (int i = 0; i < UICanvas.transform.childCount; i++) {
@@ -52,6 +48,10 @@ public class GUIManager : MonoBehaviour
 			}
 			tutorialBox = Instantiate(tutorialBoxPrefab, UICanvas.transform);
 		}
+
+		//pause menu has to be instantiated last so that it covers the other buttons when paused
+		pauseMenu = Instantiate(pauseMenuPrefab, UICanvas.transform);
+		pauseMenu.SetActive(false);
 
 		winMenuCanvas = Instantiate(winMenuCanvasPrefab);
 		winMenuCanvas.SetActive(false);
