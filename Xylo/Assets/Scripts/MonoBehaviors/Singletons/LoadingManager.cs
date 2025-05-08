@@ -28,9 +28,9 @@ public class LoadingManager : MonoBehaviour
 		}
     }
     private void LoadCurrentScene(Scene scene, LoadSceneMode mode) {
-        ControlsManager.self.InitializeActionMap(scene.buildIndex == 0);
         
         if (scene.buildIndex == 0) { //for title only 
+            ControlsManager.self.InitializeActionMap("levelselect");
             if (!hasTitleLoaded) {
                 GUIManager.self.InstantiateTitleUI(true);
                 CameraManager.self.InstantiateTitleCamera();
@@ -41,10 +41,12 @@ public class LoadingManager : MonoBehaviour
             }
         }
         if (scene.buildIndex == 1) { //for tutorial only
+            ControlsManager.self.InitializeActionMap("menu");
             GUIManager.self.InstantiateLevelUI(true);
             AudioManager.self.LoadSounds(SceneManager.GetActiveScene().buildIndex);
         }
         if (scene.buildIndex > 1) {
+            ControlsManager.self.InitializeActionMap("main");
 			GUIManager.self.InstantiateLevelUI(false);
             AudioManager.self.LoadSounds(SceneManager.GetActiveScene().buildIndex);
 		}

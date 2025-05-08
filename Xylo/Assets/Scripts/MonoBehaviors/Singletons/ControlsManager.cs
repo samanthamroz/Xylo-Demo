@@ -33,18 +33,14 @@ public class ControlsManager : MonoBehaviour
 
     }
     
-    public void InitializeActionMap(bool isLevelSelect) {
+    public void InitializeActionMap(string map) {
         inputActions = GetComponent<PlayerInput>().actions;
         mainMap = inputActions.FindActionMap("Main");
         levelSelectMap = inputActions.FindActionMap("LevelSelect");
         menuMap = inputActions.FindActionMap("LevelMenus");
         cinematicMap = inputActions.FindActionMap("Cinematic");
 
-        if (isLevelSelect) {
-            ChangeActionMap("levelSelect");
-        } else {
-            ChangeActionMap("main");
-        }
+        ChangeActionMap(map);
     }
 
     private void ChangeActionMap(string mapName) {

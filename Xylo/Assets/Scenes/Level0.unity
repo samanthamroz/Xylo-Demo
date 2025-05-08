@@ -1266,7 +1266,7 @@ GameObject:
   m_Component:
   - component: {fileID: 36253966}
   m_Layer: 0
-  m_Name: Moveable
+  m_Name: Blocks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59470,7 +59470,6 @@ MonoBehaviour:
   - {fileID: 1963081288}
   isMultipleParts: 0
   startsAttempt: 0
-  endsAttempt: 0
   note: 5
   originalPosition: {x: 0, y: 0, z: 0}
 --- !u!23 &6602302344484039936

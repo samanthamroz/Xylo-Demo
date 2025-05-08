@@ -67,7 +67,6 @@ public class LevelManager : MonoBehaviour
                 totalPausedTime += currentDspTime - pauseStartDspTime;
             }
             pauseStartDspTime = 0;
-            print(totalPausedTime);
             
             songPosInSec = (float)(currentDspTime - dspSongTime - totalPausedTime);
             songPosInBeats = songPosInSec / secPerBeat;
@@ -97,7 +96,9 @@ public class LevelManager : MonoBehaviour
     public void EndAttempt(bool retryLevel = false, bool resetCamera = false) {
         if (!attemptStarted) {
             if (!hasWon) {
-                ControlsManager.self.ExitCinematicMode(resetCamera);
+                if (CameraManager.self.isCinematicCamera) {
+                    ControlsManager.self.ExitCinematicMode(resetCamera);
+                }
             }
             return;
         }
@@ -111,11 +112,15 @@ public class LevelManager : MonoBehaviour
 
         if (hasWon) {
             LoadingManager.self.SetLevelCompleted(0);
-            ControlsManager.self.ExitCinematicMode(true);
+            if (CameraManager.self.isCinematicCamera) {
+                ControlsManager.self.ExitCinematicMode(true);
+            }
             GUIManager.self.ActivateWinMenuUI();
         } else {
             attemptList = new();
-            ControlsManager.self.ExitCinematicMode(resetCamera);
+            if (CameraManager.self.isCinematicCamera) {
+                ControlsManager.self.ExitCinematicMode(resetCamera);
+            }
             if (retryLevel) {
                 RetryLevel();
             }
