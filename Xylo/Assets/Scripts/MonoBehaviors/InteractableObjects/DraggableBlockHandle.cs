@@ -47,7 +47,15 @@ public class DraggableBlockHandle : InteractableObject
     }
     public override void DoRelease()
     {
-        parentBlock.originalPosition = GetSnapToGridVector(parentBlock.originalPosition, parentBlock.transform.position);
+        if (parentBlock.isMultipleParts) {
+            DraggableBlock temp;
+            foreach (Transform child in parentBlock.transform.parent) {
+                temp = child.GetComponent<DraggableBlock>();
+                temp.originalPosition = GetSnapToGridVector(temp.originalPosition, child.position);
+            }
+        } else {
+            parentBlock.originalPosition = GetSnapToGridVector(parentBlock.originalPosition, parentBlock.transform.position);
+        }
         
         parentBlock.ToggleAllHandles(true, false);
         isDragging = false;

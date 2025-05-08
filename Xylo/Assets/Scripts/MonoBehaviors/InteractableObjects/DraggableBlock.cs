@@ -22,7 +22,7 @@ public class DraggableBlock : InteractableObject
     public void ToggleAllHandles(bool isOn, bool turnInvisible) {
         foreach (DraggableBlockHandle handle in handles) {
             handle.gameObject.SetActive(isOn);
-            Vector3 testPosition = transform.position + handle.direction;
+            Vector3 testPosition = transform.position + new Vector3(handle.direction.x, handle.direction.y / 2, handle.direction.z);
             if (turnInvisible) {
                 handle.ToggleInvisible(handle.IsParentBlockCollidingAtPosition(testPosition));
             } else {
