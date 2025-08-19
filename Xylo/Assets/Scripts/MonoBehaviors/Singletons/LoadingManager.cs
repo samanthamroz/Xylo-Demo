@@ -33,6 +33,7 @@ public class LoadingManager : MonoBehaviour
             ControlsManager.self.InitializeActionMap("levelselect");
             if (!hasTitleLoaded) {
                 GUIManager.self.InstantiateTitleUI(true);
+                CameraManager.self.SetCameraMode(CamMode.TITLESCREEN);
                 CameraManager.self.InstantiateTitleCamera();
                 hasTitleLoaded = true;
                 return;
@@ -50,6 +51,7 @@ public class LoadingManager : MonoBehaviour
 			GUIManager.self.InstantiateLevelUI(false);
             AudioManager.self.LoadSounds(SceneManager.GetActiveScene().buildIndex);
 		}
+        CameraManager.self.SetCameraMode(CamMode.NORMAL);
         CameraManager.self.InstantiateCamera(scene.buildIndex);
 
         try {

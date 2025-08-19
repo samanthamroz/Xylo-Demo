@@ -144,14 +144,6 @@ public class ControlsManager : MonoBehaviour
         }
     }
 
-    void OnMiddleMouseClick(InputValue value) {
-        if (value.Get<float>() == 1) { //click down
-			CameraManager.self.DoRotate();
-		} else {
-            CameraManager.self.isRotating = false;
-        }
-    }
-
     void OnRightMouseClick(InputValue value) {
         if (value.Get<float>() == 1) { //click down
 			CameraManager.self.DoPan();
@@ -198,11 +190,9 @@ public class ControlsManager : MonoBehaviour
     }
 
     void OnDebug2(InputValue value) { //shift + D + 2
-        if (value.Get<float>() == 1) {
-            LoadingManager.self.SetLevelCompleted(0);
-            ControlsManager.self.ActivateMainMap();
-            CameraManager.self.ExitCinematicMode(true);
-            GUIManager.self.ActivateWinMenuUI();
+        if (value.Get<float>() == 1)
+        {
+            
         }
     }
 }

@@ -60,15 +60,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "MiddleMouseClick",
-                    "type": "Button",
-                    "id": "990c0550-9ae8-42cc-b89f-34fdf7957ec1",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "Press(behavior=2)",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "RightMouseClick",
                     "type": "Button",
                     "id": "4a670f97-e8c2-4a05-8201-9324c96b2101",
@@ -191,17 +182,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "MouseMove",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c6b3eebc-d15c-4cb9-9c26-21bcc4d9bbd7",
-                    "path": "<Mouse>/middleButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MiddleMouseClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

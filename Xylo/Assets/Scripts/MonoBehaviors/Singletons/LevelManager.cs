@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 //inspo: https://www.gamedeveloper.com/audio/coding-to-the-beat---under-the-hood-of-a-rhythm-game-in-unity
 
@@ -82,8 +83,8 @@ public class LevelManager : MonoBehaviour
         attemptList = new List<NoteTrigger>();
 
         GUIManager.self.TogglePlayButtonImage(false);
-    
-        CameraManager.self.EnterCinematicMode(marble);
+        CameraManager.self.SwitchLookAtObject(marble);
+        CameraManager.self.SetCameraMode(CamMode.CINEMATIC);
 
         //for when StartAttempt() isn't called by the marble itself
         marble.GetComponent<Rigidbody>().isKinematic = false;
@@ -98,7 +99,7 @@ public class LevelManager : MonoBehaviour
             if (!hasWon) {
                 if (CameraManager.self.isCinematicCamera) {
                     ControlsManager.self.ActivateMainMap();
-                    CameraManager.self.ExitCinematicMode(resetCamera);
+                    CameraManager.self.SetCameraMode(CamMode.NORMAL);
                 }
             }
             if (retryLevel) {
@@ -117,20 +118,15 @@ public class LevelManager : MonoBehaviour
 
         if (hasWon) {
             LoadingManager.self.SetLevelCompleted(0);
-            if (CameraManager.self.isCinematicCamera) {
-                ControlsManager.self.ActivateMainMap();
-                CameraManager.self.ExitCinematicMode(true);
-            }
+            ControlsManager.self.ActivateMainMap();
+            CameraManager.self.SetCameraMode(CamMode.NORMAL);
             GUIManager.self.ActivateWinMenuUI();
         } else {
             attemptList = new();
 
             if (retryLevel) {
-                if (CameraManager.self.isCinematicCamera) {
-                    ControlsManager.self.ActivateMainMap();
-                    CameraManager.self.ExitCinematicMode(resetCamera);
-                }
-
+                ControlsManager.self.ActivateMainMap();
+                CameraManager.self.SetCameraMode(CamMode.NORMAL);
                 GUIManager.self.TogglePlayButtonImage(true);
                 RetryLevel();
             }

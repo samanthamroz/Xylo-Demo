@@ -6,6 +6,6 @@ public class ToTitleButton : MonoBehaviour
 {
     public void GoToTitle() {
         GUIManager.self.ToggleTitleScreen();
-        CameraManager.self.SwitchLevelSelectIsland("title");
+        CameraManager.self.SwitchTitleScreenPosition("title");
     }
 }
