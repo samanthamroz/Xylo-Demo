@@ -51,11 +51,6 @@ public class LevelManager : MonoBehaviour
 
         secPerBeat = 60f / songBpm;
     }
-    /*void Update()
-    {
-        songPosInSec = (float)(AudioSettings.dspTime - dspSongTime);
-        songPosInBeats = songPosInSec / secPerBeat;
-    }*/
 
     private double pauseStartDspTime = 0f, totalPausedTime = 0f;
 
@@ -77,13 +72,14 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
-    
-    public void StartAttempt() {
+
+    public void StartAttempt()
+    {
         attemptStarted = true;
         attemptList = new List<NoteTrigger>();
 
         GUIManager.self.TogglePlayButtonImage(false);
-        CameraManager.self.SwitchLookAtObject(marble);
+        CameraManager.self.SwitchLookAtObject(marble, false);
         CameraManager.self.SetCameraMode(CamMode.CINEMATIC);
 
         //for when StartAttempt() isn't called by the marble itself
