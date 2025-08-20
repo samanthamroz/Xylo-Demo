@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/LevelSelect.unity
     guid: 225859f4c7c85624397dcbfdf25d7fdc
   - enabled: 1
+    path: Assets/Scenes/NotInBuild/Level0-OldCopy.unity
+    guid: 93e0cfb73426ac7488e149ab8c9aafe1
+  - enabled: 1
     path: Assets/Scenes/Level0.unity
     guid: 1825bf0df9e89ce41a618c2f2d221255
   m_configObjects: {}

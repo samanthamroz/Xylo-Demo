@@ -20,6 +20,8 @@ public class LevelManager : MonoBehaviour
 {   
     public static LevelManager self;
 
+    private int currentSection = 0;
+
     public GameObject marblePrefab;
     private GameObject marble;
     private List<NoteTrigger> solutionList = new() 
@@ -36,10 +38,10 @@ public class LevelManager : MonoBehaviour
     };
     private List<NoteTrigger> attemptList;
     [HideInInspector] public Vector3 marbleStartPos = new(-14.67694f, 7.25f, 1.5f);
-    public float songBpm, forgivenessBetweenBeats; //idk why but these have to be public
+    private float songBpm, forgivenessBetweenBeats;
     private float secPerBeat, songPosInSec, songPosInBeats, dspSongTime;
     [HideInInspector] public bool attemptStarted;
-    private bool attemptCountingStarted, hasWon;
+    private bool attemptCountingStarted;
 
     void Awake() {
         self = this;
@@ -90,43 +92,34 @@ public class LevelManager : MonoBehaviour
         dspSongTime = (float)AudioSettings.dspTime;
         attemptCountingStarted = true;
     }
-    public void EndAttempt(bool retryLevel = false, bool resetCamera = false) {
+    public void EndAttempt(bool retrySection = true) {
         if (!attemptStarted) {
-            if (!hasWon) {
-                if (CameraManager.self.isCinematicCamera) {
-                    ControlsManager.self.ActivateMainMap();
-                    CameraManager.self.SetCameraMode(CamMode.NORMAL);
-                }
+            if (retrySection) {
+                RetrySection();
             }
-            if (retryLevel) {
-                GUIManager.self.TogglePlayButtonImage(true);
-                RetryLevel();
+            return;
+        }
+        attemptStarted = false;
+        attemptCountingStarted = false;
+
+        bool hasWonSection = false;
+        try {
+            hasWonSection = CheckForSectionWin();
+        } catch (NullReferenceException) {} //occurs when restart is triggered before first note block is triggered
+
+        if (!hasWonSection) {
+            attemptList = new();
+            if (retrySection) {
+                RetrySection();
             }
             return;
         }
 
-        attemptStarted = false;
-        attemptCountingStarted = false;
-
-        try {
-            hasWon = IsWin();
-        } catch (NullReferenceException) {} //occurs when restart is triggered before first note block is triggered
-
-        if (hasWon) {
-            LoadingManager.self.SetLevelCompleted(0);
-            ControlsManager.self.ActivateMainMap();
-            CameraManager.self.SetCameraMode(CamMode.NORMAL);
-            GUIManager.self.ActivateWinMenuUI();
-        } else {
-            attemptList = new();
-
-            if (retryLevel) {
-                ControlsManager.self.ActivateMainMap();
-                CameraManager.self.SetCameraMode(CamMode.NORMAL);
-                GUIManager.self.TogglePlayButtonImage(true);
-                RetryLevel();
-            }
-        }
+        //TODO: Cinematic for end of level
+        LoadingManager.self.SetCurrentSectionCompleted(0); //TODO: Fix
+        ControlsManager.self.ActivateMainMap();
+        CameraManager.self.SetCameraMode(CamMode.NORMAL);
+        GUIManager.self.ActivateWinMenuUI();
     }
     
     private void PrintNoteList(List<NoteTrigger> list) {
@@ -136,13 +129,13 @@ public class LevelManager : MonoBehaviour
         }
         print (str);
     }
-    private bool IsWin() {
+    private bool CheckForSectionWin() {
         if (attemptList.Count < 1) {
             return false;
         }
 
-        PrintNoteList(solutionList);
-        PrintNoteList(attemptList);
+        //PrintNoteList(solutionList);
+        //PrintNoteList(attemptList);
         if ((attemptList[0].note != solutionList[0].note) ||
             (attemptList.Count != solutionList.Count)) {
             return false;
@@ -162,16 +155,17 @@ public class LevelManager : MonoBehaviour
         }
         return true;
     }
-    
+    private void RetrySection() {
+        ControlsManager.self.ActivateMainMap();
+        CameraManager.self.SetCameraMode(CamMode.NORMAL);
+        GUIManager.self.TogglePlayButtonImage(true);
+        marble.GetComponent<PlayerMarble>().ResetSelf();
+    }
     public void TriggerNote(Note note) {
         if (!attemptCountingStarted) {
             return;
         }
         
         attemptList.Add(new NoteTrigger(note, songPosInBeats));
-    }
-    
-    private void RetryLevel() {
-        marble.GetComponent<PlayerMarble>().ResetSelf();
-    }
+    }  
 }

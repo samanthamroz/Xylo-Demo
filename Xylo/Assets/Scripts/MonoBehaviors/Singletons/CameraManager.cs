@@ -278,7 +278,7 @@ public class CameraManager : MonoBehaviour
 
     private class TitleScreenCameraManager
     {
-        private Dictionary<string, Vector3> levelSelectCameraPositions = new() {
+        private readonly Dictionary<string, Vector3> levelSelectCameraPositions = new() {
             {"title", new Vector3(.03f, 50f, 11.3f)},
             {"credits", new Vector3(32.1f, -3.75f, -44.7f)},
             {"level0", new Vector3(.03f, -0.25f, 11.3f)}
@@ -310,18 +310,29 @@ public class CameraManager : MonoBehaviour
 
     private class CinematicCameraManager
     {
+        private readonly List<List<Vector3>> levelSectionViewPoints = new()
+        {
+            //level 1
+            new() {
+                new Vector3(0,5,16)
+            },
+            //level 2
+            new() {
+                new Vector3(0,20,16)
+            }
+        };
         public void EnterCinematicMode()
         {
             ControlsManager.self.ActivateCinematicMap();
             self.StartCoroutine(GUIManager.self.ActivateCinematicUI());
             self.StartCoroutine(DoCinematicCam());
-        }
+        } 
         public IEnumerator DoCinematicCam()
         {
             self.cam.transform.GetPositionAndRotation(out Vector3 originalPosition, out Quaternion originalRotation);
             float time = 1f;
 
-            LeanTween.moveLocal(self.cameraObject, new Vector3(0, 5, 16), time).setEaseInOutSine();
+            LeanTween.moveLocal(self.cameraObject, levelSectionViewPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][0], time).setEaseInOutSine();
 
             float elapsed = 0f;
             while (elapsed < time)
@@ -337,7 +348,6 @@ public class CameraManager : MonoBehaviour
                 // Calculate desired rotation toward current lookHere position
                 Vector3 direction = (self.currentlookAtObject.transform.position - self.cam.transform.position).normalized;
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
-                Debug.Log(targetRotation);
 
                 // Smoothly interpolate rotation
                 self.cam.transform.rotation = Quaternion.Slerp(originalRotation, targetRotation, easedT);

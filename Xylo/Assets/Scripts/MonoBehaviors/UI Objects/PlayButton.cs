@@ -7,7 +7,7 @@ public class PlayButton : MonoBehaviour
         if (!LevelManager.self.attemptStarted) {
             LevelManager.self.StartAttempt();
         } else {
-            LevelManager.self.EndAttempt(true);
+            LevelManager.self.EndAttempt();
         }
     }
 }

@@ -16,9 +16,9 @@ public class PlayerMarble : InteractableObject
         GetComponent<Rigidbody>().isKinematic = true;
         LeanTween.move(gameObject, resetPosition, .5f).setEaseInOutSine();
     }
-    
-    void OnCollisionEnter(Collision other)
-    {
-        //GetComponent<AudioSource>().Play();
+
+    public void ResetSelf(Vector3 newResetPosition) {
+        GetComponent<Rigidbody>().isKinematic = true;
+        LeanTween.move(gameObject, newResetPosition, .5f).setEaseInOutSine();
     }
 }

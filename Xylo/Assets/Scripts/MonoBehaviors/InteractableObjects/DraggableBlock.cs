@@ -98,7 +98,7 @@ public class DraggableBlock : InteractableObject
         yield return null;
         LevelManager.self.TriggerNote(note);
         if (endsAttempt) {
-            LevelManager.self.EndAttempt();
+            LevelManager.self.EndAttempt(false);
         }
     }
 }
