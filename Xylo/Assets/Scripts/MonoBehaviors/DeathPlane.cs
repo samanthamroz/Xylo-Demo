@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class DeathPlane : MonoBehaviour
 {
-    void OnCollisionEnter(Collision other)
+    void OnTriggerEnter(Collider other)
     {
-        LevelManager.self.EndAttempt();
+        if (other.gameObject.TryGetComponent<PlayerMarble>(out _)) {
+            LevelManager.self.EndAttempt();
+        }
     }
 }

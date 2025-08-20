@@ -20,10 +20,11 @@ public class LevelManager : MonoBehaviour
 {   
     public static LevelManager self;
 
+    private int levelNum { get { return LoadingManager.self.GetCurrentLevelNumber(); } }
     private int currentSection = 0;
 
-    public GameObject marblePrefab;
-    private GameObject marble;
+    public GameObject marblePrefab, deathPlanePrefab;
+    private GameObject marble, deathPlane;
     private List<NoteTrigger> solutionList = new() 
     {
         new NoteTrigger(Note.G, 0f),
@@ -37,11 +38,19 @@ public class LevelManager : MonoBehaviour
         new NoteTrigger(Note.D, 9f),
     };
     private List<NoteTrigger> attemptList;
-    [HideInInspector] public Vector3 marbleStartPos = new(-14.67694f, 7.25f, 1.5f);
+
+    private Vector3[] marbleStartPositions = {new(-14.67694f, 7.25f, 1.5f)};
+    private int[][] deathPlaneYLevels = {
+        //Level 1
+        new int[] {-3, -12, -25, -36}
+    };
+    
     private float songBpm, forgivenessBetweenBeats;
     private float secPerBeat, songPosInSec, songPosInBeats, dspSongTime;
     [HideInInspector] public bool attemptStarted;
     private bool attemptCountingStarted;
+
+    [SerializeField] private bool DEBUG_AutoWin;
 
     void Awake() {
         self = this;
@@ -49,7 +58,8 @@ public class LevelManager : MonoBehaviour
     void Start() {
         attemptStarted = false;
 
-        marble = Instantiate(marblePrefab, marbleStartPos, Quaternion.identity);
+        marble = Instantiate(marblePrefab, marbleStartPositions[levelNum - 1], Quaternion.identity);
+        deathPlane = Instantiate(deathPlanePrefab, new(0, deathPlaneYLevels[levelNum - 1][currentSection], 0), Quaternion.identity);
 
         secPerBeat = 60f / songBpm;
     }
@@ -80,12 +90,9 @@ public class LevelManager : MonoBehaviour
         attemptStarted = true;
         attemptList = new List<NoteTrigger>();
 
-        GUIManager.self.TogglePlayButtonImage(false);
-        CameraManager.self.SwitchLookAtObject(marble, false);
-        CameraManager.self.SetCameraMode(CamMode.CINEMATIC);
+        CameraManager.self.DoBeginAttempt(currentSection, marble);
 
-        //for when StartAttempt() isn't called by the marble itself
-        marble.GetComponent<Rigidbody>().isKinematic = false;
+        marble.GetComponent<PlayerMarble>().RunMarble();
     }
     public void StartCountingForAttempt() {
         //Record the time when the music starts
@@ -95,31 +102,47 @@ public class LevelManager : MonoBehaviour
     public void EndAttempt(bool retrySection = true) {
         if (!attemptStarted) {
             if (retrySection) {
-                RetrySection();
+                marble.GetComponent<PlayerMarble>().ResetSelf();
             }
             return;
         }
         attemptStarted = false;
         attemptCountingStarted = false;
+        
+        if (!DEBUG_AutoWin) {
+            bool hasWonSection = false;
+            try {
+                hasWonSection = CheckForSectionWin();
+            } catch (NullReferenceException) {} //occurs when restart is triggered before first note block is triggered
 
-        bool hasWonSection = false;
-        try {
-            hasWonSection = CheckForSectionWin();
-        } catch (NullReferenceException) {} //occurs when restart is triggered before first note block is triggered
-
-        if (!hasWonSection) {
-            attemptList = new();
-            if (retrySection) {
-                RetrySection();
+            if (!hasWonSection) {
+                attemptList = new();
+                if (retrySection) {
+                    marble.GetComponent<PlayerMarble>().ResetSelf();
+                }
+                return;
             }
+        }
+        LoadingManager.self.SetCurrentSectionCompleted(currentSection);
+        
+        //Move to next section
+        if (!LoadingManager.self.IsLevelCompleted()) {
+            currentSection += 1;
+
+            CameraManager.self.DoMoveToNextSection(currentSection);
+
+            LeanTween.moveLocalY(deathPlane, deathPlaneYLevels[levelNum - 1][currentSection], .5f);
+
+            marble.GetComponent<PlayerMarble>().UpdateSavedVelocity();
+            marble.GetComponent<PlayerMarble>().ResetSelfToCurrentPosition();
             return;
         }
 
-        //TODO: Cinematic for end of level
-        LoadingManager.self.SetCurrentSectionCompleted(0); //TODO: Fix
+        //TODO: Level won stuff
+        /*
         ControlsManager.self.ActivateMainMap();
-        CameraManager.self.SetCameraMode(CamMode.NORMAL);
-        GUIManager.self.ActivateWinMenuUI();
+        CameraManager.self.SetCameraMode(CamMode.NORMAL); */
+        //GUIManager.self.ActivateWinMenuUI();
     }
     
     private void PrintNoteList(List<NoteTrigger> list) {
@@ -154,12 +177,6 @@ public class LevelManager : MonoBehaviour
             }
         }
         return true;
-    }
-    private void RetrySection() {
-        ControlsManager.self.ActivateMainMap();
-        CameraManager.self.SetCameraMode(CamMode.NORMAL);
-        GUIManager.self.TogglePlayButtonImage(true);
-        marble.GetComponent<PlayerMarble>().ResetSelf();
     }
     public void TriggerNote(Note note) {
         if (!attemptCountingStarted) {

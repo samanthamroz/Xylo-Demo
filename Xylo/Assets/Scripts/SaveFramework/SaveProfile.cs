@@ -20,14 +20,10 @@ public record GlobalSaveData : SaveProfileData
 {
     private const int numLevels = 1;
     public bool[] levelCompletionStatusList = new bool[numLevels];
-    public List<bool>[] sectionCompletionStatusList = new List<bool>[numLevels];
-    public GlobalSaveData() //constructor
-    {
-        for (int i = 0; i < numLevels; i++)
-        {
-            sectionCompletionStatusList[i] = new List<bool>();
-        }
-    }
+    public List<bool>[] sectionCompletionStatusList = {
+        //Level 1
+        new() {false, false, false, false}
+    };
 }
 
 public record SceneSaveData : SaveProfileData {

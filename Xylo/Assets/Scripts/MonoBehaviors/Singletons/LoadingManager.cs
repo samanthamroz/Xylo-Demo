@@ -10,10 +10,14 @@ public class LoadingManager : MonoBehaviour
     public static bool hasTitleLoaded = false;
     public GlobalSaveData saveData { get { return SaveManager.Load<GlobalSaveData>().saveData;} }
     public SceneSaveData sceneData;
+    [SerializeField] private bool DEBUG_AlwaysResetData = false;
 
     void Awake() {
 		if (self == null) {
 			self = this;
+            if (DEBUG_AlwaysResetData) {
+                SaveManager.DeleteAll();
+            }
             if (!SaveManager.GameDataExists()) {
                 GlobalSaveData newSave = new();
                 SaveManager.Save(new SaveProfile<GlobalSaveData>(newSave));
@@ -37,7 +41,6 @@ public class LoadingManager : MonoBehaviour
             if (!hasTitleLoaded)
             {
                 GUIManager.self.InstantiateTitleUI(true);
-                CameraManager.self.SetCameraMode(CamMode.TITLESCREEN);
                 CameraManager.self.InstantiateTitleCamera();
                 hasTitleLoaded = true;
                 return;
@@ -59,7 +62,6 @@ public class LoadingManager : MonoBehaviour
             GUIManager.self.InstantiateLevelUI(false);
             AudioManager.self.LoadSounds(SceneManager.GetActiveScene().buildIndex);
         }
-        CameraManager.self.SetCameraMode(CamMode.NORMAL);
         CameraManager.self.InstantiateCamera(scene.buildIndex);
 
         try
@@ -101,10 +103,10 @@ public class LoadingManager : MonoBehaviour
         GlobalSaveData temp;
         try {
             temp = SaveManager.Load<GlobalSaveData>().saveData;
-            temp.levelCompletionStatusList[GetCurrentLevelNumber() - 1] = true;
+            temp.sectionCompletionStatusList[GetCurrentLevelNumber() - 1][sectionNum] = true;
         } catch {
             temp = new GlobalSaveData {};
-            temp.levelCompletionStatusList[GetCurrentLevelNumber() - 1] = true;
+            temp.sectionCompletionStatusList[GetCurrentLevelNumber() - 1][sectionNum] = true;
         }
         
         //set level complete if all sections are done
@@ -121,16 +123,20 @@ public class LoadingManager : MonoBehaviour
         SaveManager.Save(new SaveProfile<GlobalSaveData>(temp));
     }
 
-    public bool IsLevelCompleted(int checkLevelNumber)
+    public bool IsLevelCompleted(int checkLevelNumber = 99)
     {
+        if (checkLevelNumber == 99) {
+            checkLevelNumber = GetCurrentLevelNumber();
+        }
+        //print($"{string.Join("", saveData.levelCompletionStatusList)}");
         bool isCompleted = false;
         try
         {
-            isCompleted = saveData.levelCompletionStatusList[checkLevelNumber];
+            isCompleted = saveData.levelCompletionStatusList[checkLevelNumber - 1];
         }
-        catch (ArgumentOutOfRangeException)
+        catch (IndexOutOfRangeException)
         {
-            print("Level status unknown");
+            print("Level " + checkLevelNumber + "status unknown");
         }
 
         return isCompleted;

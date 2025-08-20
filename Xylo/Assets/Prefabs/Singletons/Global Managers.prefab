@@ -50,9 +50,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d278645e82b2f9a41bba5c8e675de7c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentMode: 0
   cameraPrefab: {fileID: 6637513072474089607, guid: e2534d2040cf2634ca6c7439432e6772, type: 3}
   lookAtPrefab: {fileID: 4270330739806824873, guid: e12c0c2ae03821846a54820a4c4faa7f, type: 3}
-  isCinematicCamera: 0
   isRotating: 0
   isPanning: 0
   panDistancePerFrame: 0.5
@@ -70,6 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dc7b2a82f1c01e4d850b71ac27bc4a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DEBUG_AlwaysResetData: 1
 --- !u!114 &4835543353819988492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +140,7 @@ MonoBehaviour:
   mousePosition: {x: 0, y: 0, z: 0}
   currentInteractable: {fileID: 0}
   lastInteractable: {fileID: 0}
+  isGamePaused: 0
 --- !u!82 &7082541316067202080
 AudioSource:
   m_ObjectHideFlags: 0
