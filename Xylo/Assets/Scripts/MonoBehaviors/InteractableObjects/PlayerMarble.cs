@@ -15,7 +15,7 @@ public class PlayerMarble : InteractableObject
 
     public void RunMarble() {
         GetComponent<Rigidbody>().isKinematic = false;
-        GetComponent<Rigidbody>().velocity = currentVelocity;
+        GetComponent<Rigidbody>().velocity = new Vector3(-2.667f,2.344f, 0) * .5f;//currentVelocity;
         Debug.Log(GetComponent<Rigidbody>().velocity);
     }
     

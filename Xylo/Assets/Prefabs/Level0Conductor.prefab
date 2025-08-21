@@ -45,7 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   marblePrefab: {fileID: 1985733370118950983, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
-  marbleStartPos: {x: -14.67694, y: 7.25, z: 1.5}
-  songBpm: 184
-  forgivenessBetweenBeats: 0.4
+  deathPlanePrefab: {fileID: 7731684992102565030, guid: b0bf39dcf914ef140a8d9a90ee2708cc, type: 3}
   attemptStarted: 0
+  DEBUG_AutoWin: 1
