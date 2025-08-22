@@ -1,34 +1,36 @@
+
 using UnityEngine;
 
 public class PlayerMarble : InteractableObject
 {
     public Vector3 resetPosition;
     public Vector3 currentVelocity;
-    private float currentVX; // track horizontal speed
     void Start()
     {
         resetPosition = transform.position;
         currentVelocity = Vector3.zero;
     }
+    void Update()
+    {
+        currentVelocity = GetComponent<Rigidbody>().velocity;
+    }
+    
     public override void DoClick() {
         LevelManager.self.StartAttempt();
     }
-
     public void RunMarble() {
         GetComponent<Rigidbody>().isKinematic = false;
 
         float T = 0.75f;                // airtime per bounce
         float g = -Physics.gravity.y;   // ~9.81
         float vY = g * T * 0.5f;        // vertical launch speed
-        currentVX = 2f / T;             // horizontal speed (negative to go left)
+        float vX = 2f / T;             // horizontal speed (negative to go left)
 
         Rigidbody rb = GetComponent<Rigidbody>();
         float mass = rb.mass;
-        Vector3 impulse = mass * new Vector3(currentVX, vY, 0f);
+        Vector3 impulse = mass * new Vector3(vX, vY, 0f);
 
-        rb.AddForce(impulse, ForceMode.Impulse); 
-
-        Debug.Log(GetComponent<Rigidbody>().velocity);
+        rb.AddForce(impulse, ForceMode.Impulse);
     }
     
     public void ResetSelf() {
@@ -46,37 +48,16 @@ public class PlayerMarble : InteractableObject
         
     }
 
-    void OnCollisionEnter(Collision other)
+    void OnCollisionEnter(Collision collision)
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
+        if (!collision.gameObject.CompareTag("Bounces")) return;
 
-        float T = 0.75f;
-        float g = -Physics.gravity.y;
-        float vY = g * T * 0.5f;    // up speed
+        var speed = currentVelocity.magnitude;
+        var direction = Vector3.Reflect(currentVelocity.normalized, collision.contacts[0].normal);
+        float bounciness = .75f;
 
-        // Get the collision normal
-        Vector3 normal = other.contacts[0].normal;
+        Vector3 newVelocity = new (direction.x * Mathf.Max(speed, 0f), direction.y * Mathf.Max(speed * bounciness, 0f), 0); 
 
-        // Reflect the horizontal velocity component along the collision normal
-        Vector3 horizontalVelocity = new Vector3(currentVX, 0f, 0f);
-        Vector3 reflected = Vector3.Reflect(horizontalVelocity, normal);
-
-        // Use the reflected X for horizontal speed
-        currentVX = reflected.x;
-
-        float bounceLoss = .75f;
-        if (Mathf.Abs(normal.y) > 0.5f) 
-        {
-            vY *= bounceLoss;
-        } 
-        else 
-        {
-            // keep falling velocity when hitting mostly vertical walls
-            vY = rb.velocity.y;
-        }
-
-        rb.velocity = new Vector3(currentVX, vY, 0);
-
-        Debug.Log(rb.velocity);
+        GetComponent<Rigidbody>().velocity = newVelocity;
     }
 }
