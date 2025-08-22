@@ -39,7 +39,7 @@ public class LevelManager : MonoBehaviour
     };
     private List<NoteTrigger> attemptList;
 
-    private Vector3[] marbleStartPositions = {new(10, 12, -3)};
+    private Vector3[] marbleStartPositions = {new(-2f, 11.75f, -6)};
     private int[][] deathPlaneYLevels = {
         //Level 1
         new int[] {-3, -12, -25, -36}
