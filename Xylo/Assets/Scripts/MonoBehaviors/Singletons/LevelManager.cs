@@ -39,15 +39,16 @@ public class LevelManager : MonoBehaviour
     };
     private List<NoteTrigger> attemptList;
 
-    private Vector3[] marbleStartPositions = {new(0f, 11.75f, -6)};
+    private Vector3[] marbleStartPositions = {new(0f, 13f, -6)};
     private int[][] deathPlaneYLevels = {
         //Level 1
         new int[] {-3, -12, -25, -36}
     };
     
-    private float songBpm, forgivenessBetweenBeats;
-    private float secPerBeat, songPosInSec, songPosInBeats, dspSongTime;
-    [HideInInspector] public bool attemptStarted;
+    public float songBpm;
+    private float songPosInSec, forgivenessBetweenBeats, songPosInBeats;
+    [HideInInspector] public float secPerBeat, dspSongTime;
+    [HideInInspector] public bool attemptStarted, isOnBeat;
     private bool attemptCountingStarted;
 
     [SerializeField] private bool DEBUG_AutoWin;
@@ -65,10 +66,15 @@ public class LevelManager : MonoBehaviour
     }
 
     private double pauseStartDspTime = 0f, totalPausedTime = 0f;
+    private float lastQuantizedBeat = -.1f; 
+    public float currentBeat;
+    private float subdivision = 4f;
 
     void Update()
     {
         double currentDspTime = AudioSettings.dspTime;
+        isOnBeat = false;
+
         if (!ControlsManager.self.isGamePaused)
         {
             if (pauseStartDspTime != 0) {
@@ -78,14 +84,30 @@ public class LevelManager : MonoBehaviour
             
             songPosInSec = (float)(currentDspTime - dspSongTime - totalPausedTime);
             songPosInBeats = songPosInSec / secPerBeat;
+            
+            float quantizedBeat = Mathf.Floor(songPosInBeats * subdivision) / subdivision; // rounds down to nearest 0.25
+
+            if (quantizedBeat > lastQuantizedBeat)
+            {
+                currentBeat = quantizedBeat;
+                lastQuantizedBeat = quantizedBeat;
+                isOnBeat = true;
+            }
         } else {
             if (pauseStartDspTime == 0) {
                 pauseStartDspTime = currentDspTime;
             }
         }
     }
-
-    public void StartAttempt()
+    public float GetSecToNextBeat() {
+        float nextBeat = Mathf.Ceil(lastQuantizedBeat) + 1;
+        float timeToNext = (nextBeat - songPosInBeats) * secPerBeat;
+        return timeToNext;
+    }
+    public double GetDSPTimeForCurrentBeat() {
+        return dspSongTime + totalPausedTime + (currentBeat * secPerBeat);
+    }
+    public void StartPlaying()
     {
         attemptStarted = true;
         attemptList = new List<NoteTrigger>();
@@ -97,6 +119,7 @@ public class LevelManager : MonoBehaviour
     public void StartCountingForAttempt() {
         //Record the time when the music starts
         dspSongTime = (float)AudioSettings.dspTime;
+        lastQuantizedBeat = -.1f;
         attemptCountingStarted = true;
     }
     public void EndAttempt(bool retrySection = true) {
@@ -133,7 +156,7 @@ public class LevelManager : MonoBehaviour
 
             LeanTween.moveLocalY(deathPlane, deathPlaneYLevels[levelNum - 1][currentSection], .5f);
 
-            marble.GetComponent<PlayerMarble>().UpdateSavedVelocity();
+            //marble.GetComponent<PlayerMarble>().UpdateSavedVelocity();
             marble.GetComponent<PlayerMarble>().ResetSelfToCurrentPosition();
             return;
         }

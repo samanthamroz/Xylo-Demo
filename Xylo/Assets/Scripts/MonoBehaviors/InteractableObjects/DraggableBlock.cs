@@ -91,14 +91,17 @@ public class DraggableBlock : InteractableObject
     }
 
     private IEnumerator TriggerNote() {
-        GetComponent<AudioSource>().Play();
+    // Calculate the exact DSP time when the current quantized beat should occur
+        double currentBeatDSPTime = LevelManager.self.GetDSPTimeForCurrentBeat();
+        
+        // Schedule the audio to play exactly on the current beat
+        GetComponent<AudioSource>().PlayScheduled(currentBeatDSPTime);
+        
         if (startsAttempt) {
             LevelManager.self.StartCountingForAttempt();
         }
         yield return null;
+
         LevelManager.self.TriggerNote(note);
-        if (endsAttempt) {
-            
-        }
     }
 }
