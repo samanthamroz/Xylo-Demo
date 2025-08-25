@@ -39,7 +39,7 @@ public class LevelManager : MonoBehaviour
     };
     private List<NoteTrigger> attemptList;
 
-    private Vector3[] marbleStartPositions = {new(-2f, 11.75f, -6)};
+    private Vector3[] marbleStartPositions = {new(0f, 11.75f, -6)};
     private int[][] deathPlaneYLevels = {
         //Level 1
         new int[] {-3, -12, -25, -36}
@@ -91,7 +91,7 @@ public class LevelManager : MonoBehaviour
         attemptList = new List<NoteTrigger>();
 
         CameraManager.self.DoBeginAttempt(currentSection, marble);
-
+        
         marble.GetComponent<PlayerMarble>().RunMarble();
     }
     public void StartCountingForAttempt() {
