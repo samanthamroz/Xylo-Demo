@@ -14,13 +14,11 @@ public class Metronome : MonoBehaviour {
 
     private double sampleRate;
     private double nextTick;
-    public double dspNextTickTime;
     private int accent;
 
     public double bpm = 80.0;
     [SerializeField] private int signatureHi = 4;
     [SerializeField] private int signatureLo = 4;
-    [SerializeField] private bool playMetronomeTick = true;
 
     [HideInInspector] public bool running = false;
 
@@ -34,7 +32,6 @@ public class Metronome : MonoBehaviour {
 
     public void ResetTickSchedule() {
         sampleRate = AudioSettings.outputSampleRate;
-        dspNextTickTime = AudioSettings.dspTime;
         nextTick = AudioSettings.dspTime * sampleRate;
         accent = signatureHi;
     }
@@ -55,7 +52,6 @@ public class Metronome : MonoBehaviour {
         for (int n = 0; n < dataLen; n++) {
             while (dspSample + n >= nextTick) {
                 nextTick += samplesPerTick;
-                dspNextTickTime = AudioSettings.dspTime;
 
                 // Queue events for main thread
                 if (++accent > signatureHi) {

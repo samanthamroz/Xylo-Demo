@@ -11,7 +11,7 @@ public class PlayerMarble : InteractableObject {
     void Start() {
         resetPosition = transform.position;
     }
-    void Update() {
+    void FixedUpdate() {
         currentVelocity = GetComponent<Rigidbody>().velocity;
     }
 
@@ -33,7 +33,7 @@ public class PlayerMarble : InteractableObject {
         float T = .75f;                // airtime per bounce
         float g = -Physics.gravity.y;   // ~9.81
         float vY = g * T * 0.5f;        // vertical launch speed
-        float vX = 2f / T;             // horizontal speed (negative to go left)
+        float vX = 1.9f / T;             // horizontal speed (negative to go left)
 
         Rigidbody rb = GetComponent<Rigidbody>();
         float mass = rb.mass;
@@ -133,7 +133,8 @@ public class PlayerMarble : InteractableObject {
         //tPerfect = amount of time between now and perfect spot
         //adjust so that it is tPerfect + an offset so that it ends on a solid beat
         int perfectBeat = (int)Mathf.Round(BeatManager.self.GetBeatInNSeconds(deltaX / realisticVelocity.x));
-        float time = BeatManager.self.GetSecsToBeat(perfectBeat);
+        //float time = BeatManager.self.GetSecsToBeat(perfectBeat);
+        float time = (float)BeatManager.self.secPerBeat;
 
         Vector2 perfectVelocity = new(
             realisticVelocity.x,

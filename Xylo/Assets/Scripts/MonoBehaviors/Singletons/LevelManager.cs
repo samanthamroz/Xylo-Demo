@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 //inspo: https://www.gamedeveloper.com/audio/coding-to-the-beat---under-the-hood-of-a-rhythm-game-in-unity
 
@@ -36,7 +35,7 @@ public class LevelManager : MonoBehaviour {
     };
     private List<NoteTrigger> attemptList;
 
-    private Vector3[] marbleStartPositions = { new(0f, 13f, -6) };
+    private Vector3[] marbleStartPositions = { new(.5f, 13f, -6) };
     private int[][] deathPlaneYLevels = {
         //Level 1
         new int[] {-3, -12, -25, -36}
@@ -56,11 +55,6 @@ public class LevelManager : MonoBehaviour {
         marble = Instantiate(marblePrefab, marbleStartPositions[levelNum - 1], Quaternion.identity);
         deathPlane = Instantiate(deathPlanePrefab, new(0, deathPlaneYLevels[levelNum - 1][currentSection], 0), Quaternion.identity);
     }
-
-    private double pauseStartDspTime = 0f, totalPausedTime = 0f;
-    private float lastQuantizedBeat = -.1f;
-    public float currentBeat;
-    private float subdivision = 4f;
     public void StartPlaying() {
         attemptStarted = true;
         attemptList = new List<NoteTrigger>();
