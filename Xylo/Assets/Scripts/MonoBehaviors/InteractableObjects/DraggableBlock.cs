@@ -4,18 +4,15 @@ using System.Collections.Generic;
 using System.Data.Common;
 using UnityEngine;
 
-public class DraggableBlock : InteractableObject
-{
+public class DraggableBlock : InteractableObject {
     [SerializeField] private List<DraggableBlockHandle> handles = new();
     public bool isMultipleParts = false;
     [SerializeField] private bool startsAttempt = false;
-    [SerializeField] private bool endsAttempt = false;
     [SerializeField] private Note note;
     private Vector3 mousePosition { get { return ControlsManager.self.mousePosition; } }
     [HideInInspector] public Vector3 originalPosition;
     private Vector3 direction = Vector3.one;
-    void Start()
-    {
+    void Start() {
         ToggleAllHandles(false, true);
         originalPosition = GetSnapToGridVector(transform.position, transform.position);
     }
@@ -25,7 +22,8 @@ public class DraggableBlock : InteractableObject
             Vector3 testPosition = transform.position + new Vector3(handle.direction.x, handle.direction.y / 2, handle.direction.z);
             if (turnInvisible) {
                 handle.ToggleInvisible(handle.IsParentBlockCollidingAtPosition(testPosition));
-            } else {
+            }
+            else {
                 handle.ToggleGrey(handle.IsParentBlockCollidingAtPosition(testPosition));
             }
         }
@@ -55,15 +53,13 @@ public class DraggableBlock : InteractableObject
 
         return new Vector3(snappedX, snappedY, snappedZ);
     }
-    
-    public bool IsBlockCollidingAtPosition(Vector3 targetPosition)
-    {
+
+    public bool IsBlockCollidingAtPosition(Vector3 targetPosition) {
         Collider[] colliders = Physics.OverlapBox(targetPosition, GetComponent<Collider>().bounds.extents, Quaternion.identity);
 
         bool isColliding = false;
         foreach (Collider c in colliders) {
-            if (c.gameObject != gameObject && !c.transform.IsChildOf(transform.parent) && !c.isTrigger)
-            {
+            if (c.gameObject != gameObject && !c.transform.IsChildOf(transform.parent) && !c.isTrigger) {
                 isColliding = true;
                 break;
             }
@@ -71,34 +67,30 @@ public class DraggableBlock : InteractableObject
         return isColliding;
     }
 
-    //Click & Drag Behavior
     public override void DoClick() {
         GetComponent<AudioSource>().Play();
         ToggleAllHandles(true, false);
     }
 
-    public override void DoClickAway()
-    {
+    public override void DoClickAway() {
         ToggleAllHandles(false, true);
     }
 
-    //Marble Collision Behavior
-    private void OnCollisionEnter(Collision other)
-    {
+    private void OnCollisionEnter(Collision other) {
         if (other.gameObject.CompareTag("Marble")) {
             StartCoroutine(TriggerNote());
         }
     }
 
     private IEnumerator TriggerNote() {
-        GetComponent<AudioSource>().Play();
+        // Schedule the audio to play exactly on the current beat
+        GetComponent<AudioSource>().PlayScheduled(AudioSettings.dspTime);
+
         if (startsAttempt) {
-            LevelManager.self.StartCountingForAttempt();
+            //LevelManager.self.StartCountingForAttempt();
         }
         yield return null;
+
         LevelManager.self.TriggerNote(note);
-        if (endsAttempt) {
-            
-        }
     }
 }

@@ -5,7 +5,7 @@ public class PlayButton : MonoBehaviour
 {
     public void PressButton() {
         if (!LevelManager.self.attemptStarted) {
-            LevelManager.self.StartAttempt();
+            LevelManager.self.StartPlaying();
         } else {
             LevelManager.self.EndAttempt();
         }

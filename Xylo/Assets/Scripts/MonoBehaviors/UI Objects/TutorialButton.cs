@@ -23,7 +23,7 @@ public class TutorialButton : MonoBehaviour
             return;
         }
         if (currentFrameNumber == 3) {
-            AudioManager.self.PlayMelody();
+            //AudioManager.self.PlayMelody();
         }
         currentFrame = frames[currentFrameNumber];
         currentFrame.SetActive(true);

@@ -5,19 +5,16 @@ using UnityEngine.Rendering;
 
 //inspo: https://www.gamedeveloper.com/audio/coding-to-the-beat---under-the-hood-of-a-rhythm-game-in-unity
 
-class NoteTrigger
-{
+class NoteTrigger {
     public Note note { get; set; }
-    public float beatTriggered { get; set; }
-    public NoteTrigger(Note _note, float _beatTriggered)
-    {
+    public double beatTriggered { get; set; }
+    public NoteTrigger(Note _note, double _beatTriggered) {
         note = _note;
         beatTriggered = _beatTriggered;
     }
 }
 
-public class LevelManager : MonoBehaviour
-{   
+public class LevelManager : MonoBehaviour {
     public static LevelManager self;
 
     private int levelNum { get { return LoadingManager.self.GetCurrentLevelNumber(); } }
@@ -25,7 +22,7 @@ public class LevelManager : MonoBehaviour
 
     public GameObject marblePrefab, deathPlanePrefab;
     private GameObject marble, deathPlane;
-    private List<NoteTrigger> solutionList = new() 
+    private List<NoteTrigger> solutionList = new()
     {
         new NoteTrigger(Note.G, 0f),
         new NoteTrigger(Note.Gb, 1.5f),
@@ -39,14 +36,12 @@ public class LevelManager : MonoBehaviour
     };
     private List<NoteTrigger> attemptList;
 
-    private Vector3[] marbleStartPositions = {new(0f, 11.75f, -6)};
+    private Vector3[] marbleStartPositions = { new(0f, 13f, -6) };
     private int[][] deathPlaneYLevels = {
         //Level 1
         new int[] {-3, -12, -25, -36}
     };
-    
-    private float songBpm, forgivenessBetweenBeats;
-    private float secPerBeat, songPosInSec, songPosInBeats, dspSongTime;
+    private float forgivenessBetweenBeats;
     [HideInInspector] public bool attemptStarted;
     private bool attemptCountingStarted;
 
@@ -60,43 +55,21 @@ public class LevelManager : MonoBehaviour
 
         marble = Instantiate(marblePrefab, marbleStartPositions[levelNum - 1], Quaternion.identity);
         deathPlane = Instantiate(deathPlanePrefab, new(0, deathPlaneYLevels[levelNum - 1][currentSection], 0), Quaternion.identity);
-
-        secPerBeat = 60f / songBpm;
     }
 
     private double pauseStartDspTime = 0f, totalPausedTime = 0f;
-
-    void Update()
-    {
-        double currentDspTime = AudioSettings.dspTime;
-        if (!ControlsManager.self.isGamePaused)
-        {
-            if (pauseStartDspTime != 0) {
-                totalPausedTime += currentDspTime - pauseStartDspTime;
-            }
-            pauseStartDspTime = 0;
-            
-            songPosInSec = (float)(currentDspTime - dspSongTime - totalPausedTime);
-            songPosInBeats = songPosInSec / secPerBeat;
-        } else {
-            if (pauseStartDspTime == 0) {
-                pauseStartDspTime = currentDspTime;
-            }
-        }
-    }
-
-    public void StartAttempt()
-    {
+    private float lastQuantizedBeat = -.1f;
+    public float currentBeat;
+    private float subdivision = 4f;
+    public void StartPlaying() {
         attemptStarted = true;
         attemptList = new List<NoteTrigger>();
 
         CameraManager.self.DoBeginAttempt(currentSection, marble);
-        
+
         marble.GetComponent<PlayerMarble>().RunMarble();
     }
     public void StartCountingForAttempt() {
-        //Record the time when the music starts
-        dspSongTime = (float)AudioSettings.dspTime;
         attemptCountingStarted = true;
     }
     public void EndAttempt(bool retrySection = true) {
@@ -108,12 +81,13 @@ public class LevelManager : MonoBehaviour
         }
         attemptStarted = false;
         attemptCountingStarted = false;
-        
+
         if (!DEBUG_AutoWin) {
             bool hasWonSection = false;
             try {
                 hasWonSection = CheckForSectionWin();
-            } catch (NullReferenceException) {} //occurs when restart is triggered before first note block is triggered
+            }
+            catch (NullReferenceException) { } //occurs when restart is triggered before first note block is triggered
 
             if (!hasWonSection) {
                 attemptList = new();
@@ -124,7 +98,7 @@ public class LevelManager : MonoBehaviour
             }
         }
         LoadingManager.self.SetCurrentSectionCompleted(currentSection);
-        
+
         //Move to next section
         if (!LoadingManager.self.IsLevelCompleted()) {
             currentSection += 1;
@@ -133,7 +107,7 @@ public class LevelManager : MonoBehaviour
 
             LeanTween.moveLocalY(deathPlane, deathPlaneYLevels[levelNum - 1][currentSection], .5f);
 
-            marble.GetComponent<PlayerMarble>().UpdateSavedVelocity();
+            //marble.GetComponent<PlayerMarble>().UpdateSavedVelocity();
             marble.GetComponent<PlayerMarble>().ResetSelfToCurrentPosition();
             return;
         }
@@ -144,13 +118,13 @@ public class LevelManager : MonoBehaviour
         CameraManager.self.SetCameraMode(CamMode.NORMAL); */
         //GUIManager.self.ActivateWinMenuUI();
     }
-    
+
     private void PrintNoteList(List<NoteTrigger> list) {
         string str = "";
         foreach (var thing in list) {
             str += "(" + thing.note + ", " + thing.beatTriggered + ") ";
         }
-        print (str);
+        print(str);
     }
     private bool CheckForSectionWin() {
         if (attemptList.Count < 1) {
@@ -163,7 +137,7 @@ public class LevelManager : MonoBehaviour
             (attemptList.Count != solutionList.Count)) {
             return false;
         }
-        float distanceBetweenAttemptNotes, distanceBetweenSolutionNotes;
+        double distanceBetweenAttemptNotes, distanceBetweenSolutionNotes;
 
         for (int i = 1; i < attemptList.Count; i++) {
             if (attemptList[i].note != solutionList[i].note) {
@@ -171,7 +145,7 @@ public class LevelManager : MonoBehaviour
             }
             distanceBetweenAttemptNotes = attemptList[i].beatTriggered - attemptList[i - 1].beatTriggered;
             distanceBetweenSolutionNotes = solutionList[i].beatTriggered - solutionList[i - 1].beatTriggered;
-            
+
             if (Math.Abs(distanceBetweenAttemptNotes - distanceBetweenSolutionNotes) >= forgivenessBetweenBeats) {
                 return false;
             }
@@ -182,7 +156,7 @@ public class LevelManager : MonoBehaviour
         if (!attemptCountingStarted) {
             return;
         }
-        
-        attemptList.Add(new NoteTrigger(note, songPosInBeats));
-    }  
+
+        attemptList.Add(new NoteTrigger(note, BeatManager.self.songPosInBeats));
+    }
 }
