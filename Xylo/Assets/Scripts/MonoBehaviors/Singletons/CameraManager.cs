@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-public class CameraManager : MonoBehaviour
-{
+public class CameraManager : MonoBehaviour {
     private TitleScreenCameraManager tscm;
     private CinematicCameraManager ccm;
     public static CameraManager self;
@@ -29,22 +28,18 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private float zoomDistancePerFrame = 0.05f;
     private float zoomGoal, currentZoom;
 
-    void Awake()
-    {
-        if (self == null)
-        {
+    void Awake() {
+        if (self == null) {
             self = this;
             ccm = new CinematicCameraManager();
             tscm = new TitleScreenCameraManager();
             DontDestroyOnLoad(gameObject);
         }
-        else
-        {
+        else {
             Destroy(gameObject);
         }
     }
-    public void InstantiateCamera(int levelNumber)
-    {
+    public void InstantiateCamera(int levelNumber) {
         cameraObject = Instantiate(cameraPrefab);
         cam = cameraObject.GetComponent<Camera>();
 
@@ -53,8 +48,7 @@ public class CameraManager : MonoBehaviour
 
         SetCameraMode(CamMode.NORMAL);
 
-        switch (levelNumber)
-        {
+        switch (levelNumber) {
             case 1:
                 lookAtPointResetPos = new Vector3(0, 0, 0);
                 cameraHeight = 0f;
@@ -68,8 +62,7 @@ public class CameraManager : MonoBehaviour
 
         StartCoroutine(PlaceCamera());
     }
-    public void InstantiateTitleCamera()
-    {
+    public void InstantiateTitleCamera() {
         cameraObject = Instantiate(cameraPrefab);
         cam = cameraObject.GetComponent<Camera>();
         lookAtObject = Instantiate(lookAtPrefab);
@@ -106,10 +99,8 @@ public class CameraManager : MonoBehaviour
             newHypothetical.y + cameraHeight,
             newHypothetical.z + zOffset);
     }
-    private IEnumerator PlaceCamera(float time = 0f, bool reset = false)
-    {
-        if (reset)
-        {
+    private IEnumerator PlaceCamera(float time = 0f, bool reset = false) {
+        if (reset) {
             currentlookAtObject.transform.position = lookAtPointResetPos;
             currentlookAtObject.transform.LookAt(cam.transform);
         }
@@ -133,35 +124,28 @@ public class CameraManager : MonoBehaviour
         cam.transform.LookAt(currentlookAtObject.transform);
     }
 
-    private void SwitchLookAtObject(GameObject newLookAtPoint, bool replace = true)
-    {
+    private void SwitchLookAtObject(GameObject newLookAtPoint, bool replace = true) {
         currentlookAtObject = newLookAtPoint;
-        if (replace)
-        {
+        if (replace) {
             StartCoroutine(PlaceCamera());
         }
     }
-    private void MoveLookAtPosition(Vector3 newPostion)
-    {
+    private void MoveLookAtPosition(Vector3 newPostion) {
         currentlookAtObject.transform.position = newPostion;
         currentlookAtObject.transform.eulerAngles = new Vector3(0, 0, 0);
         StartCoroutine(PlaceCamera(1f));
     }
-    public void SwitchTitleScreenPosition(string key)
-    {
+    public void SwitchTitleScreenPosition(string key) {
         tscm.MoveToIsland(key);
     }
-    
-    private void SetCameraMode(CamMode mode)
-    {
-        if (currentMode != CamMode.NORMAL && mode == CamMode.NORMAL)
-        {
+
+    private void SetCameraMode(CamMode mode) {
+        if (currentMode != CamMode.NORMAL && mode == CamMode.NORMAL) {
             ControlsManager.self.ActivateMainMap();
-            GUIManager.self.TogglePlayButtonImage(true); 
+            GUIManager.self.TogglePlayButtonImage(true);
             currentlookAtObject = lookAtObject;
         }
-        if (currentMode == CamMode.CINEMATIC && mode != CamMode.CINEMATIC)
-        {
+        if (currentMode == CamMode.CINEMATIC && mode != CamMode.CINEMATIC) {
             StartCoroutine(GUIManager.self.DeactivateCinematicUI());
             currentZoom = Vector3.Distance(cam.transform.position, currentlookAtObject.transform.position);
             zoomGoal = currentZoom;
@@ -170,12 +154,11 @@ public class CameraManager : MonoBehaviour
 
         currentMode = mode;
 
-        if (mode == CamMode.CINEMATIC)
-        {
+        if (mode == CamMode.CINEMATIC) {
             ControlsManager.self.ActivateCinematicMap();
             StartCoroutine(GUIManager.self.ActivateCinematicUI());
         }
-        
+
     }
 
     public void DoBeginAttempt(int sectionNum, GameObject lookAtNewObj) {
@@ -183,7 +166,7 @@ public class CameraManager : MonoBehaviour
 
         SetCameraMode(CamMode.CINEMATIC);
         SwitchLookAtObject(lookAtNewObj, false);
-        
+
         StartCoroutine(ccm.DoSectionView(sectionNum));
     }
     public void DoMoveToNextSection(int sectionNum) {
@@ -196,21 +179,17 @@ public class CameraManager : MonoBehaviour
 
     }
 
-    public void DoPan()
-    {
+    public void DoPan() {
         float distance = Vector3.Distance(cam.transform.position, currentlookAtObject.transform.position);
         lastPositionInWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, distance));
         lastMousePosition = mousePosition;
         StartCoroutine(Pan());
     }
-    private IEnumerator Pan()
-    {
+    private IEnumerator Pan() {
         isPanning = true;
-        while (isPanning)
-        {
+        while (isPanning) {
             //if we haven't started moving
-            if (lastMousePosition != mousePosition)
-            {
+            if (lastMousePosition != mousePosition) {
                 //Calculate new world position for camera at mouse point
                 //float z = Camera.main.WorldToScreenPoint(lookAtWorldCoordinates).z;
                 float distance = Vector3.Distance(cam.transform.position, currentlookAtObject.transform.position);
@@ -240,17 +219,14 @@ public class CameraManager : MonoBehaviour
         }
         isPanning = false;
     }
-    public void DoRotate()
-    {
+    public void DoRotate() {
         lastMousePosition = mousePosition;
         StartCoroutine(Rotate());
     }
-    private IEnumerator Rotate()
-    {
+    private IEnumerator Rotate() {
         isRotating = true;
 
-        while (isRotating)
-        {
+        while (isRotating) {
             float mouseDeltaX = mousePosition.x - lastMousePosition.x;
 
             Vector3 screenRotationAxis = new Vector3(-mousePosition.y, mousePosition.x, 0).normalized;
@@ -265,53 +241,43 @@ public class CameraManager : MonoBehaviour
         }
         isRotating = false;
     }
-    public void DoScroll(float scrollInput)
-    {
+    public void DoScroll(float scrollInput) {
         scrollInput *= -1;
         if ((scrollInput < 0 && zoomGoal >= zoomMin)
-                || (scrollInput > 0 && zoomGoal <= zoomMax))
-        {
+                || (scrollInput > 0 && zoomGoal <= zoomMax)) {
             zoomGoal += scrollInput;
         }
         StartCoroutine(Scroll(scrollInput));
     }
-    private IEnumerator Scroll(float scrollInput)
-    {
-        if (scrollInput == 1)
-        {
-            while (currentZoom <= zoomGoal)
-            {
+    private IEnumerator Scroll(float scrollInput) {
+        if (scrollInput == 1) {
+            while (currentZoom <= zoomGoal) {
                 currentZoom += zoomDistancePerFrame;
                 StartCoroutine(PlaceCamera(0f));
                 yield return null;
             }
         }
-        else
-        {
-            while (currentZoom >= zoomGoal)
-            {
+        else {
+            while (currentZoom >= zoomGoal) {
                 currentZoom -= zoomDistancePerFrame;
                 StartCoroutine(PlaceCamera(0f));
                 yield return null;
             }
         }
     }
-    public void ManualZoom(float amountToZoom, float animationTime = .5f)
-    {
+    public void ManualZoom(float amountToZoom, float animationTime = .5f) {
         currentZoom += amountToZoom;
         StartCoroutine(PlaceCamera(animationTime));
     }
-    
+
     //-TSCM-------------------------------------------------------------------------------
-    private class TitleScreenCameraManager
-    {
+    private class TitleScreenCameraManager {
         private readonly Dictionary<string, Vector3> levelSelectCameraPositions = new() {
             {"title", new Vector3(.03f, 50f, 11.3f)},
             {"credits", new Vector3(32.1f, -3.75f, -44.7f)},
             {"level0", new Vector3(.03f, -0.25f, 11.3f)}
         };
-        public void ReturnToTitle(float time = 0f)
-        {
+        public void ReturnToTitle(float time = 0f) {
             self.lookAtPointResetPos = levelSelectCameraPositions["title"];
             self.cameraHeight = 0f;
             self.startingZoom = 25f;
@@ -321,8 +287,7 @@ public class CameraManager : MonoBehaviour
             self.StartCoroutine(self.PlaceCamera(time, true));
         }
 
-        public void MoveToIsland(string key)
-        {
+        public void MoveToIsland(string key) {
             self.currentlookAtObject.transform.position = levelSelectCameraPositions[key];
             self.currentlookAtObject.transform.eulerAngles = new Vector3(0, 0, 0);
             self.StartCoroutine(self.PlaceCamera(1f));
@@ -330,8 +295,7 @@ public class CameraManager : MonoBehaviour
     }
 
     //-----CCM-------------------------------------------------------------------------------------------
-    private class CinematicCameraManager
-    {
+    private class CinematicCameraManager {
         private readonly List<List<Vector3>> levelSectionViewPoints = new()
         {
             //level 1
@@ -343,21 +307,19 @@ public class CameraManager : MonoBehaviour
                 new Vector3(0,20,16)
             }
         };
-        
+
         private readonly Vector3[][] sectionStartPoints = {
             new Vector3[] {new(0, 0, 0), new(3, -5.5f, 0), new(0, -12f, 0), new(0, -16f, 0)}
         };
 
-        public IEnumerator DoSectionView(int sectionNum)
-        {
+        public IEnumerator DoSectionView(int sectionNum) {
             self.cam.transform.GetPositionAndRotation(out Vector3 originalPosition, out Quaternion originalRotation);
             float time = .5f;
 
             LeanTween.moveLocal(self.cameraObject, levelSectionViewPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][sectionNum], time).setEaseInOutSine();
 
             float elapsed = 0f;
-            while (elapsed < time)
-            {
+            while (elapsed < time) {
                 //what to update here
                 elapsed += Time.deltaTime;
 
@@ -376,16 +338,14 @@ public class CameraManager : MonoBehaviour
                 yield return null; // wait for next frame
             }
 
-            while (self.currentlookAtObject != self.lookAtObject)
-            {
+            while (self.currentlookAtObject != self.lookAtObject) {
                 self.currentlookAtObject.transform.LookAt(self.cam.transform);
                 self.cam.transform.LookAt(self.currentlookAtObject.transform);
                 yield return null;
             }
         }
 
-        public IEnumerator DoMoveToNextSection(int sectionNum)
-        {
+        public IEnumerator DoMoveToNextSection(int sectionNum) {
             self.cam.transform.GetPositionAndRotation(out Vector3 originalPosition, out Quaternion originalRotation);
             float time = 1f;
 
@@ -393,8 +353,7 @@ public class CameraManager : MonoBehaviour
             LeanTween.moveLocal(self.cam.gameObject, self.GetNewCameraPosition(sectionStartPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][sectionNum]), time).setEaseInOutSine();
 
             float elapsed = 0f;
-            while (elapsed < time)
-            {
+            while (elapsed < time) {
                 //what to update here
                 elapsed += Time.deltaTime;
 
@@ -407,7 +366,7 @@ public class CameraManager : MonoBehaviour
 
                 // Smoothly interpolate rotation
                 self.cam.transform.rotation = Quaternion.Slerp(originalRotation, targetRotation, easedT);
-                
+
 
                 yield return null; // wait for next frame
             }
