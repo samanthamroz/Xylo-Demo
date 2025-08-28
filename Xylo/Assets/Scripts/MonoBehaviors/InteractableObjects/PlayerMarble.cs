@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerMarble : InteractableObject {
     public Vector3 resetPosition;
     public Vector3 currentVelocity;
+    public Vector3 launchVelocity = Vector3.zero;
     public GameObject sphere;
     public List<GameObject> spheres = new();
     void Start() {
@@ -22,26 +24,36 @@ public class PlayerMarble : InteractableObject {
     public void ResetSelf() {
         GetComponent<Rigidbody>().isKinematic = true;
         LeanTween.move(gameObject, resetPosition, .5f).setEaseInOutSine();
+        isFirstNote = true;
     }
     public void ResetSelfToCurrentPosition() {
         resetPosition = transform.position;
         ResetSelf();
     }
+    public void SaveCurrentVelocity() {
+        launchVelocity = GetComponent<Rigidbody>().velocity;
+    }
 
     public void RunMarble() {
-        GetComponent<Rigidbody>().isKinematic = false;
-        float T = .75f;                // airtime per bounce
-        float g = -Physics.gravity.y;   // ~9.81
-        float vY = g * T * 0.5f;        // vertical launch speed
-        float vX = 1.9f / T;             // horizontal speed (negative to go left)
-
         Rigidbody rb = GetComponent<Rigidbody>();
-        float mass = rb.mass;
-        Vector3 impulse = mass * new Vector3(vX, vY, 0f);
+        rb.isKinematic = false;
 
-        rb.AddForce(impulse, ForceMode.Impulse);
+        if (launchVelocity == Vector3.zero) {
+            float T = .75f;                // airtime per bounce
+            float g = -Physics.gravity.y;   // ~9.81
+            float vY = g * T * 0.5f;        // vertical launch speed
+            float vX = 1.9f / T;             // horizontal speed (negative to go left)
 
-        //begin attempt
+
+            float mass = rb.mass;
+            Vector3 impulse = mass * new Vector3(vX, vY, 0f);
+
+            rb.AddForce(impulse, ForceMode.Impulse);
+        }
+        else {
+            rb.velocity = launchVelocity;
+        }
+
         LevelManager.self.StartCountingForAttempt();
     }
     public static bool IsWithinIntervalRange(float y, float tolerance) {

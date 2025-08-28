@@ -101,16 +101,13 @@ public class LevelManager : MonoBehaviour {
 
             LeanTween.moveLocal(deathPlane, deathPlaneCoords[levelNum - 1][sectionNum], .5f);
 
-            //marble.GetComponent<PlayerMarble>().UpdateSavedVelocity();
+            marble.GetComponent<PlayerMarble>().SaveCurrentVelocity();
             marble.GetComponent<PlayerMarble>().ResetSelfToCurrentPosition();
             return;
         }
 
         //TODO: Level won stuff
-        /*
-        ControlsManager.self.ActivateMainMap();
-        CameraManager.self.SetCameraMode(CamMode.NORMAL); */
-        //GUIManager.self.ActivateWinMenuUI();
+        CameraManager.self.DoEndOfLevel();
     }
 
     private void PrintNoteList(List<NoteTrigger> list) {

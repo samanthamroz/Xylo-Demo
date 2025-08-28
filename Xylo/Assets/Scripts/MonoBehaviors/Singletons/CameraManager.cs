@@ -178,7 +178,10 @@ public class CameraManager : MonoBehaviour {
         StartCoroutine(ccm.DoMoveToNextSection(sectionNum));
 
     }
-
+    public void DoEndOfLevel() {
+        GUIManager.self.ActivateWinMenuUI();
+        SetCameraMode(CamMode.NORMAL);
+    }
     public void DoPan() {
         float distance = Vector3.Distance(cam.transform.position, currentlookAtObject.transform.position);
         lastPositionInWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, distance));
