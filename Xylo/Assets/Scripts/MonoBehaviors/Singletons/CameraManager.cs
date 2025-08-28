@@ -50,9 +50,9 @@ public class CameraManager : MonoBehaviour {
 
         switch (levelNumber) {
             case 1:
-                lookAtPointResetPos = new Vector3(0, 0, 0);
-                cameraHeight = 0f;
-                startingZoom = 25f;
+                lookAtPointResetPos = new Vector3(6, 12, -6);
+                cameraHeight = 2f;
+                startingZoom = 17f;
                 break;
             default:
                 break;
@@ -60,7 +60,7 @@ public class CameraManager : MonoBehaviour {
         currentZoom = startingZoom;
         zoomGoal = currentZoom;
 
-        StartCoroutine(PlaceCamera());
+        StartCoroutine(PlaceCamera(0f, true));
     }
     public void InstantiateTitleCamera() {
         cameraObject = Instantiate(cameraPrefab);
@@ -102,7 +102,7 @@ public class CameraManager : MonoBehaviour {
     private IEnumerator PlaceCamera(float time = 0f, bool reset = false) {
         if (reset) {
             currentlookAtObject.transform.position = lookAtPointResetPos;
-            currentlookAtObject.transform.LookAt(cam.transform);
+            //currentlookAtObject.transform.LookAt(cam.transform);
         }
 
         //get position to travel to
@@ -296,27 +296,24 @@ public class CameraManager : MonoBehaviour {
 
     //-----CCM-------------------------------------------------------------------------------------------
     private class CinematicCameraManager {
-        private readonly List<List<Vector3>> levelSectionViewPoints = new()
+        private readonly List<List<Vector3>> sectionCinematicViewPoints = new()
         {
             //level 1
             new() {
-                new Vector3(0,5,16), new Vector3(0,-.5f,16), new Vector3(0,-7,16), new Vector3(-6,-11,16)
-            },
-            //level 2
-            new() {
-                new Vector3(0,20,16)
+                new Vector3(8, 15, -15), new Vector3(16, 14, -15), new Vector3(22, 13, -15), new Vector3(30, 12, -15)
             }
         };
 
-        private readonly Vector3[][] sectionStartPoints = {
-            new Vector3[] {new(0, 0, 0), new(3, -5.5f, 0), new(0, -12f, 0), new(0, -16f, 0)}
+        private readonly Vector3[][] sectionGameViewPoints = {
+            //level 1
+            new Vector3[] {new(6, 12, -6), new(14, 11, -6), new(22, 10, -6), new(30, 9, -6)}
         };
 
         public IEnumerator DoSectionView(int sectionNum) {
             self.cam.transform.GetPositionAndRotation(out Vector3 originalPosition, out Quaternion originalRotation);
             float time = .5f;
 
-            LeanTween.moveLocal(self.cameraObject, levelSectionViewPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][sectionNum], time).setEaseInOutSine();
+            LeanTween.moveLocal(self.cameraObject, sectionCinematicViewPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][sectionNum], time).setEaseInOutSine();
 
             float elapsed = 0f;
             while (elapsed < time) {
@@ -349,8 +346,8 @@ public class CameraManager : MonoBehaviour {
             self.cam.transform.GetPositionAndRotation(out Vector3 originalPosition, out Quaternion originalRotation);
             float time = 1f;
 
-            LeanTween.moveLocal(self.lookAtObject, sectionStartPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][sectionNum], time).setEaseInOutSine();
-            LeanTween.moveLocal(self.cam.gameObject, self.GetNewCameraPosition(sectionStartPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][sectionNum]), time).setEaseInOutSine();
+            LeanTween.moveLocal(self.lookAtObject, sectionGameViewPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][sectionNum], time).setEaseInOutSine();
+            LeanTween.moveLocal(self.cam.gameObject, self.GetNewCameraPosition(sectionGameViewPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][sectionNum]), time).setEaseInOutSine();
 
             float elapsed = 0f;
             while (elapsed < time) {
@@ -370,7 +367,7 @@ public class CameraManager : MonoBehaviour {
 
                 yield return null; // wait for next frame
             }
-            self.lookAtPointResetPos = sectionStartPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][sectionNum];
+            self.lookAtPointResetPos = sectionGameViewPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][sectionNum];
             self.SetCameraMode(CamMode.NORMAL);
         }
     }
