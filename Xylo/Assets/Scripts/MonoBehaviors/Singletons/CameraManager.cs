@@ -140,6 +140,8 @@ public class CameraManager : MonoBehaviour {
     }
 
     private void SetCameraMode(CamMode mode) {
+        if (mode == currentMode) return;
+
         if (currentMode != CamMode.NORMAL && mode == CamMode.NORMAL) {
             ControlsManager.self.ActivateMainMap();
             GUIManager.self.TogglePlayButtonImage(true);
@@ -176,7 +178,6 @@ public class CameraManager : MonoBehaviour {
         SwitchLookAtObject(lookAtObject, false);
 
         StartCoroutine(ccm.DoMoveToNextSection(sectionNum));
-
     }
     public void DoEndOfLevel() {
         GUIManager.self.ActivateWinMenuUI();
@@ -316,7 +317,7 @@ public class CameraManager : MonoBehaviour {
             self.cam.transform.GetPositionAndRotation(out Vector3 originalPosition, out Quaternion originalRotation);
             float time = .5f;
 
-            LeanTween.moveLocal(self.cameraObject, sectionCinematicViewPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][sectionNum], time).setEaseInOutSine();
+            LeanTween.moveLocal(self.cameraObject, sectionCinematicViewPoints[LoadingManager.self.GetCurrentLevelNumber()][sectionNum], time).setEaseInOutSine();
 
             float elapsed = 0f;
             while (elapsed < time) {
@@ -349,8 +350,8 @@ public class CameraManager : MonoBehaviour {
             self.cam.transform.GetPositionAndRotation(out Vector3 originalPosition, out Quaternion originalRotation);
             float time = 1f;
 
-            LeanTween.moveLocal(self.lookAtObject, sectionGameViewPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][sectionNum], time).setEaseInOutSine();
-            LeanTween.moveLocal(self.cam.gameObject, self.GetNewCameraPosition(sectionGameViewPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][sectionNum]), time).setEaseInOutSine();
+            LeanTween.moveLocal(self.lookAtObject, sectionGameViewPoints[LoadingManager.self.GetCurrentLevelNumber()][sectionNum], time).setEaseInOutSine();
+            LeanTween.moveLocal(self.cam.gameObject, self.GetNewCameraPosition(sectionGameViewPoints[LoadingManager.self.GetCurrentLevelNumber()][sectionNum]), time).setEaseInOutSine();
 
             float elapsed = 0f;
             while (elapsed < time) {
@@ -370,8 +371,9 @@ public class CameraManager : MonoBehaviour {
 
                 yield return null; // wait for next frame
             }
-            self.lookAtPointResetPos = sectionGameViewPoints[LoadingManager.self.GetCurrentLevelNumber() - 1][sectionNum];
+            self.lookAtPointResetPos = sectionGameViewPoints[LoadingManager.self.GetCurrentLevelNumber()][sectionNum];
             self.SetCameraMode(CamMode.NORMAL);
+            AudioManager.self.PlayMelodyForCurrentSection();
         }
     }
 }

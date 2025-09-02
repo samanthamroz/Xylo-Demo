@@ -5,23 +5,20 @@ using UnityEngine;
 
 //inspo: https://www.gamedeveloper.com/audio/coding-to-the-beat---under-the-hood-of-a-rhythm-game-in-unity
 
-class NoteTrigger
-{
+class NoteTrigger {
     public Note note { get; set; }
     public double beatTriggered { get; set; }
-    public NoteTrigger(Note _note, double _beatTriggered)
-    {
+    public NoteTrigger(Note _note, double _beatTriggered) {
         note = _note;
         beatTriggered = _beatTriggered;
     }
 }
 
-public class LevelManager : MonoBehaviour
-{
+public class LevelManager : MonoBehaviour {
     public static LevelManager self;
 
     private int levelNum { get { return LoadingManager.self.GetCurrentLevelNumber(); } }
-    private int sectionNum = 0;
+    [HideInInspector] public int sectionNum = 0;
 
     public GameObject marblePrefab, deathPlanePrefab;
     private GameObject marble, deathPlane;
@@ -36,33 +33,31 @@ public class LevelManager : MonoBehaviour
             new NoteTrigger[] {new(Note.Ab, 1f), new(Note.B, 2f), new(Note.Eb, 3f), new(Note.Db, 4f)},
         }
     };
-    private NoteTrigger[] currentSectionSolution { get { return solutions[levelNum - 1][sectionNum]; } }
+    private NoteTrigger[] currentSectionSolution { get { return solutions[levelNum][sectionNum]; } }
     private List<NoteTrigger> attemptList;
 
     private Vector3[] marbleStartPositions = { new(.5f, 13f, -6) };
     private Vector2[][] deathPlaneCoords = {
         //Level 1
-        new Vector2[] {new(0, 8), new(8, 8), new(16, 8), new(24, 8)}
+        new Vector2[] {new(0, 8), new(8, 8), new(16, 6), new(24, 4)}
     };
-    private float forgivenessBetweenBeats = .2f;
+    private float forgivenessBetweenBeats = .1f;
     [HideInInspector] public bool attemptStarted;
     private bool attemptCountingStarted;
 
     [SerializeField] private bool DEBUG_AutoWin;
 
-    void Awake()
-    {
+    void Awake() {
         self = this;
     }
-    void Start()
-    {
+    void Start() {
+        print("started");
         attemptStarted = false;
 
-        marble = Instantiate(marblePrefab, marbleStartPositions[levelNum - 1], Quaternion.identity);
-        deathPlane = Instantiate(deathPlanePrefab, deathPlaneCoords[levelNum - 1][sectionNum], Quaternion.identity);
+        marble = Instantiate(marblePrefab, marbleStartPositions[levelNum], Quaternion.identity);
+        deathPlane = Instantiate(deathPlanePrefab, deathPlaneCoords[levelNum][sectionNum], Quaternion.identity);
     }
-    public void StartPlaying()
-    {
+    public void StartPlaying() {
         attemptStarted = true;
         attemptList = new List<NoteTrigger>();
 
@@ -70,16 +65,12 @@ public class LevelManager : MonoBehaviour
 
         marble.GetComponent<PlayerMarble>().RunMarble();
     }
-    public void StartCountingForAttempt()
-    {
+    public void StartCountingForAttempt() {
         attemptCountingStarted = true;
     }
-    public void EndAttempt(bool retrySection = true)
-    {
-        if (!attemptStarted)
-        {
-            if (retrySection)
-            {
+    public void EndAttempt(bool retrySection = true) {
+        if (!attemptStarted) {
+            if (retrySection) {
                 marble.GetComponent<PlayerMarble>().ResetSelf();
             }
             return;
@@ -88,32 +79,28 @@ public class LevelManager : MonoBehaviour
         attemptCountingStarted = false;
 
         bool hasWonSection = false;
-        try
-        {
+        try {
             hasWonSection = CheckForSectionWin();
         }
         catch (NullReferenceException) { } //occurs when restart is triggered before first note block is triggered
 
-        print(hasWonSection);
-        if (!hasWonSection && !DEBUG_AutoWin)
-        {
+        if (!hasWonSection && !DEBUG_AutoWin) {
             attemptList = new();
-            if (retrySection)
-            {
+            if (retrySection) {
                 marble.GetComponent<PlayerMarble>().ResetSelf();
             }
+            CameraManager.self.DoMoveToNextSection(sectionNum);
             return;
         }
         LoadingManager.self.SetCurrentSectionCompleted(sectionNum);
 
         //Move to next section
-        if (!LoadingManager.self.IsLevelCompleted())
-        {
+        if (!LoadingManager.self.IsLevelCompleted()) {
             sectionNum += 1;
 
             CameraManager.self.DoMoveToNextSection(sectionNum);
 
-            LeanTween.moveLocal(deathPlane, deathPlaneCoords[levelNum - 1][sectionNum], .5f);
+            LeanTween.moveLocal(deathPlane, deathPlaneCoords[levelNum][sectionNum], .5f);
 
             marble.GetComponent<PlayerMarble>().SaveCurrentVelocity();
             marble.GetComponent<PlayerMarble>().ResetSelfToCurrentPosition();
@@ -124,51 +111,41 @@ public class LevelManager : MonoBehaviour
         CameraManager.self.DoEndOfLevel();
     }
 
-    private void PrintNoteList(List<NoteTrigger> list)
-    {
+    private void PrintNoteList(List<NoteTrigger> list) {
         string str = "";
-        foreach (var thing in list)
-        {
+        foreach (var thing in list) {
             str += "(" + thing.note + ", " + thing.beatTriggered + ") ";
         }
         print(str);
     }
-    private bool CheckForSectionWin()
-    {
-        if (attemptList.Count < 1)
-        {
+    private bool CheckForSectionWin() {
+        if (attemptList.Count < 1) {
             return false;
         }
 
         PrintNoteList(currentSectionSolution.ToList());
         PrintNoteList(attemptList);
         if ((attemptList[0].note != currentSectionSolution[0].note) ||
-            (attemptList.Count != currentSectionSolution.Length))
-        {
+            (attemptList.Count != currentSectionSolution.Length)) {
             return false;
         }
         double distanceBetweenAttemptNotes, distanceBetweenSolutionNotes;
 
-        for (int i = 1; i < attemptList.Count; i++)
-        {
-            if (attemptList[i].note != currentSectionSolution[i].note)
-            {
+        for (int i = 1; i < attemptList.Count; i++) {
+            if (attemptList[i].note != currentSectionSolution[i].note) {
                 return false;
             }
             distanceBetweenAttemptNotes = attemptList[i].beatTriggered - attemptList[i - 1].beatTriggered;
             distanceBetweenSolutionNotes = currentSectionSolution[i].beatTriggered - currentSectionSolution[i - 1].beatTriggered;
 
-            if (Math.Abs(distanceBetweenAttemptNotes - distanceBetweenSolutionNotes) >= forgivenessBetweenBeats)
-            {
+            if (Math.Abs(distanceBetweenAttemptNotes - distanceBetweenSolutionNotes) >= forgivenessBetweenBeats) {
                 return false;
             }
         }
         return true;
     }
-    public void TriggerNote(Note note)
-    {
-        if (!attemptCountingStarted)
-        {
+    public void TriggerNote(Note note) {
+        if (!attemptCountingStarted) {
             return;
         }
 

@@ -7,10 +7,9 @@ using UnityEngine.SceneManagement;
 
 //inspo: https://www.youtube.com/watch?v=zo1dkYfIJVg
 
-public class ControlsManager : MonoBehaviour
-{
+public class ControlsManager : MonoBehaviour {
     public static ControlsManager self;
-    
+
     private InputActionAsset inputActions;
     private InputActionMap mainMap, levelSelectMap, menuMap, cinematicMap, currentActionMap, lastActionMap;
     public string currentActionMapName { get { return currentActionMap.name; } }
@@ -19,20 +18,21 @@ public class ControlsManager : MonoBehaviour
 
     public bool isGamePaused;
 
-    
+
     void Awake() {
-		if (self == null) {
-			self = this;
-			DontDestroyOnLoad(gameObject);
-		} else {
-			Destroy(gameObject);
-		}
+        if (self == null) {
+            self = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else {
+            Destroy(gameObject);
+        }
     }
-    
+
     void Start() {
 
     }
-    
+
     public void InitializeActionMap(string map) {
         inputActions = GetComponent<PlayerInput>().actions;
         mainMap = inputActions.FindActionMap("Main");
@@ -72,7 +72,7 @@ public class ControlsManager : MonoBehaviour
             default:
                 break;
         }
-        
+
         if (lastActionMap == null) {
             lastActionMap = currentActionMap;
         }
@@ -97,7 +97,8 @@ public class ControlsManager : MonoBehaviour
     public void PauseGameTime(bool doPause) {
         if (doPause) {
             Time.timeScale = 0f;
-        } else {
+        }
+        else {
             Time.timeScale = 1f;
         }
         isGamePaused = doPause;
@@ -106,48 +107,50 @@ public class ControlsManager : MonoBehaviour
     void OnMouseMove(InputValue value) {
         mousePosition = value.Get<Vector2>();
     }
-    
+
     private InteractableObject FindInteractableObjectAtMouse() {
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
+        if (Physics.Raycast(ray, out RaycastHit hit)) {
             InteractableObject testIfInteractable = hit.collider.gameObject.GetComponent<InteractableObject>();
             if (testIfInteractable != null) {
                 return testIfInteractable;
-            } 
+            }
         }
         return null;
     }
-    
+
     void OnMouseClick(InputValue value) {
         if (value.Get<float>() == 1) { //click down
             CameraManager.self.isRotating = false;
             CameraManager.self.isPanning = false;
-            
-            
+
+
             currentInteractable = FindInteractableObjectAtMouse();
 
             if (lastInteractable != null) {
                 lastInteractable.DoClickAway();
             }
 
-			if (currentInteractable != null) {
+            if (currentInteractable != null) {
                 currentInteractable.DoClick();
-            } else { //clicked on empty space
+            }
+            else { //clicked on empty space
                 currentInteractable = null;
             }
-		} else { //click released
+        }
+        else { //click released
             if (currentInteractable != null) {
                 currentInteractable.DoRelease();
-            } 
+            }
             lastInteractable = currentInteractable;
         }
     }
 
     void OnRightMouseClick(InputValue value) {
         if (value.Get<float>() == 1) { //click down
-			CameraManager.self.DoPan();
-		} else {
+            CameraManager.self.DoPan();
+        }
+        else {
             CameraManager.self.isPanning = false;
         }
     }
@@ -161,38 +164,37 @@ public class ControlsManager : MonoBehaviour
 
     void OnPiano(InputValue value) {
         if (value.Get<float>() == 1) {
-			GUIManager.self.TogglePianoPosition();
-		}
+            GUIManager.self.TogglePianoPosition();
+        }
     }
 
-	void OnPause(InputValue value) {
-		if (value.Get<float>() == 1) {
-			GUIManager.self.TogglePause();
-		}
-	}
+    void OnPause(InputValue value) {
+        if (value.Get<float>() == 1) {
+            GUIManager.self.TogglePause();
+        }
+    }
 
     void OnSpace(InputValue value) {
         if (value.Get<float>() == 1) {
-			AudioManager.self.PlayMelody();
-		}
+            AudioManager.self.PlayMelodyForCurrentSection();
+        }
     }
 
-    void OnRestart(InputValue value){
+    void OnRestart(InputValue value) {
         if (value.Get<float>() == 1) {
-			LoadingManager.self.ReloadCurrentScene();
-		}
+            LoadingManager.self.ReloadCurrentScene();
+        }
     }
 
     void OnDebug1(InputValue value) { //shift + D + 1
         if (value.Get<float>() == 1) {
-			SaveManager.DeleteAll();
-		}
+            SaveManager.DeleteAll();
+        }
     }
 
     void OnDebug2(InputValue value) { //shift + D + 2
-        if (value.Get<float>() == 1)
-        {
-            
+        if (value.Get<float>() == 1) {
+
         }
     }
 }

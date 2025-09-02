@@ -10,11 +10,14 @@ public class PlayerMarble : InteractableObject {
     public Vector3 launchVelocity = Vector3.zero;
     public GameObject sphere;
     public List<GameObject> spheres = new();
+    [SerializeField] bool DEBUG_ShowSpheres = false;
     void Start() {
         resetPosition = transform.position;
     }
     void FixedUpdate() {
-        currentVelocity = GetComponent<Rigidbody>().velocity;
+        if (!GetComponent<Rigidbody>().isKinematic) {
+            currentVelocity = GetComponent<Rigidbody>().velocity;
+        }
     }
 
     public override void DoClick() {
@@ -32,6 +35,7 @@ public class PlayerMarble : InteractableObject {
     }
     public void SaveCurrentVelocity() {
         launchVelocity = GetComponent<Rigidbody>().velocity;
+        currentVelocity = launchVelocity;
     }
 
     public void RunMarble() {
@@ -56,7 +60,7 @@ public class PlayerMarble : InteractableObject {
 
         LevelManager.self.StartCountingForAttempt();
     }
-    public static bool IsWithinIntervalRange(float y, float tolerance) {
+    private bool IsWithinIntervalRange(float y, float tolerance) {
         // Find remainder when divided by 0.5 (since intervals are every 0.5 units)
         float remainder = y % 0.5f;
 
@@ -115,10 +119,13 @@ public class PlayerMarble : InteractableObject {
             float testY = start.y + (realisticVelocity.y * t) + (0.5f * Physics.gravity.y * t * t);
 
             Vector2 tryEnd = new(testX, testY);  // This is absolute position
-            spheres.Add(Instantiate(sphere, new(tryEnd.x, tryEnd.y, -10), Quaternion.identity));
-            if (i % 4 == 0) {
-                spheres[^1].transform.localScale = new(.5f, .5f, .5f);
+            if (DEBUG_ShowSpheres) {
+                spheres.Add(Instantiate(sphere, new(tryEnd.x, tryEnd.y, -10), Quaternion.identity));
+                if (i % 4 == 0) {
+                    spheres[^1].transform.localScale = new(.5f, .5f, .5f);
+                }
             }
+
 
             //if y is within range, that point is valid
             //when a point is found, we keep searching to draw the curve
@@ -128,8 +135,10 @@ public class PlayerMarble : InteractableObject {
                 end = new(tryEnd.x, roundedY, transform.position.z);  // Use absolute coordinates
                 tPerfect = t;
                 adjust = true;
-                spheres.Add(Instantiate(sphere, new(end.x, end.y, -10), Quaternion.identity));
-                spheres[^1].transform.localScale = Vector3.one;
+                if (DEBUG_ShowSpheres) {
+                    spheres.Add(Instantiate(sphere, new(end.x, end.y, -10), Quaternion.identity));
+                    spheres[^1].transform.localScale = Vector3.one;
+                }
             }
         }
 
@@ -169,6 +178,6 @@ public class PlayerMarble : InteractableObject {
 
         rb.velocity = (Vector3)perfectVelocity;
 
-        print($"Measure {BeatManager.self.currentMeasure} | Beat {BeatManager.self.currentBeat} | Offset {(float)BeatManager.self.GetCurrentBeatOffset()}");
+        //print($"Measure {BeatManager.self.currentMeasure} | Beat {BeatManager.self.currentBeat} | Offset {(float)BeatManager.self.GetCurrentBeatOffset()}");
     }
 }

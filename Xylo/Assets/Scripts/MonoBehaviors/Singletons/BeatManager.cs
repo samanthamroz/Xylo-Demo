@@ -11,10 +11,6 @@ public class BeatManager : MonoBehaviour {
     void Awake() {
         if (self == null) {
             self = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else {
-            Destroy(gameObject);
         }
     }
 

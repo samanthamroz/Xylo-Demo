@@ -1651,7 +1651,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -1763,10 +1763,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 273b75a924284d54e8449f1b783db482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sectionNum: 0
   marblePrefab: {fileID: 1985733370118950983, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
   deathPlanePrefab: {fileID: 7291011703702692135, guid: b6e55067ed16c5b40b0b01ab94c3ec3c, type: 3}
   attemptStarted: 0
-  DEBUG_AutoWin: 1
+  DEBUG_AutoWin: 0
 --- !u!1001 &1721217636
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2382,5 +2383,5 @@ SceneRoots:
   - {fileID: 1930209694}
   - {fileID: 2036136115}
   - {fileID: 1512528259}
-  - {fileID: 1008274513}
   - {fileID: 1713012012}
+  - {fileID: 1008274513}

@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TutorialButton : MonoBehaviour
-{
+public class TutorialButton : MonoBehaviour {
     public List<GameObject> frames;
     private GameObject currentFrame;
     private int currentFrameNumber = 0;
@@ -23,7 +22,7 @@ public class TutorialButton : MonoBehaviour
             return;
         }
         if (currentFrameNumber == 3) {
-            //AudioManager.self.PlayMelody();
+            AudioManager.self.PlayMelodyForSection(0, 0);
         }
         currentFrame = frames[currentFrameNumber];
         currentFrame.SetActive(true);

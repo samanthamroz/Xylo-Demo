@@ -249,5 +249,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b179211f801b54c44a8e74d47c112c8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  melodies:
-  - {fileID: 8300000, guid: 21261e68188038b449d28fc851b3e9df, type: 3}
+  melodyFragments:
+  - list:
+    - {fileID: 8300000, guid: 6833a68cf72c82041b0bb9467e04b578, type: 3}
+    - {fileID: 8300000, guid: 1b42f075ffc9468419c9591c5a6dc367, type: 3}
+    - {fileID: 8300000, guid: d4b61f5e57c667e4aaf47fe96652621a, type: 3}
+    - {fileID: 8300000, guid: 58ab134753a92c046ac96d2d5a2bac23, type: 3}

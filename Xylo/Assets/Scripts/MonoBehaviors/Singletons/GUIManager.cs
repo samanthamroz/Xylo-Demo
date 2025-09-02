@@ -3,9 +3,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-public class GUIManager : MonoBehaviour
-{
-    public static GUIManager self;
+public class GUIManager : MonoBehaviour {
+	public static GUIManager self;
 
 	public GameObject loadingBannerPrefab, titleScreenCanvasPrefab, levelSelectCanvasPrefab;
 	private GameObject titleScreenCanvas, levelSelectCanvas;
@@ -19,10 +18,11 @@ public class GUIManager : MonoBehaviour
 		if (self == null) {
 			self = this;
 			DontDestroyOnLoad(gameObject);
-		} else {
+		}
+		else {
 			Destroy(gameObject);
 		}
-    }
+	}
 
 	public void InstantiateTitleUI(bool keepOpen) {
 		titleScreenCanvas = Instantiate(titleScreenCanvasPrefab);
@@ -30,7 +30,8 @@ public class GUIManager : MonoBehaviour
 
 		if (keepOpen) {
 			levelSelectCanvas.SetActive(false);
-		} else {
+		}
+		else {
 			titleScreenCanvas.SetActive(false);
 		}
 	}
@@ -39,7 +40,7 @@ public class GUIManager : MonoBehaviour
 
 		pianoMenu = Instantiate(pianoMenuPrefab, UICanvas.transform);
 		ActivatePiano(false, 0f);
-		
+
 		playButton = Instantiate(playButtonPrefab, UICanvas.transform);
 
 		if (isTutorial) {
@@ -66,11 +67,12 @@ public class GUIManager : MonoBehaviour
 	}
 	public void TogglePianoPosition() {
 		ActivatePiano(pianoMenu.transform.localPosition.y == (-60f + -(Screen.height / 2)), .1f);
-    }
+	}
 	public void ActivatePiano(bool turnOn, float animationTime) {
 		if (turnOn) {
 			LeanTween.moveLocalY(pianoMenu, 200f + -(Screen.height / 2), animationTime).setEaseInOutSine();
-		} else {
+		}
+		else {
 			LeanTween.moveLocalY(pianoMenu, -60f + -(Screen.height / 2), animationTime).setEaseInOutSine();
 		}
 	}
@@ -79,13 +81,14 @@ public class GUIManager : MonoBehaviour
 		GameObject bottom = cinematicBarsCanvas.transform.GetChild(1).gameObject;
 
 		if (turnOn) {
-			LeanTween.moveLocalY(top, Screen.height / 2 - 75, animationTime).setEaseInOutSine().setIgnoreTimeScale(true);;
-			LeanTween.moveLocalY(bottom, -(Screen.height / 2) + 75, animationTime).setEaseInOutSine().setIgnoreTimeScale(true);;
-			LeanTween.moveLocalY(playButton, playButton.transform.localPosition.y + 150f, animationTime).setEaseInOutSine().setIgnoreTimeScale(true);;
-		} else {
-			LeanTween.moveLocalY(top, Screen.height / 2 + 75, animationTime).setEaseInOutSine().setIgnoreTimeScale(true);;
-			LeanTween.moveLocalY(bottom, -(Screen.height / 2) - 75, animationTime).setEaseInOutSine().setIgnoreTimeScale(true);;
-			LeanTween.moveLocalY(playButton, playButton.transform.localPosition.y - 150f, animationTime).setEaseInOutSine().setIgnoreTimeScale(true);;
+			LeanTween.moveLocalY(top, Screen.height / 2 - 75, animationTime).setEaseInOutSine().setIgnoreTimeScale(true); ;
+			LeanTween.moveLocalY(bottom, -(Screen.height / 2) + 75, animationTime).setEaseInOutSine().setIgnoreTimeScale(true); ;
+			LeanTween.moveLocalY(playButton, playButton.transform.localPosition.y + 150f, animationTime).setEaseInOutSine().setIgnoreTimeScale(true); ;
+		}
+		else {
+			LeanTween.moveLocalY(top, Screen.height / 2 + 75, animationTime).setEaseInOutSine().setIgnoreTimeScale(true); ;
+			LeanTween.moveLocalY(bottom, -(Screen.height / 2) - 75, animationTime).setEaseInOutSine().setIgnoreTimeScale(true); ;
+			LeanTween.moveLocalY(playButton, playButton.transform.localPosition.y - 150f, animationTime).setEaseInOutSine().setIgnoreTimeScale(true); ;
 		}
 	}
 	private void SetPianoActive(bool isActive) {
@@ -95,10 +98,11 @@ public class GUIManager : MonoBehaviour
 		pauseMenu.SetActive(!pauseMenu.activeSelf);
 		if (pauseMenu.activeSelf) {
 			ControlsManager.self.ActivateMenuMap();
-		} else {
+		}
+		else {
 			ControlsManager.self.RevertToLastMap();
 		}
-		
+
 		if (CameraManager.self.isCinematicCamera) {
 			//ControlsManager.self.ActivateCinematicMap();
 			ActivateCinematicBars(!pauseMenu.activeSelf, .25f);
@@ -115,13 +119,16 @@ public class GUIManager : MonoBehaviour
 			endingPosition = curr.transform.position;
 			if (curr == pauseMenu) {
 				curr.SetActive(false);
-			} else if (curr == pianoMenu) {
+			}
+			else if (curr == pianoMenu) {
 				curr.transform.Translate(0, -250f, 0);
 				LeanTween.move(curr, endingPosition, .25f);
-			} else if (curr == playButton) {
+			}
+			else if (curr == playButton) {
 				curr.transform.Translate(0, -200f, 0);
 				LeanTween.move(curr, endingPosition, .25f);
-			} else { //pause button
+			}
+			else { //pause button
 				curr.transform.Translate(0, 150f, 0);
 				LeanTween.move(curr, endingPosition, .25f);
 			}
@@ -149,10 +156,11 @@ public class GUIManager : MonoBehaviour
 
 	public void TogglePlayButtonImage(bool toPlayButton) {
 		if (toPlayButton) {
-            playButton.GetComponent<Image>().sprite = playButtonImage;
-        } else {
-            playButton.GetComponent<Image>().sprite = retryButtonImage;
-        }
+			playButton.GetComponent<Image>().sprite = playButtonImage;
+		}
+		else {
+			playButton.GetComponent<Image>().sprite = retryButtonImage;
+		}
 	}
 
 	public void LoadLeftToMiddle(float time) {
