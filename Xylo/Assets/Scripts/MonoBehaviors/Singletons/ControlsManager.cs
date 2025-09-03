@@ -186,6 +186,17 @@ public class ControlsManager : MonoBehaviour {
         }
     }
 
+    void OnLeftKey(InputValue value) {
+        if (value.Get<float>() == 1) {
+            LevelManager.self.GoToPreviousSection();
+        }
+    }
+
+    void OnRightKey(InputValue value) {
+        if (value.Get<float>() == 1) {
+            LevelManager.self.GoToNextSection();
+        }
+    }
     void OnDebug1(InputValue value) { //shift + D + 1
         if (value.Get<float>() == 1) {
             SaveManager.DeleteAll();

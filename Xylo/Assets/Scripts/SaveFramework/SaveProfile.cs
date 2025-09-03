@@ -16,16 +16,15 @@ public sealed class SaveProfile<T> where T : SaveProfileData {
 
 public abstract record SaveProfileData { }
 
-public record GlobalSaveData : SaveProfileData
-{
+public record GlobalSaveData : SaveProfileData {
     private const int numLevels = 1;
+    public readonly int[] numSectionsInLevel = { 4 };
     public bool[] levelCompletionStatusList = new bool[numLevels];
-    public List<bool>[] sectionCompletionStatusList = {
-        //Level 1
-        new() {false, false, false, false}
-    };
 }
 
 public record SceneSaveData : SaveProfileData {
     public Scene scene;
+    public int numSectionsComplete = 0;
+    public Dictionary<int, Vector2> sectionStartMarbleVelocities = new();
+    public Dictionary<int, Vector2> sectionStartMarblePositions = new();
 }

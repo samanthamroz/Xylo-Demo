@@ -83,7 +83,6 @@ public class DraggableBlockHandle : InteractableObject {
         isDragging = true;
 
         while (isDragging) {
-            print(direction);
             float z = Camera.main.WorldToScreenPoint(transform.position).z;
             Vector3 originalMousePositionInWorld = Camera.main.ScreenToWorldPoint(new Vector3(originalMousePosition.x, originalMousePosition.y, z));
             Vector3 mousePositionInWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, z));

@@ -12,8 +12,8 @@ public static class SaveManager {
             //Debug.Log($"Successfully overwrote {saveFolder}/{save.name}");
         }
 
-        var jsonString = JsonConvert.SerializeObject(save, Formatting.Indented, new JsonSerializerSettings{ReferenceLoopHandling = ReferenceLoopHandling.Ignore});
-        
+        var jsonString = JsonConvert.SerializeObject(save, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+
         if (!Directory.Exists(saveFolder)) {
             Directory.CreateDirectory(saveFolder); //creates /GameData directory
         }
@@ -63,6 +63,6 @@ public static class SaveManager {
         if (Directory.Exists($"{saveFolder}")) {
             Directory.Delete($"{saveFolder}", true);
         }
-        Debug.Log("Data deleted successfully");
+        //Debug.Log("Data deleted successfully");
     }
 }

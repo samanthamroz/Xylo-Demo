@@ -21,7 +21,8 @@ public class LevelManager : MonoBehaviour {
     [HideInInspector] public int sectionNum = 0;
 
     public GameObject marblePrefab, deathPlanePrefab;
-    private GameObject marble, deathPlane;
+    private GameObject marbleObject, deathPlane;
+    private PlayerMarble marble { get { return marbleObject.GetComponent<PlayerMarble>(); } }
     private NoteTrigger[][][] solutions =
     {
         //Level 0
@@ -51,19 +52,18 @@ public class LevelManager : MonoBehaviour {
         self = this;
     }
     void Start() {
-        print("started");
         attemptStarted = false;
 
-        marble = Instantiate(marblePrefab, marbleStartPositions[levelNum], Quaternion.identity);
+        marbleObject = Instantiate(marblePrefab, marbleStartPositions[levelNum], Quaternion.identity);
         deathPlane = Instantiate(deathPlanePrefab, deathPlaneCoords[levelNum][sectionNum], Quaternion.identity);
     }
     public void StartPlaying() {
         attemptStarted = true;
         attemptList = new List<NoteTrigger>();
 
-        CameraManager.self.DoBeginAttempt(sectionNum, marble);
+        CameraManager.self.DoBeginAttempt(sectionNum, marbleObject);
 
-        marble.GetComponent<PlayerMarble>().RunMarble();
+        marble.RunMarble();
     }
     public void StartCountingForAttempt() {
         attemptCountingStarted = true;
@@ -71,7 +71,7 @@ public class LevelManager : MonoBehaviour {
     public void EndAttempt(bool retrySection = true) {
         if (!attemptStarted) {
             if (retrySection) {
-                marble.GetComponent<PlayerMarble>().ResetSelf();
+                marble.ResetSelf();
             }
             return;
         }
@@ -87,28 +87,49 @@ public class LevelManager : MonoBehaviour {
         if (!hasWonSection && !DEBUG_AutoWin) {
             attemptList = new();
             if (retrySection) {
-                marble.GetComponent<PlayerMarble>().ResetSelf();
+                marble.ResetSelf();
             }
             CameraManager.self.DoMoveToNextSection(sectionNum);
             return;
         }
+
         LoadingManager.self.SetCurrentSectionCompleted(sectionNum);
+        LoadingManager.self.SetMarbleStartForSection(sectionNum + 1, marble.GetComponent<Rigidbody>().velocity, marble.transform.position);
 
         //Move to next section
         if (!LoadingManager.self.IsLevelCompleted()) {
-            sectionNum += 1;
-
-            CameraManager.self.DoMoveToNextSection(sectionNum);
-
-            LeanTween.moveLocal(deathPlane, deathPlaneCoords[levelNum][sectionNum], .5f);
-
-            marble.GetComponent<PlayerMarble>().SaveCurrentVelocity();
-            marble.GetComponent<PlayerMarble>().ResetSelfToCurrentPosition();
+            GoToNextSection();
             return;
         }
 
         //TODO: Level won stuff
         CameraManager.self.DoEndOfLevel();
+    }
+
+    public void GoToNextSection() {
+        if (!LoadingManager.self.IsCurrentSectionCompleted(sectionNum)) return;
+
+        sectionNum += 1;
+
+        CameraManager.self.DoMoveToNextSection(sectionNum);
+
+        LeanTween.moveLocal(deathPlane, deathPlaneCoords[levelNum][sectionNum], .5f);
+
+        marble.SaveCurrentVelocity();
+        marble.ResetSelfToCurrentPosition();
+    }
+
+    public void GoToPreviousSection() {
+        if (sectionNum == 0) return;
+
+        sectionNum -= 1;
+
+        CameraManager.self.DoMoveToNextSection(sectionNum);
+
+        LeanTween.moveLocal(deathPlane, deathPlaneCoords[levelNum][sectionNum], .5f);
+
+        marble.SaveCurrentVelocity();
+        marble.ResetSelfToCurrentPosition();
     }
 
     private void PrintNoteList(List<NoteTrigger> list) {
@@ -123,8 +144,8 @@ public class LevelManager : MonoBehaviour {
             return false;
         }
 
-        PrintNoteList(currentSectionSolution.ToList());
-        PrintNoteList(attemptList);
+        //PrintNoteList(currentSectionSolution.ToList());
+        //PrintNoteList(attemptList);
         if ((attemptList[0].note != currentSectionSolution[0].note) ||
             (attemptList.Count != currentSectionSolution.Length)) {
             return false;

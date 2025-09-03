@@ -6,14 +6,12 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class DraggableBlock : InteractableObject {
     [SerializeField] private List<DraggableBlockHandle> handles = new();
-    [SerializeField] private bool startsAttempt = false;
     [SerializeField] private Note note;
     [HideInInspector] public Vector3 originalPosition;
 
     void Start() {
         ToggleAllHandles(false, true);
-        originalPosition = GetSnapToGridVector(transform.position, transform.position);
-        print("start");
+        originalPosition = VectorUtils.GetSnapToGridVector(transform.position, transform.position);
     }
     public void ToggleAllHandles(bool isOn, bool turnInvisible) {
         foreach (DraggableBlockHandle handle in handles) {
@@ -28,25 +26,11 @@ public class DraggableBlock : InteractableObject {
         }
     }
 
-    private static Vector3 GetAbsVector(Vector3 vec) {
-        return new Vector3(Math.Abs(vec.x), Math.Abs(vec.y), Math.Abs(vec.z));
-    }
-    private static Vector3 GetSnapToGridVector(Vector3 originalPosition, Vector3 targetVector) {
-        float Yincrement = 0.5f;
-        float XZincrement = 1f;
-
-        float snappedX = originalPosition.x + Mathf.Round((targetVector.x - originalPosition.x) / XZincrement) * XZincrement;
-        float snappedY = originalPosition.y + Mathf.Round((targetVector.y - originalPosition.y) / Yincrement) * Yincrement;
-        float snappedZ = originalPosition.z + Mathf.Round((targetVector.z - originalPosition.z) / XZincrement) * XZincrement;
-
-        return new Vector3(snappedX, snappedY, snappedZ);
-    }
-
     public void TurnOffHandlesNotInDirection(Vector3 direction) {
         ToggleAllHandles(true, true);
         ToggleAllHandles(true, false);
         foreach (DraggableBlockHandle handle in handles) {
-            if (GetAbsVector(handle.direction) != GetAbsVector(direction)) {
+            if (VectorUtils.GetAbsVector(handle.direction) != VectorUtils.GetAbsVector(direction)) {
                 handle.gameObject.SetActive(false);
             }
         }

@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerMarble : InteractableObject {
     public Vector3 resetPosition;
     public Vector3 currentVelocity;
-    public Vector3 launchVelocity = Vector3.zero;
+    public Vector3 launchVelocity = VectorUtils.nullVector;
     public GameObject sphere;
     public List<GameObject> spheres = new();
     [SerializeField] bool DEBUG_ShowSpheres = false;
@@ -42,7 +42,7 @@ public class PlayerMarble : InteractableObject {
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.isKinematic = false;
 
-        if (launchVelocity == Vector3.zero) {
+        if (launchVelocity == VectorUtils.nullVector) {
             float T = .75f;                // airtime per bounce
             float g = -Physics.gravity.y;   // ~9.81
             float vY = g * T * 0.5f;        // vertical launch speed

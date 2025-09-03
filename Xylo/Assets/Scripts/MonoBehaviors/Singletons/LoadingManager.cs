@@ -6,9 +6,9 @@ using System.Collections;
 
 public class LoadingManager : MonoBehaviour {
     public static LoadingManager self;
-    public static bool hasTitleLoaded = false;
-    public GlobalSaveData saveData { get { return SaveManager.Load<GlobalSaveData>().saveData; } }
-    public SceneSaveData sceneData;
+    private static bool hasTitleLoaded = false;
+    private GlobalSaveData globalData;
+    private SceneSaveData currentSceneData;
     [SerializeField] private bool DEBUG_AlwaysResetData = false;
 
     void Awake() {
@@ -31,7 +31,18 @@ public class LoadingManager : MonoBehaviour {
     public int GetCurrentLevelNumber() {
         return SceneManager.GetActiveScene().buildIndex - 1;
     }
+
+    // Loading Data functions
+    // These read the data from disk and save to useable variable
+    // LoadCurrentScene is triggered on Awake
     private void LoadCurrentScene(Scene scene, LoadSceneMode mode) {
+        if (currentSceneData == null) {
+            Debug.Log("Creating new scene save");
+            SaveManager.Save(
+                new SaveProfile<SceneSaveData>(new() { scene = SceneManager.GetActiveScene() },
+                SceneManager.GetActiveScene().name));
+        }
+
         if (scene.buildIndex == 0) { //for title only 
             ControlsManager.self.InitializeActionMap("levelselect");
             if (!hasTitleLoaded) {
@@ -54,15 +65,20 @@ public class LoadingManager : MonoBehaviour {
         }
         CameraManager.self.InstantiateCamera(scene.buildIndex);
 
-        try {
-            sceneData = SaveManager.Load<SceneSaveData>(scene.name).saveData;
-        }
-        catch { }
-
         GUIManager.self.LoadMiddleToRight(.25f);
     }
+    private void RefreshPointerToSceneData() {
+        currentSceneData = SaveManager.Load<SceneSaveData>(SceneManager.GetActiveScene().name).saveData;
+    }
+    private void RefreshPointerToGlobalData() {
+        globalData = SaveManager.Load<GlobalSaveData>().saveData;
+    }
+
+    // Loading Scene Functions
+    //
+    // These take us from the current scene to a different one
     public IEnumerator LoadNewScene(string sceneName) {
-        SaveCurrentScene();
+        SaveGlobal();
         float time = .25f;
         GUIManager.self.LoadLeftToMiddle(time);
 
@@ -74,42 +90,69 @@ public class LoadingManager : MonoBehaviour {
     public void ReloadCurrentScene() {
         StartCoroutine(LoadNewScene(SceneManager.GetActiveScene().name));
     }
-    private void SaveCurrentScene() {
-        //create blank sceneSave
-        var sceneSave = new SceneSaveData {
-            scene = SceneManager.GetActiveScene()
-        };
 
+    // Saving Functions
+    // 
+    // These write save data to disk as it currently is
+    private void SaveCurrentScene() {
         //save to file
-        var saveProfile = new SaveProfile<SceneSaveData>(sceneSave, sceneSave.scene.name);
+        var saveProfile = new SaveProfile<SceneSaveData>(currentSceneData, currentSceneData.scene.name);
         SaveManager.Save(saveProfile);
+        RefreshPointerToSceneData();
+    }
+    private void SaveGlobal() {
+        SaveCurrentScene();
+        SaveManager.Save(new SaveProfile<GlobalSaveData>(globalData));
+        RefreshPointerToGlobalData();
     }
 
+    // Writing Functions
+    //
+    // These change values in the save data and then write it to disk
     public void SetCurrentSectionCompleted(int sectionNum) {
-        GlobalSaveData temp;
-        try {
-            temp = SaveManager.Load<GlobalSaveData>().saveData;
-            temp.sectionCompletionStatusList[GetCurrentLevelNumber()][sectionNum] = true;
-        }
-        catch {
-            temp = new GlobalSaveData { };
-            temp.sectionCompletionStatusList[GetCurrentLevelNumber()][sectionNum] = true;
-        }
+        //increment number of sections completed
+        currentSceneData.numSectionsComplete++;
+
+        SaveCurrentScene();
 
         //set level complete if all sections are done
-        bool levelComplete = true;
-        for (int i = 0; i < temp.sectionCompletionStatusList[GetCurrentLevelNumber()].Count; i++) {
-            if (!temp.sectionCompletionStatusList[GetCurrentLevelNumber()][i]) {
-                levelComplete = false;
-            }
-        }
-        if (levelComplete) {
-            temp.levelCompletionStatusList[GetCurrentLevelNumber()] = true;
+        if (currentSceneData.numSectionsComplete == globalData.numSectionsInLevel[GetCurrentLevelNumber()]) {
+            globalData.levelCompletionStatusList[GetCurrentLevelNumber()] = true;
         }
 
-        SaveManager.Save(new SaveProfile<GlobalSaveData>(temp));
+        SaveGlobal();
     }
+    public void SetMarbleStartForSection(int sectionNum, Vector3 velocity, Vector3 position) {
+        currentSceneData.numSectionsComplete++;
 
+        if (currentSceneData.sectionStartMarbleVelocities.ContainsKey(sectionNum)) {
+            currentSceneData.sectionStartMarbleVelocities[sectionNum] = velocity;
+        }
+        else {
+            currentSceneData.sectionStartMarbleVelocities.Add(sectionNum, velocity);
+        }
+
+        if (currentSceneData.sectionStartMarblePositions.ContainsKey(sectionNum)) {
+            currentSceneData.sectionStartMarblePositions[sectionNum] = position;
+        }
+        else {
+            currentSceneData.sectionStartMarblePositions.Add(sectionNum, position);
+        }
+    }
+    // References for other managers
+    //
+    // These are easily accessbile values for other managers to use
+    public bool IsCurrentSectionCompleted(int checkSectionNum) {
+        bool isCompleted = false;
+        try {
+            isCompleted = currentSceneData.numSectionsComplete > checkSectionNum;
+        }
+        catch (IndexOutOfRangeException) {
+            print("Level " + checkSectionNum + "status unknown");
+        }
+
+        return isCompleted;
+    }
     public bool IsLevelCompleted(int checkLevelNumber = 99) {
         if (checkLevelNumber == 99) {
             checkLevelNumber = GetCurrentLevelNumber();
@@ -117,12 +160,29 @@ public class LoadingManager : MonoBehaviour {
         //print($"{string.Join("", saveData.levelCompletionStatusList)}");
         bool isCompleted = false;
         try {
-            isCompleted = saveData.levelCompletionStatusList[checkLevelNumber];
+            isCompleted = globalData.levelCompletionStatusList[checkLevelNumber];
         }
         catch (IndexOutOfRangeException) {
             print("Level " + checkLevelNumber + "status unknown");
         }
 
         return isCompleted;
+    }
+
+    public VelocityPosition GetMarbleStartForSection(int sectionNum) {
+        VelocityPosition returnVal = new() {
+            velocity = VectorUtils.nullVector,
+            position = VectorUtils.nullVector
+        };
+
+        try {
+            returnVal.velocity = currentSceneData.sectionStartMarbleVelocities[sectionNum];
+            returnVal.position = currentSceneData.sectionStartMarblePositions[sectionNum];
+        }
+        catch {
+            print("Could not find marble data for section " + sectionNum);
+        }
+
+        return returnVal;
     }
 }
