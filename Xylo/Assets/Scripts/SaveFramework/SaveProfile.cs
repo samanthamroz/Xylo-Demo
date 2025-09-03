@@ -25,6 +25,6 @@ public record GlobalSaveData : SaveProfileData {
 public record SceneSaveData : SaveProfileData {
     public Scene scene;
     public int numSectionsComplete = 0;
-    public Dictionary<int, Vector2> sectionStartMarbleVelocities = new();
-    public Dictionary<int, Vector2> sectionStartMarblePositions = new();
+    public Dictionary<int, Vector3> sectionStartMarbleVelocities = new();
+    public Dictionary<int, Vector3> sectionStartMarblePositions = new();
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerMarble : InteractableObject {
     public Vector3 resetPosition;
     public Vector3 currentVelocity;
-    public Vector3 launchVelocity = VectorUtils.nullVector;
+    private Vector3 launchVelocity = VectorUtils.nullVector;
     public GameObject sphere;
     public List<GameObject> spheres = new();
     [SerializeField] bool DEBUG_ShowSpheres = false;
@@ -29,20 +29,20 @@ public class PlayerMarble : InteractableObject {
         LeanTween.move(gameObject, resetPosition, .5f).setEaseInOutSine();
         isFirstNote = true;
     }
-    public void ResetSelfToCurrentPosition() {
-        resetPosition = transform.position;
-        ResetSelf();
-    }
-    public void SaveCurrentVelocity() {
-        launchVelocity = GetComponent<Rigidbody>().velocity;
+    public void PlaceMarbleForSectionStart(Vector3 velocity, Vector3 position) {
+        launchVelocity = velocity;
         currentVelocity = launchVelocity;
+
+        resetPosition = position;
+
+        ResetSelf();
     }
 
     public void RunMarble() {
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.isKinematic = false;
-
-        if (launchVelocity == VectorUtils.nullVector) {
+        
+        if (VectorUtils.IsNullVector(launchVelocity)) {
             float T = .75f;                // airtime per bounce
             float g = -Physics.gravity.y;   // ~9.81
             float vY = g * T * 0.5f;        // vertical launch speed

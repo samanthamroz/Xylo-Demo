@@ -36,11 +36,16 @@ public class LoadingManager : MonoBehaviour {
     // These read the data from disk and save to useable variable
     // LoadCurrentScene is triggered on Awake
     private void LoadCurrentScene(Scene scene, LoadSceneMode mode) {
-        if (currentSceneData == null) {
-            Debug.Log("Creating new scene save");
+        RefreshPointerToGlobalData();
+
+        try {
+            RefreshPointerToSceneData();
+        } catch {
+            //Debug.Log("Creating new scene save");
             SaveManager.Save(
                 new SaveProfile<SceneSaveData>(new() { scene = SceneManager.GetActiveScene() },
                 SceneManager.GetActiveScene().name));
+            RefreshPointerToSceneData();
         }
 
         if (scene.buildIndex == 0) { //for title only 
@@ -69,9 +74,22 @@ public class LoadingManager : MonoBehaviour {
     }
     private void RefreshPointerToSceneData() {
         currentSceneData = SaveManager.Load<SceneSaveData>(SceneManager.GetActiveScene().name).saveData;
+        if (currentSceneData == null) {
+            Debug.Log("Creating new scene save");
+            SaveManager.Save(
+                new SaveProfile<SceneSaveData>(new() { scene = SceneManager.GetActiveScene() },
+                SceneManager.GetActiveScene().name));
+            RefreshPointerToSceneData();
+        }
+        //Debug.Log($"Loaded scene data with {currentSceneData.sectionStartMarbleVelocities.Count} velocity entries");
     }
     private void RefreshPointerToGlobalData() {
         globalData = SaveManager.Load<GlobalSaveData>().saveData;
+        if (globalData == null) {
+            GlobalSaveData newSave = new();
+            SaveManager.Save(new SaveProfile<GlobalSaveData>(newSave));
+            RefreshPointerToGlobalData();
+        }
     }
 
     // Loading Scene Functions
@@ -98,12 +116,10 @@ public class LoadingManager : MonoBehaviour {
         //save to file
         var saveProfile = new SaveProfile<SceneSaveData>(currentSceneData, currentSceneData.scene.name);
         SaveManager.Save(saveProfile);
-        RefreshPointerToSceneData();
     }
     private void SaveGlobal() {
         SaveCurrentScene();
         SaveManager.Save(new SaveProfile<GlobalSaveData>(globalData));
-        RefreshPointerToGlobalData();
     }
 
     // Writing Functions
@@ -111,7 +127,9 @@ public class LoadingManager : MonoBehaviour {
     // These change values in the save data and then write it to disk
     public void SetCurrentSectionCompleted(int sectionNum) {
         //increment number of sections completed
-        currentSceneData.numSectionsComplete++;
+        if (sectionNum == currentSceneData.numSectionsComplete) {
+            currentSceneData.numSectionsComplete++;
+        }
 
         SaveCurrentScene();
 
@@ -123,8 +141,6 @@ public class LoadingManager : MonoBehaviour {
         SaveGlobal();
     }
     public void SetMarbleStartForSection(int sectionNum, Vector3 velocity, Vector3 position) {
-        currentSceneData.numSectionsComplete++;
-
         if (currentSceneData.sectionStartMarbleVelocities.ContainsKey(sectionNum)) {
             currentSceneData.sectionStartMarbleVelocities[sectionNum] = velocity;
         }
@@ -138,7 +154,10 @@ public class LoadingManager : MonoBehaviour {
         else {
             currentSceneData.sectionStartMarblePositions.Add(sectionNum, position);
         }
+
+        SaveCurrentScene();
     }
+    
     // References for other managers
     //
     // These are easily accessbile values for other managers to use
@@ -170,6 +189,9 @@ public class LoadingManager : MonoBehaviour {
     }
 
     public VelocityPosition GetMarbleStartForSection(int sectionNum) {
+        //Debug.Log($"currentSceneData is null: {currentSceneData == null}");
+        //Debug.Log($"Velocity dictionary is null: {currentSceneData.sectionStartMarbleVelocities == null}");
+
         VelocityPosition returnVal = new() {
             velocity = VectorUtils.nullVector,
             position = VectorUtils.nullVector

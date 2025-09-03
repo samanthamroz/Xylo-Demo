@@ -56,6 +56,8 @@ public class LevelManager : MonoBehaviour {
 
         marbleObject = Instantiate(marblePrefab, marbleStartPositions[levelNum], Quaternion.identity);
         deathPlane = Instantiate(deathPlanePrefab, deathPlaneCoords[levelNum][sectionNum], Quaternion.identity);
+
+        LoadingManager.self.SetMarbleStartForSection(0, VectorUtils.nullVector, marble.transform.position);
     }
     public void StartPlaying() {
         attemptStarted = true;
@@ -95,7 +97,6 @@ public class LevelManager : MonoBehaviour {
 
         LoadingManager.self.SetCurrentSectionCompleted(sectionNum);
         LoadingManager.self.SetMarbleStartForSection(sectionNum + 1, marble.GetComponent<Rigidbody>().velocity, marble.transform.position);
-
         //Move to next section
         if (!LoadingManager.self.IsLevelCompleted()) {
             GoToNextSection();
@@ -107,7 +108,7 @@ public class LevelManager : MonoBehaviour {
     }
 
     public void GoToNextSection() {
-        if (!LoadingManager.self.IsCurrentSectionCompleted(sectionNum)) return;
+        //if (!LoadingManager.self.IsCurrentSectionCompleted(sectionNum)) return;
 
         sectionNum += 1;
 
@@ -115,8 +116,9 @@ public class LevelManager : MonoBehaviour {
 
         LeanTween.moveLocal(deathPlane, deathPlaneCoords[levelNum][sectionNum], .5f);
 
-        marble.SaveCurrentVelocity();
-        marble.ResetSelfToCurrentPosition();
+        VelocityPosition marbStart = LoadingManager.self.GetMarbleStartForSection(sectionNum);
+
+        marble.PlaceMarbleForSectionStart(marbStart.velocity, marbStart.position);
     }
 
     public void GoToPreviousSection() {
@@ -128,8 +130,8 @@ public class LevelManager : MonoBehaviour {
 
         LeanTween.moveLocal(deathPlane, deathPlaneCoords[levelNum][sectionNum], .5f);
 
-        marble.SaveCurrentVelocity();
-        marble.ResetSelfToCurrentPosition();
+        VelocityPosition marbStart = LoadingManager.self.GetMarbleStartForSection(sectionNum);
+        marble.PlaceMarbleForSectionStart(marbStart.velocity, marbStart.position);
     }
 
     private void PrintNoteList(List<NoteTrigger> list) {
