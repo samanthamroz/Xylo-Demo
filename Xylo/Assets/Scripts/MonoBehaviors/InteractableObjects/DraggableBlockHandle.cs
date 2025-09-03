@@ -13,7 +13,7 @@ public class DraggableBlockHandle : InteractableObject {
     private bool isDragging;
 
     void Start() {
-        direction = (parentBlock.transform.rotation * direction).normalized;
+        //direction = (parentBlock.transform.rotation * direction).normalized;
         direction = GetRoundedVector(direction);
 
         isDragging = false;
@@ -81,6 +81,7 @@ public class DraggableBlockHandle : InteractableObject {
         isDragging = true;
 
         while (isDragging) {
+            print(direction);
             float z = Camera.main.WorldToScreenPoint(transform.position).z;
             Vector3 originalMousePositionInWorld = Camera.main.ScreenToWorldPoint(new Vector3(originalMousePosition.x, originalMousePosition.y, z));
             Vector3 mousePositionInWorld = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, z));
