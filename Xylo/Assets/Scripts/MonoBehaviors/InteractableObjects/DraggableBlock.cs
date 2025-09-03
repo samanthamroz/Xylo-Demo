@@ -72,13 +72,15 @@ public class DraggableBlock : InteractableObject {
 
         bool isColliding = false;
         foreach (Collider c in colliders) {
-            if (c.gameObject != objCollider.gameObject && !c.isTrigger) {
-                //Debug.Log($"Collision detected with: {c.gameObject.name} at position {targetPosition}");
+            bool layerIsExcluded = ((1 << c.gameObject.layer) & objCollider.excludeLayers) != 0;
+
+            if (c.gameObject != objCollider.gameObject && !c.isTrigger && !layerIsExcluded) {
+                Debug.Log($"{objCollider.gameObject.name} Collision detected with: {c.gameObject.name} at position {targetPosition}");
                 isColliding = true;
                 break;
             }
         }
-        //Debug.Log($"Position {targetPosition} - Colliding: {isColliding}");
+        Debug.Log($"Position {targetPosition} - Colliding: {isColliding}");
         return isColliding;
     }
 
