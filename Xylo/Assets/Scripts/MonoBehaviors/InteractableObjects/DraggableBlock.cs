@@ -20,10 +20,10 @@ public class DraggableBlock : InteractableObject {
             handle.gameObject.SetActive(isOn);
             Vector3 testPosition = transform.position + new Vector3(handle.direction.x, handle.direction.y / 2, 0);
             if (turnInvisible) {
-                handle.ToggleInvisible(IsBlockCollidingAtPosition(testPosition));
+                handle.ToggleInvisible(IsSelfCollidingAtPosition(testPosition));
             }
             else {
-                handle.ToggleGrey(IsBlockCollidingAtPosition(testPosition));
+                handle.ToggleGrey(IsSelfCollidingAtPosition(testPosition));
             }
         }
     }
@@ -52,7 +52,7 @@ public class DraggableBlock : InteractableObject {
         }
     }
 
-    public bool IsBlockCollidingAtPosition(Vector3 targetPosition) {
+    private bool IsSelfCollidingAtPosition(Vector3 targetPosition) {
         Collider[] colliders = Physics.OverlapBox(targetPosition, GetComponent<Collider>().bounds.extents, Quaternion.identity);
 
         bool isColliding = false;
@@ -64,6 +64,23 @@ public class DraggableBlock : InteractableObject {
             }
         }
         //Debug.Log($"Position {targetPosition} - Colliding: {isColliding}");
+        return isColliding;
+    }
+
+    public static bool IsObjectCollidingAtPosition(Collider objCollider, Vector3 targetPosition) {
+        Collider[] colliders = Physics.OverlapBox(targetPosition, objCollider.bounds.extents, Quaternion.identity);
+
+        bool isColliding = false;
+        foreach (Collider c in colliders) {
+            bool layerIsExcluded = ((1 << c.gameObject.layer) & objCollider.excludeLayers) != 0;
+
+            if (c.gameObject != objCollider.gameObject && !c.isTrigger && !layerIsExcluded) {
+                Debug.Log($"{objCollider.gameObject.name} Collision detected with: {c.gameObject.name} at position {targetPosition}");
+                isColliding = true;
+                break;
+            }
+        }
+        Debug.Log($"Position {targetPosition} - Colliding: {isColliding}");
         return isColliding;
     }
 
