@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System;
 
 public class CameraManager : MonoBehaviour {
     private TitleScreenCameraManager tscm;
@@ -19,6 +20,7 @@ public class CameraManager : MonoBehaviour {
 
     private Vector3 lookAtPointResetPos; //this is the position the lookAtObject is reset to
     private float startingZoom, cameraHeight; //this is the difference in height between the lookAtObject and the camera
+    [SerializeField] private Vector2 cameraPlacementRadius;
 
     [SerializeField] private float panDistancePerFrame = .01f;
     [SerializeField] private float rotateDistancePerFrame = .1f;
@@ -210,13 +212,13 @@ public class CameraManager : MonoBehaviour {
                 Vector3 howMuchToMove = deltaPosition * panDistancePerFrame;// * (zoomMax / currentZoom);
 
                 //Move camera and the place it is facing
-                currentlookAtObject.transform.position += howMuchToMove;
-                StartCoroutine(PlaceCamera(0f));
-
-                //Update variables for next loop
-                lastPositionInWorld = newPositioninWorld;
-
-                //Loop
+                Vector3 placeToMoveLookAtPoint = currentlookAtObject.transform.position + howMuchToMove;
+                if (Math.Abs(placeToMoveLookAtPoint.x - lookAtPointResetPos.x) < cameraPlacementRadius.x &&
+                    Math.Abs(placeToMoveLookAtPoint.y - lookAtPointResetPos.y) < cameraPlacementRadius.y) {
+                    currentlookAtObject.transform.position += howMuchToMove;
+                    StartCoroutine(PlaceCamera(0f));
+                    lastPositionInWorld = newPositioninWorld;
+                }
             }
             lastMousePosition = mousePosition;
             yield return null;

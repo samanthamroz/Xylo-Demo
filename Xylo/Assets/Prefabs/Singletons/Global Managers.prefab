@@ -181,6 +181,7 @@ MonoBehaviour:
   lookAtPrefab: {fileID: 4270330739806824873, guid: e12c0c2ae03821846a54820a4c4faa7f, type: 3}
   isRotating: 0
   isPanning: 0
+  cameraPlacementRadius: {x: 3, y: 2}
   panDistancePerFrame: 0.5
   rotateDistancePerFrame: 0.1
   zoomDistancePerFrame: 0.05
