@@ -5,13 +5,9 @@ using UnityEngine;
 
 [RequireComponent(typeof(ConnectedBlock))]
 public class ConnectedBlock : DraggableBlock {
-    public List<ConnectedBlock> connectedBlocks = new();
+    public List<GameObject> connectedBlocks = new();
 
     void Start() {
-        foreach (ConnectedBlock block in connectedBlocks) {
-            if (!block.connectedBlocks.Contains(GetComponent<ConnectedBlock>())) {
-                block.connectedBlocks.Add(GetComponent<ConnectedBlock>());
-            }
-        }
+
     }
 }

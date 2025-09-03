@@ -13,7 +13,7 @@ public class DraggableBlockHandle : InteractableObject {
     private bool isDragging;
 
     void Start() {
-        direction = (parentBlock.transform.rotation * direction).normalized;
+        //direction = (parentBlock.transform.rotation * direction).normalized;
         direction = GetRoundedVector(direction);
 
         isDragging = false;
@@ -47,8 +47,10 @@ public class DraggableBlockHandle : InteractableObject {
     public override void DoRelease() {
         if (parentBlock.gameObject.TryGetComponent<ConnectedBlock>(out ConnectedBlock connected)) {
             parentBlock.originalPosition = GetSnapToGridVector(parentBlock.originalPosition, parentBlock.transform.position);
-            foreach (ConnectedBlock block in connected.connectedBlocks) {
-                block.originalPosition = GetSnapToGridVector(block.originalPosition, block.transform.position);
+            foreach (GameObject block in connected.connectedBlocks) {
+                if (block.TryGetComponent<ConnectedBlock>(out ConnectedBlock temp)) {
+                    temp.originalPosition = GetSnapToGridVector(temp.originalPosition, temp.transform.position);
+                }
             }
         }
         else {
@@ -114,14 +116,14 @@ public class DraggableBlockHandle : InteractableObject {
                     Vector3 howMuchToMove = newBlockPosition - parentBlock.transform.position;
 
                     bool isAnyChildrenColliding = false;
-                    foreach (ConnectedBlock block in connected.connectedBlocks) {
-                        if (block.IsBlockCollidingAtPosition(block.transform.position + howMuchToMove)) {
+                    foreach (GameObject block in connected.connectedBlocks) {
+                        if (DraggableBlock.IsObjectCollidingAtPosition(block.GetComponent<Collider>(), block.transform.position + howMuchToMove)) {
                             isAnyChildrenColliding = true;
                         }
                     }
                     if (!isAnyChildrenColliding) {
                         parentBlock.transform.position = newBlockPosition;
-                        foreach (ConnectedBlock block in connected.connectedBlocks) {
+                        foreach (GameObject block in connected.connectedBlocks) {
                             block.transform.position += howMuchToMove;
                         }
                         parentBlock.TurnOffHandlesNotInDirection(direction);
