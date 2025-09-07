@@ -5,7 +5,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 public class DraggableBlock : InteractableObject {
-    [SerializeField] private List<DraggableBlockHandle> handles = new();
+    [SerializeField] protected List<DraggableBlockHandle> handles = new();
     [SerializeField] private Note note;
     [HideInInspector] public Vector3 originalPosition;
 
@@ -13,7 +13,7 @@ public class DraggableBlock : InteractableObject {
         ToggleAllHandles(false, true);
         originalPosition = VectorUtils.GetSnapToGridVector(transform.position, transform.position);
     }
-    public void ToggleAllHandles(bool isOn, bool turnInvisible) {
+    public virtual void ToggleAllHandles(bool isOn, bool turnInvisible) {
         foreach (DraggableBlockHandle handle in handles) {
             handle.gameObject.SetActive(isOn);
             Vector3 testPosition = transform.position + new Vector3(handle.direction.x, handle.direction.y / 2, 0);
@@ -36,7 +36,7 @@ public class DraggableBlock : InteractableObject {
         }
     }
 
-    private bool IsSelfCollidingAtPosition(Vector3 targetPosition) {
+    protected bool IsSelfCollidingAtPosition(Vector3 targetPosition) {
         Collider[] colliders = Physics.OverlapBox(targetPosition, GetComponent<Collider>().bounds.extents, Quaternion.identity);
 
         bool isColliding = false;
@@ -52,6 +52,8 @@ public class DraggableBlock : InteractableObject {
     }
 
     public static bool IsObjectCollidingAtPosition(Collider objCollider, Vector3 targetPosition) {
+        if (objCollider == null) return false;
+
         Collider[] colliders = Physics.OverlapBox(targetPosition, objCollider.bounds.extents, Quaternion.identity);
 
         bool isColliding = false;

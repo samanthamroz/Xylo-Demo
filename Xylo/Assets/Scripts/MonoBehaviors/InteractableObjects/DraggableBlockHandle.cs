@@ -37,6 +37,13 @@ public class DraggableBlockHandle : InteractableObject {
     }
 
     public override void DoClick() {
+        if (parentBlock.gameObject.TryGetComponent<ConnectedBlock>(out ConnectedBlock connected)) {
+            foreach (GameObject block in connected.connectedBlocks) {
+                if (block.TryGetComponent<ConnectedBlock>(out ConnectedBlock temp)) {
+                    temp.TurnOffHandlesNotInDirection(direction);
+                }
+            }
+        }
         parentBlock.TurnOffHandlesNotInDirection(direction);
         originalMousePosition = mousePosition;
         StartCoroutine(Drag());
@@ -50,6 +57,7 @@ public class DraggableBlockHandle : InteractableObject {
             foreach (GameObject block in connected.connectedBlocks) {
                 if (block.TryGetComponent<ConnectedBlock>(out ConnectedBlock temp)) {
                     temp.originalPosition = GetSnapToGridVector(temp.originalPosition, temp.transform.position);
+                    temp.ToggleAllHandles(true, false);
                 }
             }
         }

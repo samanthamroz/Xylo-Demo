@@ -20,8 +20,8 @@ public class LevelManager : MonoBehaviour {
     private int levelNum { get { return LoadingManager.self.GetCurrentLevelNumber(); } }
     [HideInInspector] public int sectionNum = 0;
 
-    public GameObject marblePrefab, deathPlanePrefab;
-    private GameObject marbleObject, deathPlane;
+    public GameObject marblePrefab, deathPlaneObj;
+    private GameObject marbleObject;
     private PlayerMarble marble { get { return marbleObject.GetComponent<PlayerMarble>(); } }
     private NoteTrigger[][][] solutions =
     {
@@ -38,9 +38,9 @@ public class LevelManager : MonoBehaviour {
     private List<NoteTrigger> attemptList;
 
     private Vector3[] marbleStartPositions = { new(.5f, 13f, -6) };
-    private Vector2[][] deathPlaneCoords = {
+    private Vector3[][] deathPlaneCoords = {
         //Level 1
-        new Vector2[] {new(0, 8), new(8, 8), new(16, 6), new(24, 4)}
+        new Vector3[] {new(0, 0, 0), new(0f, 0f, 17.2f), new(0, -1.29f, 32f), new(0, -6, 49)}
     };
     private float forgivenessBetweenBeats = .1f;
     [HideInInspector] public bool attemptStarted;
@@ -55,7 +55,6 @@ public class LevelManager : MonoBehaviour {
         attemptStarted = false;
 
         marbleObject = Instantiate(marblePrefab, marbleStartPositions[levelNum], Quaternion.identity);
-        deathPlane = Instantiate(deathPlanePrefab, deathPlaneCoords[levelNum][sectionNum], Quaternion.identity);
 
         LoadingManager.self.SetMarbleStartForSection(0, VectorUtils.nullVector, marble.transform.position);
     }
@@ -104,7 +103,8 @@ public class LevelManager : MonoBehaviour {
         }
 
         //TODO: Level won stuff
-        CameraManager.self.DoEndOfLevel();
+        marble.RunMarbleFromBeginning();
+        CameraManager.self.DoEndOfLevel(marble.gameObject);
     }
 
     public void GoToNextSection() {
@@ -114,7 +114,7 @@ public class LevelManager : MonoBehaviour {
 
         CameraManager.self.DoMoveToNextSection(sectionNum);
 
-        LeanTween.moveLocal(deathPlane, deathPlaneCoords[levelNum][sectionNum], .5f);
+        LeanTween.moveLocal(deathPlaneObj, deathPlaneCoords[levelNum][sectionNum], .5f);
 
         VelocityPosition marbStart = LoadingManager.self.GetMarbleStartForSection(sectionNum);
 
@@ -128,7 +128,7 @@ public class LevelManager : MonoBehaviour {
 
         CameraManager.self.DoMoveToNextSection(sectionNum);
 
-        LeanTween.moveLocal(deathPlane, deathPlaneCoords[levelNum][sectionNum], .5f);
+        LeanTween.moveLocal(deathPlaneObj, deathPlaneCoords[levelNum][sectionNum], .5f);
 
         VelocityPosition marbStart = LoadingManager.self.GetMarbleStartForSection(sectionNum);
         marble.PlaceMarbleForSectionStart(marbStart.velocity, marbStart.position);

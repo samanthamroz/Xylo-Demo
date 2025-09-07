@@ -5,6 +5,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMarble : InteractableObject {
+    private Vector3 originalPosition;
     public Vector3 resetPosition;
     public Vector3 currentVelocity;
     private Vector3 launchVelocity = VectorUtils.nullVector;
@@ -13,6 +14,7 @@ public class PlayerMarble : InteractableObject {
     [SerializeField] bool DEBUG_ShowSpheres = false;
     void Start() {
         resetPosition = transform.position;
+        originalPosition = transform.position;
     }
     void FixedUpdate() {
         if (!GetComponent<Rigidbody>().isKinematic) {
@@ -23,7 +25,13 @@ public class PlayerMarble : InteractableObject {
     public override void DoClick() {
         LevelManager.self.StartPlaying();
     }
-
+    public void RunMarbleFromBeginning() {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
+        transform.position = originalPosition;
+        launchVelocity = VectorUtils.nullVector;
+        RunMarble();
+    }
     public void ResetSelf() {
         GetComponent<Rigidbody>().isKinematic = true;
         LeanTween.move(gameObject, resetPosition, .5f).setEaseInOutSine();
