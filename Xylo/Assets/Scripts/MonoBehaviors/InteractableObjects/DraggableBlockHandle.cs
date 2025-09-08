@@ -26,8 +26,8 @@ public class DraggableBlockHandle : InteractableObject {
         return new Vector3((float)Math.Round(vec.x), (float)(Math.Round(vec.y * 2) / 2), (float)Math.Round(vec.z));
     }
     private static Vector3 GetSnapToGridVector(Vector3 originalPosition, Vector3 targetVector) {
-        float Yincrement = 0.5f;
-        float XZincrement = 1f;
+        float Yincrement = .25f;
+        float XZincrement = .25f;
 
         float snappedX = originalPosition.x + Mathf.Round((targetVector.x - originalPosition.x) / XZincrement) * XZincrement;
         float snappedY = originalPosition.y + Mathf.Round((targetVector.y - originalPosition.y) / Yincrement) * Yincrement;

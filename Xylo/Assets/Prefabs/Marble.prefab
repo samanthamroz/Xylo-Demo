@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7197524480006316958}
   - component: {fileID: 8683476143291618392}
+  - component: {fileID: 6523393207050674975}
   - component: {fileID: 3714166462674165374}
   - component: {fileID: 8845771267460953708}
   m_Layer: 0
@@ -56,6 +57,27 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &6523393207050674975
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1985733370118950983}
+  m_Material: {fileID: 13400000, guid: df628f77abe6ddf4b937a6a36924c08e, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 4, z: 0}
 --- !u!54 &3714166462674165374
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -81,7 +103,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 1
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 2
 --- !u!114 &8845771267460953708
 MonoBehaviour:
@@ -95,12 +117,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2fd9ae3b9c4033439b885dbb029bf40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resetPosition: {x: 0, y: 0, z: 0}
-  currentVelocity: {x: 0, y: 0, z: 0}
-  launchVelocity: {x: 0, y: 0, z: 0}
   sphere: {fileID: 5936164703655211191, guid: 66ba69389283ddf45a8e45e1aa633343, type: 3}
-  spheres: []
-  DEBUG_ShowSpheres: 0
+  DEBUG_ShowSpheres: 1
 --- !u!1 &5808275885313984935
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,7 +245,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 1
+  m_Time: 5
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3

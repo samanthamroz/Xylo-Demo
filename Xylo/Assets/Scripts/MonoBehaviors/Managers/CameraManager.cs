@@ -56,6 +56,11 @@ public class CameraManager : MonoBehaviour {
                 cameraHeight = 2f;
                 startingZoom = 17f;
                 break;
+            case 2:
+                lookAtPointResetPos = new Vector3(0, 0, 0);
+                cameraHeight = 2f;
+                startingZoom = 15f;
+                break;
             default:
                 break;
         }

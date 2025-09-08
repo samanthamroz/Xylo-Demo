@@ -4,13 +4,5 @@ using UnityEngine;
 
 public class Springboard : MonoBehaviour
 {
-    public bool bounceX = true, bounceY = true, bounceZ = true;
-    public float springiness = 5f;
-
-    void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.TryGetComponent<Rigidbody>(out var rb)) {
-            rb.AddForce(rb.velocity * springiness);
-        }
-    }
+    public float returnInBeats = 2f;
 }

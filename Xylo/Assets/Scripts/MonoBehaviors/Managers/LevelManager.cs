@@ -17,6 +17,9 @@ class NoteTrigger {
 public class LevelManager : MonoBehaviour {
     public static LevelManager self;
 
+    public float xDistancePerBeat = 2;
+    public float beatsBetweenFirstTwoBeats = 1;
+
     private int levelNum { get { return LoadingManager.self.GetCurrentLevelNumber(); } }
     [HideInInspector] public int sectionNum = 0;
 
@@ -37,7 +40,7 @@ public class LevelManager : MonoBehaviour {
     private NoteTrigger[] currentSectionSolution { get { return solutions[levelNum][sectionNum]; } }
     private List<NoteTrigger> attemptList;
 
-    private Vector3[] marbleStartPositions = { new(.5f, 13f, -6) };
+    private Vector3[] marbleStartPositions = { new(.5f, 13f, -6), new(0, .25f, 0) };
     private Vector3[][] deathPlaneCoords = {
         //Level 1
         new Vector3[] {new(0, 0, 0), new(0f, 0f, 17.2f), new(0, -1.29f, 32f), new(0, -6, 49)}
@@ -135,9 +138,10 @@ public class LevelManager : MonoBehaviour {
     }
 
     private void PrintNoteList(List<NoteTrigger> list) {
-        string str = "";
+        string str = "| ";
         foreach (var thing in list) {
-            str += "(" + thing.note + ", " + thing.beatTriggered + ") ";
+            string s = $"{thing.note:F}, {thing.beatTriggered:F} | ";
+            str += s;
         }
         print(str);
     }
@@ -147,7 +151,7 @@ public class LevelManager : MonoBehaviour {
         }
 
         //PrintNoteList(currentSectionSolution.ToList());
-        //PrintNoteList(attemptList);
+        PrintNoteList(attemptList);
         if ((attemptList[0].note != currentSectionSolution[0].note) ||
             (attemptList.Count != currentSectionSolution.Length)) {
             return false;
