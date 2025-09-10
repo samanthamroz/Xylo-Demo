@@ -311,7 +311,8 @@ public class CameraManager : MonoBehaviour {
     private class CinematicCameraManager {
         private readonly Vector3[][] sectionCinematicViewPoints = {
             //level 1
-            new Vector3[] { new(8, 15, -15), new(16, 14, -15), new(22, 13, -15), new(30, 12, -15) }
+            new Vector3[] { new(8, 15, -15), new(16, 14, -15), new(22, 13, -15), new(30, 12, -15) },
+            new Vector3[] { new(0, 5, -15)}
         };
         private readonly Vector3[][] sectionGameViewPoints = {
             //level 1

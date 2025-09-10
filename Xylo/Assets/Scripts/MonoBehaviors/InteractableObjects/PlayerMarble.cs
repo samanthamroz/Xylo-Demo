@@ -157,7 +157,7 @@ public class PlayerMarble : InteractableObject {
         }
 
         if (!adjust) {
-            print("No valid points found, using realistic velocity");
+            //print("No valid points found, using realistic velocity");
             rb.velocity = realisticVelocity;
             return;
         }
@@ -242,7 +242,7 @@ public class PlayerMarble : InteractableObject {
                         float testX = start.x + perfectVelocity.x * t;
                         Vector2 tryEnd = new(testX, testY);
                         spheres.Add(Instantiate(sphere, new(tryEnd.x, tryEnd.y, 0), Quaternion.identity));
-                        print($"{nearestInteger}x beat jump ({testYVelocity:F2} vel) at {tryEnd} on beat {beatPosition:F3}");
+                        //print($"{nearestInteger}x beat jump ({testYVelocity:F2} vel) at {tryEnd} on beat {beatPosition:F3}");
                     }
                 }
             }
