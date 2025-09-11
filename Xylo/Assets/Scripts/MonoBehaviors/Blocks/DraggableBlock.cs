@@ -67,7 +67,6 @@ public class DraggableBlock : InteractableObject {
     }
 
     public override void DoClick() {
-        print("to");
         ToggleAllHandles(true, false);
     }
     public override void DoClickAway() {

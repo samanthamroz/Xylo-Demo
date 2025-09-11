@@ -128,11 +128,19 @@ public class ControlsManager : MonoBehaviour {
             currentInteractable = FindInteractableObjectAtMouse();
 
             if (lastInteractable != null) {
-                lastInteractable.DoClickAway();
+                var interactablesOnThisCurrentObj = lastInteractable.gameObject.GetComponents<InteractableObject>();
+                foreach (var interactable in interactablesOnThisCurrentObj)
+                {
+                    interactable.DoClickAway();
+                }
             }
 
             if (currentInteractable != null) {
-                currentInteractable.DoClick();
+                var interactablesOnThisCurrentObj = currentInteractable.gameObject.GetComponents<InteractableObject>();
+                foreach (var interactable in interactablesOnThisCurrentObj)
+                {
+                    interactable.DoClick();
+                }
             }
             else { //clicked on empty space
                 currentInteractable = null;
@@ -140,9 +148,13 @@ public class ControlsManager : MonoBehaviour {
         }
         else { //click released
             if (currentInteractable != null) {
-                currentInteractable.DoRelease();
+                var interactablesOnThisCurrentObj = currentInteractable.gameObject.GetComponents<InteractableObject>();
+                foreach (var interactable in interactablesOnThisCurrentObj)
+                {
+                    interactable.DoRelease();
+                }
+                lastInteractable = currentInteractable;
             }
-            lastInteractable = currentInteractable;
         }
     }
 

@@ -8,7 +8,6 @@ public abstract class InteractableObject : MonoBehaviour
     public virtual void DoRelease() {
         //do nothing, but can override if necessary
     }
-    
     public virtual void DoClickAway() {
         //do nothing, but can override if necessary
     }
