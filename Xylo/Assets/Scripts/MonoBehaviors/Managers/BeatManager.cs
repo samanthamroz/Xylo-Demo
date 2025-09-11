@@ -11,7 +11,9 @@ public class BeatManager : MonoBehaviour {
     public float beatsBetweenFirstTwoBeats = 1;
     [SerializeField] private float smallestPortionOfBeat = 1;
     [HideInInspector] public int smallestBeatToCheck;
+
     public int currentBeat = 0, currentMeasure = 0, totalBeatCount = 0;
+    public bool hasFirstNoteOccurred = false;
 
     void Awake() {
         if (self == null) {

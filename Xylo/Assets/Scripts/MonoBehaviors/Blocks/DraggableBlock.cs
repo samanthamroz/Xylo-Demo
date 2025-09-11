@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource))]
 public class DraggableBlock : InteractableObject {
     [SerializeField] protected List<DraggableBlockHandle> handles = new();
-    [SerializeField] private Note note;
     [HideInInspector] public Vector3 originalPosition;
 
     void Start() {
@@ -25,7 +23,6 @@ public class DraggableBlock : InteractableObject {
             }
         }
     }
-
     public void TurnOffHandlesNotInDirection(Vector3 direction) {
         ToggleAllHandles(true, true);
         ToggleAllHandles(true, false);
@@ -50,7 +47,6 @@ public class DraggableBlock : InteractableObject {
         //Debug.Log($"Position {targetPosition} - Colliding: {isColliding}");
         return isColliding;
     }
-
     public static bool IsObjectCollidingAtPosition(Collider objCollider, Vector3 targetPosition) {
         if (objCollider == null) return false;
 
@@ -71,17 +67,10 @@ public class DraggableBlock : InteractableObject {
     }
 
     public override void DoClick() {
-        GetComponent<AudioSource>().Play();
+        print("to");
         ToggleAllHandles(true, false);
     }
     public override void DoClickAway() {
         ToggleAllHandles(false, true);
-    }
-
-    private void OnCollisionEnter(Collision other) {
-        if (other.gameObject.CompareTag("Marble")) {
-            GetComponent<AudioSource>().PlayScheduled(AudioSettings.dspTime);
-            LevelManager.self.TriggerNote(note);
-        }
     }
 }
