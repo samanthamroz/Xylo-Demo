@@ -20,6 +20,7 @@ public class PlayerMarble : InteractableObject {
     void FixedUpdate() {
         if (!rb.isKinematic) {
             currentVelocity = rb.velocity;
+            print(currentVelocity);
         }
     }
 
@@ -50,10 +51,10 @@ public class PlayerMarble : InteractableObject {
         rb.isKinematic = false;
         
         if (VectorUtils.IsNullVector(launchVelocity)) {
-            float T = LevelManager.self.beatsBetweenFirstTwoBeats * (float)BeatManager.self.secPerBeat; // airtime per bounce
+            float T = BeatManager.self.beatsBetweenFirstTwoBeats * (float)BeatManager.self.secPerBeat; // airtime per bounce
             float g = -Physics.gravity.y;   // ~9.81
             float vY = g * T * 0.5f;        // vertical launch speed
-            float vX = LevelManager.self.beatsBetweenFirstTwoBeats * LevelManager.self.xDistancePerBeat / T;             // horizontal speed (negative to go left)
+            float vX = BeatManager.self.beatsBetweenFirstTwoBeats * BeatManager.self.xDistancePerBeat / T;             // horizontal speed (negative to go left)
 
 
             float mass = rb.mass;
@@ -67,7 +68,7 @@ public class PlayerMarble : InteractableObject {
 
         LevelManager.self.StartCountingForAttempt();
     }
-    private bool IsWithinIntervalRange(float y, float tolerance) {
+    private static bool IsWithinIntervalRange(float y, float tolerance) {
         // Find remainder when divided by 0.5 (since intervals are every 0.5 units)
         float remainder = y % 0.5f;
 
@@ -91,6 +92,7 @@ public class PlayerMarble : InteractableObject {
             DoSpringCollision(collision);
         }
     }
+
     private void DoBounceCollision(Collision collision) {
         if (isFirstNote) {
             BeatManager.self.StartAttempt();
@@ -102,27 +104,25 @@ public class PlayerMarble : InteractableObject {
         }
         spheres.Clear();
 
-        //Get realistic velocity
+        //Get "realistic" velocity
         var speed = currentVelocity.magnitude;
         var direction = Vector3.Reflect(currentVelocity.normalized, collision.contacts[0].normal);
         float bounciness = .85f;
-        Vector3 realisticVelocity = new(direction.x * Mathf.Max(speed, 0f), direction.y * Mathf.Max(speed * bounciness, 0f));
+        Vector2 realisticVelocity = new(direction.x * Mathf.Max(speed, 0f), direction.y * Mathf.Max(speed * bounciness, 0f));
 
+        //Find "perfect" velocity - but only look for realistic landing points
         Vector3 start = transform.position;
         float tPerfect = 0;
         Vector3 end = Vector3.zero;
         bool adjust = false;
+
         float maxSearchTime = 5.0f; // Maximum 5 seconds ahead
         float maxSearchBeats = maxSearchTime / (float)BeatManager.self.secPerBeat;
-        //int maxSearchDistance = Mathf.Min(20, Mathf.RoundToInt(Mathf.Abs(realisticVelocity.x) * maxSearchTime));
         float tApex = realisticVelocity.y / -Physics.gravity.y;
-        //float xApex = start.x + realisticVelocity.x * tApex;
-        //float yApex = start.y + (realisticVelocity.y * realisticVelocity.y) / (2f * -Physics.gravity.y);
 
-        //Searches each 16th note after the apex for a good landing point
-        for (int i = 1; i < maxSearchBeats * 4; i++) {
-            //how long to the apex plus how many beats out from there
-            float t = tApex + (i / 4f) * (float)BeatManager.self.secPerBeat;
+        for (int i = BeatManager.self.smallestBeatToCheck; i < maxSearchBeats * 2; i++) {
+            float t = i / 2f * (float)BeatManager.self.secPerBeat;
+            if (t <= tApex) continue;
 
             //given velocity and x value, what y do we get?
             float testX = start.x + realisticVelocity.x * t;
@@ -131,34 +131,29 @@ public class PlayerMarble : InteractableObject {
             Vector2 tryEnd = new(testX, testY);
             if (DEBUG_ShowSpheres) {
                 spheres.Add(Instantiate(sphere, new(tryEnd.x, tryEnd.y, -10), Quaternion.identity));
+                if (i % 4 == 0) {
+                    spheres[^1].transform.localScale = new(.5f, .5f, .5f);
+                }
             }
 
             //if y is within range, that point is valid
             //when a point is found, we keep searching to draw the curve
             //but don't save any further points, only use the closest
             if (!adjust && IsWithinIntervalRange(tryEnd.y, 0.25f)) {
-                float beatPosition = t / (float)BeatManager.self.secPerBeat;
-                float fractionalBeat = beatPosition - Mathf.Floor(beatPosition);
-                float nearestSixteenth = Mathf.Round(fractionalBeat * 4) / 4f;
-                float beatTolerance = 0.1f; // Adjust as needed
-                
-                // Only use this landing point if it's close to a 16th note subdivision
-                if (Mathf.Abs(fractionalBeat - nearestSixteenth) <= beatTolerance && IsWithinIntervalRange(tryEnd.y, .2f)) {
-                    float roundedY = (float)(Math.Round(tryEnd.y * 2f) / 2f);
-                    end = new(tryEnd.x, roundedY, transform.position.z);
-                    tPerfect = t;
-                    adjust = true;
-                    if (DEBUG_ShowSpheres) {
-                        spheres.Add(Instantiate(sphere, new(end.x, end.y, 0), Quaternion.identity));
-                    }
-                    //print($"Correcting to beat {beatPosition:F3} (sixteenth: {nearestSixteenth})");
+                float roundedY = (float)(Math.Round(tryEnd.y * 2f) / 2f);
+                end = new(tryEnd.x, roundedY, transform.position.z);  // Use absolute coordinates
+                tPerfect = t;
+                adjust = true;
+                if (DEBUG_ShowSpheres) {
+                    spheres.Add(Instantiate(sphere, new(end.x, end.y, -10), Quaternion.identity));
+                    spheres[^1].transform.localScale = Vector3.one;
                 }
             }
         }
 
         if (!adjust) {
-            //print("No valid points found, using realistic velocity");
-            rb.velocity = realisticVelocity;
+            print("No valid points found, using realistic velocity");
+            rb.velocity = (Vector3)realisticVelocity;
             return;
         }
 
@@ -166,14 +161,16 @@ public class PlayerMarble : InteractableObject {
         float deltaX = end.x - start.x;
         float deltaY = end.y - start.y;
         float time = tPerfect;
+
         Vector2 perfectVelocity = new(
-            realisticVelocity.x,
+            deltaX / time,
             (deltaY - 0.5f * Physics.gravity.y * time * time) / time);
 
         // Add velocity limits to prevent extreme adjustments
-        float maxVelocityChange = 3.0f; 
+        float maxVelocityChange = 3.0f;  // Maximum change in velocity magnitude
         float realisticSpeed = realisticVelocity.magnitude;
         float perfectSpeed = perfectVelocity.magnitude;
+
         //Second check - cannot change more than _ in magnitude
         if (perfectSpeed > realisticSpeed + maxVelocityChange) {
             perfectVelocity = perfectVelocity.normalized * (realisticSpeed + maxVelocityChange);
@@ -182,10 +179,9 @@ public class PlayerMarble : InteractableObject {
             perfectVelocity = perfectVelocity.normalized * Mathf.Max(0.1f, realisticSpeed - maxVelocityChange);
         }
 
-        //print($"Realistic: {realisticVelocity} | Perfect: {perfectVelocity} | Delta: {new Vector2(deltaX, deltaY)} | Time: {time}");
         rb.velocity = (Vector3)perfectVelocity;
-        //print($"Measure {BeatManager.self.currentMeasure} | Beat {BeatManager.self.currentBeat} | Offset {(float)BeatManager.self.GetCurrentBeatOffset()}");
     }
+
     private void DoSpringCollision(Collision collision) {
         if (!collision.gameObject.TryGetComponent<Springboard>(out Springboard sb)) return;
 
@@ -242,7 +238,6 @@ public class PlayerMarble : InteractableObject {
                         float testX = start.x + perfectVelocity.x * t;
                         Vector2 tryEnd = new(testX, testY);
                         spheres.Add(Instantiate(sphere, new(tryEnd.x, tryEnd.y, 0), Quaternion.identity));
-                        //print($"{nearestInteger}x beat jump ({testYVelocity:F2} vel) at {tryEnd} on beat {beatPosition:F3}");
                     }
                 }
             }

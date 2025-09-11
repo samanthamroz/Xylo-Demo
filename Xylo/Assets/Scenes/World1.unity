@@ -1553,6 +1553,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   songPosInBeats: 0
   secPerBeat: 0
+  xDistancePerBeat: 1.9
+  beatsBetweenFirstTwoBeats: 1
+  smallestPortionOfBeat: 1
+  smallestBeatToCheck: 0
   currentBeat: 0
   currentMeasure: 0
   totalBeatCount: 0

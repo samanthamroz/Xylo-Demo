@@ -17,8 +17,6 @@ class NoteTrigger {
 public class LevelManager : MonoBehaviour {
     public static LevelManager self;
 
-    public float xDistancePerBeat = 2;
-    public float beatsBetweenFirstTwoBeats = 1;
 
     private int levelNum { get { return LoadingManager.self.GetCurrentLevelNumber(); } }
     [HideInInspector] public int sectionNum = 0;

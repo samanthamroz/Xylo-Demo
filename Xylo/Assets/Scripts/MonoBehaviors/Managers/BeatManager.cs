@@ -6,6 +6,11 @@ public class BeatManager : MonoBehaviour {
     private Metronome metronome;
     private double dspStartTime, songPosInSec;
     public double songPosInBeats, secPerBeat;
+    
+    public float xDistancePerBeat = 2;
+    public float beatsBetweenFirstTwoBeats = 1;
+    [SerializeField] private float smallestPortionOfBeat = 1;
+    [HideInInspector] public int smallestBeatToCheck;
     public int currentBeat = 0, currentMeasure = 0, totalBeatCount = 0;
 
     void Awake() {
@@ -17,6 +22,7 @@ public class BeatManager : MonoBehaviour {
     void Start() {
         metronome = GetComponent<Metronome>();
         secPerBeat = 60 / metronome.bpm;
+        smallestBeatToCheck = (int)(smallestPortionOfBeat * 2f);
     }
 
     private void OnEnable() {

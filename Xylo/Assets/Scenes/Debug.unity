@@ -8397,6 +8397,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   songPosInBeats: 0
   secPerBeat: 0
+  xDistancePerBeat: 2
+  beatsBetweenFirstTwoBeats: 0.5
+  smallestPortionOfBeat: 0.5
+  smallestBeatToCheck: 0
   currentBeat: 0
   currentMeasure: 0
   totalBeatCount: 0
@@ -8539,8 +8543,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 273b75a924284d54e8449f1b783db482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xDistancePerBeat: 2
-  beatsBetweenFirstTwoBeats: 0.5
   sectionNum: 0
   marblePrefab: {fileID: 1985733370118950983, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
   deathPlaneObj: {fileID: 0}
