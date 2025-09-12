@@ -14,7 +14,7 @@ public class DraggableBlock : InteractableObject {
     public virtual void ToggleAllHandles(bool isOn, bool turnInvisible) {
         foreach (DraggableBlockHandle handle in handles) {
             handle.gameObject.SetActive(isOn);
-            Vector3 testPosition = transform.position + new Vector3(handle.direction.x, handle.direction.y / 2, 0);
+            Vector3 testPosition = transform.position + new Vector3(handle.direction.x / 4, handle.direction.y / 4, 0);
             if (turnInvisible) {
                 handle.ToggleInvisible(IsSelfCollidingAtPosition(testPosition));
             }

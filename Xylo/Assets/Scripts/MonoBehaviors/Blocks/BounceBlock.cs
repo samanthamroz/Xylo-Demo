@@ -7,6 +7,11 @@ public class BounceBlock : MonoBehaviour
     private List<GameObject> spheres = new();
     [SerializeField] bool DEBUG_ShowSpheres = false;
 
+    void Awake()
+    {
+        if (gameObject.TryGetComponent<SpringBlock>(out SpringBlock s)) throw new System.Exception("BounceBlock not compatible with SpringBlock. Remove one to avoid physics issues.");
+    }
+
     private static bool IsWithinIntervalRange(float y, float tolerance) {
         float remainder = y % 0.25f;
         if (remainder < 0)

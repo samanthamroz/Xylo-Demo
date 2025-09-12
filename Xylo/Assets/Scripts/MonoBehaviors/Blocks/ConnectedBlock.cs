@@ -32,7 +32,7 @@ public class ConnectedBlock : DraggableBlock {
             DraggableBlockHandle handle = handles[i];
             handle.gameObject.SetActive(isOn);
 
-            Vector3 amountToMove = new Vector3(handle.direction.x, handle.direction.y / 2, 0);
+            Vector3 amountToMove = new Vector3(handle.direction.x / 4, handle.direction.y / 4, 0);
             Vector3 testPosition = transform.position + amountToMove;
 
             bool anyCollisions = false;
