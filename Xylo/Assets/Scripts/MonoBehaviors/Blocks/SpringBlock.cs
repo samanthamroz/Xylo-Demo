@@ -21,7 +21,7 @@ public class SpringBlock : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision other) {
-        if (!other.gameObject.CompareTag("marble")) return;
+        if (!other.gameObject.CompareTag("Marble")) return;
 
         foreach (GameObject sphere in spheres) {
             Destroy(sphere);
@@ -30,7 +30,7 @@ public class SpringBlock : MonoBehaviour
 
         var currentVelocity = other.gameObject.GetComponent<PlayerMarble>().GetCurrentVelocity();
         var speed = currentVelocity.magnitude;
-        var direction = Vector3.Reflect(currentVelocity.normalized, other.contacts[0].normal);
+        var direction = Vector3.Reflect(currentVelocity.normalized, -other.contacts[0].normal);
         float realisticVelocityX = direction.x * Mathf.Max(speed, 0f);
 
         float deltaY = 0;
@@ -45,7 +45,7 @@ public class SpringBlock : MonoBehaviour
         float T = .25f * (float)BeatManager.self.secPerBeat;
         float vYNeededForFourthBeat = -Physics.gravity.y * T;
 
-        Vector3 start = transform.position;
+        Vector3 start = other.transform.position;
         float maxSearchTime = 5.0f;
         float maxSearchBeats = maxSearchTime / (float)BeatManager.self.secPerBeat;
         float tApex = perfectVelocity.y / -Physics.gravity.y;

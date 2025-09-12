@@ -20,7 +20,10 @@ public class BounceBlock : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision other) {
-        if (!other.gameObject.CompareTag("marble")) return;
+        if (!other.gameObject.CompareTag("Marble")) {
+            print("not marble");
+            return;
+        }
 
         if (!BeatManager.self.hasFirstNoteOccurred) {
             BeatManager.self.StartAttempt();
@@ -35,12 +38,12 @@ public class BounceBlock : MonoBehaviour
         //Get "realistic" velocity
         var currentVelocity = other.gameObject.GetComponent<PlayerMarble>().GetCurrentVelocity();
         var speed = currentVelocity.magnitude;
-        var direction = Vector3.Reflect(currentVelocity.normalized, other.contacts[0].normal);
+        var direction = Vector3.Reflect(currentVelocity.normalized, -other.contacts[0].normal);
         float bounciness = .85f;
         Vector2 realisticVelocity = new(direction.x * Mathf.Max(speed, 0f), direction.y * Mathf.Max(speed * bounciness, 0f));
 
         //Find "perfect" velocity - but only look for realistic landing points
-        Vector3 start = transform.position;
+        Vector3 start =  other.transform.position;
         float tPerfect = 0;
         Vector3 end = Vector3.zero;
         bool adjust = false;
@@ -106,7 +109,7 @@ public class BounceBlock : MonoBehaviour
         else if (perfectSpeed < realisticSpeed - maxVelocityChange) {
             perfectVelocity = perfectVelocity.normalized * Mathf.Max(0.1f, realisticSpeed - maxVelocityChange);
         }
-
+        
         other.gameObject.GetComponent<PlayerMarble>().SetVelocity(perfectVelocity);
     }
 }

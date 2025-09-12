@@ -9,7 +9,10 @@ public class PlayerMarble : InteractableObject {
     private Rigidbody rb;
     
     public Vector3 GetCurrentVelocity() { return currentVelocity; }
-    public void SetVelocity(Vector3 newVelocity) { rb.velocity = newVelocity; }
+    public void SetVelocity(Vector3 newVelocity) { 
+        rb.velocity = newVelocity;
+        currentVelocity = rb.velocity;
+    }
 
     void Start() {
         rb = GetComponent<Rigidbody>();
