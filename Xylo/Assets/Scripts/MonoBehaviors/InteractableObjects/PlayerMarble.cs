@@ -55,26 +55,11 @@ public class PlayerMarble : InteractableObject {
         rb.isKinematic = false;
         
         if (VectorUtils.IsNullVector(launchVelocity)) {
-            // For launching the ball initially to hit the first platform
-            float timeToFirstPlatform = 1.5f * (float)BeatManager.self.secPerBeat; // Your current timing
-            float timeBetweenPlatforms = 0.5f * (float)BeatManager.self.secPerBeat; // Target timing
+            float timeBetweenPlatforms = BeatManager.self.beatsBetweenFirstTwoBeats * (float)BeatManager.self.secPerBeat; // Target timing
+            float vX = BeatManager.self.xDistancePerBeat / (float)BeatManager.self.secPerBeat;
 
-            // Distance calculations
-            float horizontalDistanceToFirst = 1;
-            float horizontalDistanceBetween = 1;
-            float verticalDistanceToFirst = 0;
-
-            // Calculate initial velocity
-            float vX = horizontalDistanceToFirst / timeBetweenPlatforms;
-
-            // For the vertical component, account for the bounce velocity loss
-            // After bouncing with 0.85 bounciness, you need the right velocity for 0.5 beat flight
             float requiredVyAfterBounce = -0.5f * Physics.gravity.y * timeBetweenPlatforms;
             float requiredVyBeforeBounce = requiredVyAfterBounce / 0.85f; // Compensate for bounce loss
-
-            // Calculate initial vY to achieve the required velocity at first platform
-            // Using: vY_final = vY_initial + gravity * time
-            float vY = requiredVyBeforeBounce - (Physics.gravity.y * timeBetweenPlatforms);
 
             Vector2 launchVelocity = new(vX, requiredVyBeforeBounce);
             SetVelocity(launchVelocity);

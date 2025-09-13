@@ -1669,7 +1669,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   songPosInBeats: 0
   secPerBeat: 0
-  xDistancePerBeat: 1.9
+  xDistancePerBeat: 2
   beatsBetweenFirstTwoBeats: 1
   smallestPortionOfBeat: 1
   smallestBeatToCheck: 0
@@ -1819,6 +1819,8 @@ MonoBehaviour:
   sectionNum: 0
   marblePrefab: {fileID: 1985733370118950983, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
   deathPlaneObj: {fileID: 796921793}
+  firstBlockPos: {fileID: 1412761703}
+  directionMoving: {x: 1, y: 0, z: 0}
   attemptStarted: 0
   DEBUG_AutoWin: 1
 --- !u!1001 &1721217636
