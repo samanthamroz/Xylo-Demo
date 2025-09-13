@@ -151,13 +151,28 @@ public class LevelManager : MonoBehaviour {
         }
         print(str);
     }
+    private void PrintDistanceList(List<NoteTrigger> list) {
+        List<double> distanceList = new();
+        for (int i = 1; i < list.Count; i++) {
+            distanceList.Add(list[i].beatTriggered - list[i - 1].beatTriggered);
+        }
+
+        string str = "| ";
+        for (int i = 0; i < list.Count - 1; i++) {
+            string s = $"{list[i].note:F}, {distanceList[i]:F} | ";
+            str += s;
+        }
+        print(str);
+    }
+    
     private bool CheckForSectionWin() {
         if (attemptList.Count < 1) {
             return false;
         }
 
         //PrintNoteList(currentSectionSolution.ToList());
-        PrintNoteList(attemptList);
+        //PrintNoteList(attemptList);
+        PrintDistanceList(attemptList);
         if ((attemptList[0].note != currentSectionSolution[0].note) ||
             (attemptList.Count != currentSectionSolution.Length)) {
             return false;

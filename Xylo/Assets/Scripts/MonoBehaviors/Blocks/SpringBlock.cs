@@ -73,7 +73,7 @@ public class SpringBlock : MonoBehaviour
                         float testX = start.x + perfectVelocity.x * t;
                         Vector2 tryEnd = new(testX, testY);
                         if (DEBUG_ShowSpheres) spheres.Add(Instantiate(sphere, new(tryEnd.x, tryEnd.y, 0), Quaternion.identity));
-                        print($"{nearestInteger}x beat jump ({testYVelocity:F2} vel) at {tryEnd} on beat {beatPosition:F3}");
+                        //print($"{nearestInteger}x beat jump ({testYVelocity:F2} vel) at {tryEnd} on beat {beatPosition:F3}");
                     }
                 }
             }
