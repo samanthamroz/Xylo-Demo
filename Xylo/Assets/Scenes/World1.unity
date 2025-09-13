@@ -288,6 +288,10 @@ PrefabInstance:
       propertyPath: note
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 5634227414549831637, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
+      propertyPath: octave
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5682095573819578197, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_Name
       value: B
@@ -307,7 +311,7 @@ PrefabInstance:
     - target: {fileID: 7504931229027326268, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 5a2411a4b34db68469e77e2e04d7d401, type: 3}
+      objectReference: {fileID: 8300000, guid: 20e864854d7e128469969a3e08a99855, type: 3}
     - target: {fileID: 8663809828619676015, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_LocalScale.x
       value: 5
@@ -476,6 +480,10 @@ PrefabInstance:
       propertyPath: note
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 5634227414549831637, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
+      propertyPath: octave
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5682095573819578197, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_Name
       value: F#12
@@ -495,7 +503,7 @@ PrefabInstance:
     - target: {fileID: 7504931229027326268, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 207ed53b28d225141b0cc87dc6512443, type: 3}
+      objectReference: {fileID: 8300000, guid: 2364ad5e8b9294a4dbf13018ef18d3e9, type: 3}
     - target: {fileID: 8663809828619676015, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_LocalScale.x
       value: 4
@@ -655,6 +663,10 @@ PrefabInstance:
       propertyPath: note
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5634227414549831637, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
+      propertyPath: octave
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5682095573819578197, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_Name
       value: D#
@@ -674,7 +686,7 @@ PrefabInstance:
     - target: {fileID: 7504931229027326268, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 740ccc6e65623614a84dba0384b64e37, type: 3}
+      objectReference: {fileID: 8300000, guid: 9937063620f58c548be6ae2b21674cfb, type: 3}
     - target: {fileID: 8663809828619676015, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_LocalScale.x
       value: 5
@@ -1066,6 +1078,10 @@ PrefabInstance:
       propertyPath: note
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 5634227414549831637, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
+      propertyPath: octave
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5682095573819578197, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_Name
       value: G#13
@@ -1089,7 +1105,7 @@ PrefabInstance:
     - target: {fileID: 7504931229027326268, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 4001f2556e38f244a9049d38f3e1cada, type: 3}
+      objectReference: {fileID: 8300000, guid: ba53035d13d3e44498f31d9f92fdcb70, type: 3}
     - target: {fileID: 8663809828619676015, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_LocalScale.x
       value: 5
@@ -1164,6 +1180,10 @@ PrefabInstance:
       propertyPath: note
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 5634227414549831637, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
+      propertyPath: octave
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5682095573819578197, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_Name
       value: C#16
@@ -1183,7 +1203,7 @@ PrefabInstance:
     - target: {fileID: 7504931229027326268, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: c59bed015a83e1c45be9f116cc94922b, type: 3}
+      objectReference: {fileID: 8300000, guid: cdd68997c46bf3043b665ed68c88d94b, type: 3}
     - target: {fileID: 8663809828619676015, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_LocalScale.x
       value: 5
@@ -1342,6 +1362,10 @@ PrefabInstance:
       propertyPath: note
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 5634227414549831637, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
+      propertyPath: octave
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5682095573819578197, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_Name
       value: E9
@@ -1365,7 +1389,7 @@ PrefabInstance:
     - target: {fileID: 7504931229027326268, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 4ae5a47bfd19f2045abd0df138a8f088, type: 3}
+      objectReference: {fileID: 8300000, guid: ac08a792911ecea4998cfe5a17ffaf54, type: 3}
     - target: {fileID: 8663809828619676015, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_LocalScale.x
       value: 4
@@ -1674,16 +1698,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37740e06cbd35fe4abf6483e1b8490d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  songPosInBeats: 0
-  secPerBeat: 0
   xDistancePerBeat: 2
   beatsBetweenFirstTwoBeats: 1
-  smallestPortionOfBeat: 1
-  smallestBeatToCheck: 0
-  currentBeat: 0
-  currentMeasure: 0
-  totalBeatCount: 0
-  hasFirstNoteOccurred: 0
 --- !u!114 &1713012010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1696,10 +1712,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4f23ec457d61141bcfa23b8e79361b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bpm: 80
+  setBpm: 80
   signatureHi: 2
   signatureLo: 4
-  running: 0
 --- !u!82 &1713012011
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1823,12 +1838,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 273b75a924284d54e8449f1b783db482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sectionNum: 0
   marblePrefab: {fileID: 1985733370118950983, guid: d9ac359afa9b80849b6786ce6e51ec3a, type: 3}
   deathPlaneObj: {fileID: 796921793}
   firstBlockPos: {fileID: 1412761703}
   directionMoving: {x: 1, y: 0, z: 0}
-  attemptStarted: 0
   DEBUG_AutoWin: 1
 --- !u!1001 &1721217636
 PrefabInstance:
@@ -1841,6 +1854,10 @@ PrefabInstance:
     - target: {fileID: 5634227414549831637, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: note
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5634227414549831637, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
+      propertyPath: octave
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5682095573819578197, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_Name
@@ -1861,7 +1878,7 @@ PrefabInstance:
     - target: {fileID: 7504931229027326268, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 207ed53b28d225141b0cc87dc6512443, type: 3}
+      objectReference: {fileID: 8300000, guid: 2364ad5e8b9294a4dbf13018ef18d3e9, type: 3}
     - target: {fileID: 8663809828619676015, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_LocalScale.x
       value: 4
@@ -2105,6 +2122,10 @@ PrefabInstance:
       propertyPath: note
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 5634227414549831637, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
+      propertyPath: octave
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5682095573819578197, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_Name
       value: E5
@@ -2124,7 +2145,7 @@ PrefabInstance:
     - target: {fileID: 7504931229027326268, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 4ae5a47bfd19f2045abd0df138a8f088, type: 3}
+      objectReference: {fileID: 8300000, guid: ac08a792911ecea4998cfe5a17ffaf54, type: 3}
     - target: {fileID: 8663809828619676015, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_LocalScale.x
       value: 4
@@ -2296,6 +2317,10 @@ PrefabInstance:
       propertyPath: note
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 5634227414549831637, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
+      propertyPath: octave
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5682095573819578197, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_Name
       value: E11
@@ -2319,7 +2344,7 @@ PrefabInstance:
     - target: {fileID: 7504931229027326268, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 4ae5a47bfd19f2045abd0df138a8f088, type: 3}
+      objectReference: {fileID: 8300000, guid: ac08a792911ecea4998cfe5a17ffaf54, type: 3}
     - target: {fileID: 8663809828619676015, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: m_LocalScale.x
       value: 4

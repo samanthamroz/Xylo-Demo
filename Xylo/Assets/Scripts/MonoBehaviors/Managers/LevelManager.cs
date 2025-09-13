@@ -158,9 +158,15 @@ public class LevelManager : MonoBehaviour {
         }
 
         string str = "| ";
+        double distanceCovered = 0;
         for (int i = 0; i < list.Count - 1; i++) {
             string s = $"{list[i].note:F}, {distanceList[i]:F} | ";
             str += s;
+            distanceCovered += distanceList[i];
+            if (Mathf.Floor((float)distanceCovered) != 0 && Mathf.Round((float)distanceCovered) % 4 == 0) {
+                str += "\n|";
+                distanceCovered = 0;
+            }
         }
         print(str);
     }
@@ -171,7 +177,7 @@ public class LevelManager : MonoBehaviour {
         }
 
         //PrintNoteList(currentSectionSolution.ToList());
-        //PrintNoteList(attemptList);
+        PrintNoteList(attemptList);
         PrintDistanceList(attemptList);
         if ((attemptList[0].note != currentSectionSolution[0].note) ||
             (attemptList.Count != currentSectionSolution.Length)) {
