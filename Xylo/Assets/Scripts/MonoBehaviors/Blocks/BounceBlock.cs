@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class BounceBlock : MonoBehaviour
 {
@@ -21,19 +22,8 @@ public class BounceBlock : MonoBehaviour
 
     private void OnCollisionEnter(Collision other) {
         if (!other.gameObject.CompareTag("Marble")) {
-            print("not marble");
             return;
         }
-
-        if (!BeatManager.self.hasFirstNoteOccurred) {
-            BeatManager.self.StartAttempt();
-            BeatManager.self.hasFirstNoteOccurred = true;
-        }
-
-        foreach (GameObject sphere in spheres) {
-            Destroy(sphere);
-        }
-        spheres.Clear();
 
         //Get "realistic" velocity
         var currentVelocity = other.gameObject.GetComponent<PlayerMarble>().GetCurrentVelocity();
@@ -52,9 +42,9 @@ public class BounceBlock : MonoBehaviour
         float maxSearchBeats = maxSearchTime / (float)BeatManager.self.secPerBeat;
         float tApex = realisticVelocity.y / -Physics.gravity.y;
 
-        for (int i = BeatManager.self.smallestBeatToCheck; i < maxSearchBeats * 2; i++) {
-            float t = i / 2f * (float)BeatManager.self.secPerBeat;
-            if (t <= tApex) continue;
+        for (int i = 2; i < maxSearchBeats * 2; i++) {
+            float t = i / 4f * (float)BeatManager.self.secPerBeat;
+            if (t < tApex) continue;
 
             //given velocity and x value, what y do we get?
             float testX = start.x + realisticVelocity.x * t;
@@ -72,8 +62,8 @@ public class BounceBlock : MonoBehaviour
             //when a point is found, we keep searching to draw the curve
             //but don't save any further points, only use the closest
             if (!adjust && IsWithinIntervalRange(tryEnd.y, 0.25f)) {
-                float roundedY = (float)(Mathf.Round(tryEnd.y * 2f) / 2f);
-                end = new(tryEnd.x, roundedY, transform.position.z);  // Use absolute coordinates
+                float roundedY = (float)(Mathf.Round(tryEnd.y * 4f) / 4f);
+                end = new(tryEnd.x, roundedY, other.transform.position.z);  // Use absolute coordinates
                 tPerfect = t;
                 adjust = true;
                 if (DEBUG_ShowSpheres) {
@@ -111,5 +101,14 @@ public class BounceBlock : MonoBehaviour
         }
         
         other.gameObject.GetComponent<PlayerMarble>().SetVelocity(perfectVelocity);
+        StartCoroutine(ClearSpheres());
+    }
+
+    private IEnumerator ClearSpheres() {
+        yield return new WaitForSeconds(1);
+        foreach (GameObject sphere in spheres) {
+            Destroy(sphere);
+        }
+        spheres.Clear();
     }
 }

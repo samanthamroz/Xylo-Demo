@@ -135,6 +135,11 @@ public class NoteBlock : InteractableObject
     
     private void OnCollisionEnter(Collision other) {
         if (other.gameObject.CompareTag("Marble")) {
+            if (!BeatManager.self.hasFirstNoteOccurred) {
+                BeatManager.self.StartAttempt();
+                BeatManager.self.hasFirstNoteOccurred = true;
+            }
+
             if (audioSource != null)
                 audioSource.PlayScheduled(AudioSettings.dspTime);
             LevelManager.self.TriggerNote(note);

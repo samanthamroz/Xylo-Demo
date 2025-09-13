@@ -38,7 +38,7 @@ public class LevelManager : MonoBehaviour {
     private NoteTrigger[] currentSectionSolution { get { return solutions[levelNum][sectionNum]; } }
     private List<NoteTrigger> attemptList;
 
-    private Vector3[] marbleStartPositions = { new(.5f, 13f, -6), new(0f, .25f, 0) };
+    private Vector3[] marbleStartPositions = { new(.5f, 13f, -6), new(0f, 0.3f, 0) };
     private Vector3[][] deathPlaneCoords = {
         //Level 1
         new Vector3[] {new(0, 0, 0), new(0f, 0f, 17.2f), new(0, -1.29f, 32f), new(0, -6, 49)}

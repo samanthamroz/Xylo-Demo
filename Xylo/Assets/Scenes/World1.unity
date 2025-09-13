@@ -896,10 +896,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 880649859}
     m_Modifications:
-    - target: {fileID: 246950814175856523, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
-      propertyPath: DEBUG_ShowSpheres
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5634227414549831637, guid: 83dc6014e5eb5f54ba389c0fc2e41521, type: 3}
       propertyPath: note
       value: 7
