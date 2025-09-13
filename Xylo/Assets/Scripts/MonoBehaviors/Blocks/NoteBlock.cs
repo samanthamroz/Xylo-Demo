@@ -8,15 +8,12 @@ public class NoteBlock : InteractableObject
     private Renderer objectRenderer;
     private AudioSource audioSource;
     
-    [System.Serializable]
-    public struct MaterialMapping
+    [System.Serializable] public struct MaterialMapping
     {
         public Note type;
         public Material material;
     }
-
-    [System.Serializable]
-    public struct AudioMapping
+    [System.Serializable] public struct AudioMapping
     {
         public Note type;
         public List<AudioClip> audioClips;
@@ -25,8 +22,6 @@ public class NoteBlock : InteractableObject
     [Header("Mappings")]
     public MaterialMapping[] materialMappings;
     public AudioMapping[] audioMappings;
-
-    // These get populated at runtime
     private Dictionary<Note, Material> materialDict;
     private Dictionary<Note, List<AudioClip>> audioDict;
 
@@ -58,16 +53,14 @@ public class NoteBlock : InteractableObject
         // Convert arrays to dictionaries
         InitializeDictionaries();
     }
-    
     void Start() {
         UpdateNoteBlockProperties();
     }
-    
     void OnValidate()
     {
         // This will be handled by the custom editor in edit mode
         // Only update if we're in play mode
-        if (Application.isPlaying && audioSource != null && objectRenderer != null)
+        if (Application.isPlaying)
         {
             InitializeDictionaries();
             UpdateNoteBlockProperties();
@@ -94,7 +87,6 @@ public class NoteBlock : InteractableObject
             }
         }
     }
-    
     private void UpdateNoteBlockProperties() 
     {
         if (objectRenderer == null || audioSource == null)
@@ -129,19 +121,17 @@ public class NoteBlock : InteractableObject
     }
     
     public override void DoClick() {
-        if (audioSource != null)
-            audioSource.Play();
+        audioSource.Play();
     }
     
     private void OnCollisionEnter(Collision other) {
         if (other.gameObject.CompareTag("Marble")) {
             if (!BeatManager.self.hasFirstNoteOccurred) {
                 BeatManager.self.StartAttempt();
-                BeatManager.self.hasFirstNoteOccurred = true;
+                BeatManager.self.SetFirstNoteOccurred(true);
             }
 
-            if (audioSource != null)
-                audioSource.PlayScheduled(AudioSettings.dspTime);
+            audioSource.PlayScheduled(AudioSettings.dspTime);
             LevelManager.self.TriggerNote(note);
         }
     }

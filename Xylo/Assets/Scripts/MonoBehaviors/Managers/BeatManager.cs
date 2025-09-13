@@ -4,16 +4,19 @@ using UnityEngine;
 public class BeatManager : MonoBehaviour {
     public static BeatManager self;
     private Metronome metronome;
+
     private double dspStartTime, songPosInSec;
-    public double songPosInBeats, secPerBeat;
+    [HideInInspector] public double songPosInBeats { get; private set; }
+    [HideInInspector] public double secPerBeat { get; private set; }
     
     public float xDistancePerBeat = 2;
     public float beatsBetweenFirstTwoBeats = 1;
-    [SerializeField] private float smallestPortionOfBeat = 1;
-    [HideInInspector] public int smallestBeatToCheck;
 
-    public int currentBeat = 0, currentMeasure = 0, totalBeatCount = 0;
-    public bool hasFirstNoteOccurred = false;
+    private int currentBeat = 0, currentMeasure = 0, totalBeatCount = 0;
+    [HideInInspector] public bool hasFirstNoteOccurred { get; private set; }
+    public void SetFirstNoteOccurred(bool hasOccured) {
+        hasFirstNoteOccurred = hasOccured;
+    }
 
     void Awake() {
         if (self == null) {
@@ -24,7 +27,7 @@ public class BeatManager : MonoBehaviour {
     void Start() {
         metronome = GetComponent<Metronome>();
         secPerBeat = 60 / metronome.bpm;
-        smallestBeatToCheck = (int)(smallestPortionOfBeat * 2f);
+        hasFirstNoteOccurred = false;
     }
 
     private void OnEnable() {
@@ -88,10 +91,10 @@ public class BeatManager : MonoBehaviour {
 
     public void StartMetronome() {
         metronome.ResetTickSchedule();
-        metronome.running = true;
+        metronome.SetMetronomeRunning(true);
     }
     public void StopMetronome() {
-        metronome.running = false;
+        metronome.SetMetronomeRunning(false);
     }
 
     void Beat() {

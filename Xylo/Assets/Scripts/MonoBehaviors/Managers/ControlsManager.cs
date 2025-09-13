@@ -12,11 +12,9 @@ public class ControlsManager : MonoBehaviour {
 
     private InputActionAsset inputActions;
     private InputActionMap mainMap, levelSelectMap, menuMap, cinematicMap, currentActionMap, lastActionMap;
-    public string currentActionMapName { get { return currentActionMap.name; } }
+    private string currentActionMapName { get { return currentActionMap.name; } }
     [HideInInspector] public Vector3 mousePosition;
-    [SerializeField] private InteractableObject currentInteractable, lastInteractable;
-
-    public bool isGamePaused;
+    private InteractableObject currentInteractable, lastInteractable;
 
 
     void Awake() {
@@ -101,7 +99,6 @@ public class ControlsManager : MonoBehaviour {
         else {
             Time.timeScale = 1f;
         }
-        isGamePaused = doPause;
     }
 
     void OnMouseMove(InputValue value) {

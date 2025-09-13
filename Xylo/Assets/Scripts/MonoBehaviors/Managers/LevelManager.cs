@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 //inspo: https://www.gamedeveloper.com/audio/coding-to-the-beat---under-the-hood-of-a-rhythm-game-in-unity
@@ -18,12 +16,9 @@ class NoteTrigger {
 public class LevelManager : MonoBehaviour {
     public static LevelManager self;
 
-    private int levelNum { get { return LoadingManager.self.GetCurrentLevelNumber(); } }
-    [HideInInspector] public int sectionNum = 0;
-
     public GameObject marblePrefab, deathPlaneObj;
     private GameObject marbleObject;
-    private PlayerMarble marble { get { return marbleObject.GetComponent<PlayerMarble>(); } }
+    
     private NoteTrigger[][][] solutions =
     {
         //Level 0
@@ -42,21 +37,26 @@ public class LevelManager : MonoBehaviour {
     [SerializeField] private Vector3 directionMoving = Vector3.right;
 
     private Vector3 marbleStartPosition;
-    //s = { new(.5f, 13f, -6), new(0f, 0.3f, 0) };
     private Vector3[][] deathPlaneCoords = {
         //Level 1
         new Vector3[] {new(0, 0, 0), new(0f, 0f, 17.2f), new(0, -1.29f, 32f), new(0, -6, 49)}
     };
     private float forgivenessBetweenBeats = .1f;
-    [HideInInspector] public bool attemptStarted;
     private bool attemptCountingStarted;
 
     [SerializeField] private bool DEBUG_AutoWin;
+    
+    [HideInInspector] public int sectionNum { get; private set; }
+    [HideInInspector] public bool attemptStarted { get; private set; }
+
+    private PlayerMarble marble => marbleObject.GetComponent<PlayerMarble>();
+    private int levelNum => LoadingManager.self.GetCurrentLevelNumber();
 
     void Awake() {
         self = this;
     }
     void Start() {
+        sectionNum = 0;
         attemptStarted = false;
 
         float horizontalDistanceToFirst = Mathf.Abs(BeatManager.self.xDistancePerBeat * BeatManager.self.beatsBetweenFirstTwoBeats);

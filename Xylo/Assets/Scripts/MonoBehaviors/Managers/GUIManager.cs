@@ -6,13 +6,14 @@ using System.Collections;
 public class GUIManager : MonoBehaviour {
 	public static GUIManager self;
 
-	public GameObject loadingBannerPrefab, titleScreenCanvasPrefab, levelSelectCanvasPrefab;
+	[SerializeField] private GameObject loadingBannerPrefab, titleScreenCanvasPrefab, levelSelectCanvasPrefab;
 	private GameObject titleScreenCanvas, levelSelectCanvas;
 
-	public GameObject UICanvasPrefab, pauseMenuPrefab, pianoMenuPrefab, playButtonPrefab, winMenuCanvasPrefab, tutorialBoxPrefab, cinematicBarsPrefab;
+	[SerializeField] private GameObject UICanvasPrefab, pauseMenuPrefab, pianoMenuPrefab, playButtonPrefab, winMenuCanvasPrefab, tutorialBoxPrefab, cinematicBarsPrefab;
 	private GameObject UICanvas, pauseMenu, pianoMenu, playButton, winMenuCanvas, tutorialBox, cinematicBarsCanvas;
+	
 	private Vector3 pianoMenuStartPos;
-	public Sprite playButtonImage, retryButtonImage;
+	[SerializeField] private Sprite playButtonImage, retryButtonImage;
 
 	void Awake() {
 		if (self == null) {

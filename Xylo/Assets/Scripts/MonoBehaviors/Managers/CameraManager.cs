@@ -9,26 +9,30 @@ public class CameraManager : MonoBehaviour {
     private CinematicCameraManager ccm;
     public static CameraManager self;
 
-    public CamMode currentMode;
-    public bool isCinematicCamera { get { return currentMode == CamMode.CINEMATIC; } }
+    private CamMode currentMode;
+    
     [SerializeField] private GameObject cameraPrefab, lookAtPrefab;
     private GameObject cameraObject, lookAtObject, currentlookAtObject;
     private Camera cam;
-    [HideInInspector] public Vector3 camPosition { get { return cameraObject.transform.position; } }
-    private Vector3 mousePosition { get { return ControlsManager.self.mousePosition; } }
+
     [HideInInspector] public bool isRotating, isPanning;
 
-    private Vector3 lookAtPointResetPos; //this is the position the lookAtObject is reset to
+    private Vector3 lookAtPointResetPos, lastPositionInWorld, lastMousePosition;
     private float startingZoom, cameraHeight; //this is the difference in height between the lookAtObject and the camera
-    [SerializeField] private Vector2 cameraPlacementRadius;
+    private Vector2 cameraPlacementRadius = new(3, 2);
 
-    [SerializeField] private float panDistancePerFrame = .01f;
-    [SerializeField] private float rotateDistancePerFrame = .1f;
-    private Vector3 lastPositionInWorld, lastMousePosition;
+    private float panDistancePerFrame = .01f;
+    private float rotateDistancePerFrame = .1f;
+    private float zoomDistancePerFrame = 0.05f;
     private float zoomMin = 5f;
     private float zoomMax = 20f;
-    [SerializeField] private float zoomDistancePerFrame = 0.05f;
     private float zoomGoal, currentZoom;
+
+    private Vector3 mousePosition => ControlsManager.self.mousePosition;
+
+    [HideInInspector] public bool isCinematicCamera => currentMode == CamMode.CINEMATIC;
+    [HideInInspector] public Vector3 camPosition => cameraObject.transform.position;
+
 
     void Awake() {
         if (self == null) {

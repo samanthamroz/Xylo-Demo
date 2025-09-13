@@ -16,11 +16,16 @@ public class Metronome : MonoBehaviour {
     private double nextTick;
     private int accent;
 
-    public double bpm = 80.0;
+    [SerializeField] private double setBpm = 80;
+    [HideInInspector] public double bpm => setBpm;
+
     [SerializeField] private int signatureHi = 4;
     [SerializeField] private int signatureLo = 4;
 
-    [HideInInspector] public bool running = false;
+    private bool running = false;
+    public void SetMetronomeRunning(bool isRunning) {
+        running = isRunning;
+    }
 
     // Thread-safe queue for beat events
     private ConcurrentQueue<Action> beatEvents = new();

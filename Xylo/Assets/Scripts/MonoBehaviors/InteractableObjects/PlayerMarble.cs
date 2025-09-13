@@ -10,6 +10,8 @@ public class PlayerMarble : InteractableObject {
     
     public Vector3 GetCurrentVelocity() { return currentVelocity; }
     public void SetVelocity(Vector3 newVelocity) { 
+        if (rb.isKinematic) throw new Exception("Error: Attempted to set velocity while marble is kinematic");
+
         rb.velocity = newVelocity;
         currentVelocity = rb.velocity;
     }
@@ -40,7 +42,7 @@ public class PlayerMarble : InteractableObject {
     public void ResetSelf() {
         rb.isKinematic = true;
         LeanTween.move(gameObject, resetPosition, .5f).setEaseInOutSine();
-        BeatManager.self.hasFirstNoteOccurred = false;
+        BeatManager.self.SetFirstNoteOccurred(false);
     }
     public void PlaceMarbleForSectionStart(Vector3 velocity, Vector3 position) {
         launchVelocity = velocity;
