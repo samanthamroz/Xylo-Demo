@@ -34,7 +34,8 @@ public class LevelManager : MonoBehaviour {
     private List<NoteTrigger> attemptList;
 
     [SerializeField] private Transform firstBlockPos;
-    [SerializeField] private Vector3 directionMoving = Vector3.right;
+    [SerializeField] private Vector3 setDirectionMoving = Vector3.right;
+    [HideInInspector] public Vector3 directionMoving => setDirectionMoving;
 
     private Vector3 marbleStartPosition;
     private Vector3[][] deathPlaneCoords = {
@@ -45,6 +46,9 @@ public class LevelManager : MonoBehaviour {
     private bool attemptCountingStarted;
 
     [SerializeField] private bool DEBUG_AutoWin;
+    [SerializeField] public bool DEBUG_UseManualStart = false;
+    [SerializeField] private Vector3 DEBUG_ManualPosition;
+    public Vector3 DEBUG_ManualVelocity;
     
     [HideInInspector] public int sectionNum { get; private set; }
     [HideInInspector] public bool attemptStarted { get; private set; }
@@ -59,11 +63,15 @@ public class LevelManager : MonoBehaviour {
         sectionNum = 0;
         attemptStarted = false;
 
-        float horizontalDistanceToFirst = Mathf.Abs(BeatManager.self.xDistancePerBeat * BeatManager.self.beatsBetweenFirstTwoBeats);
-        marbleStartPosition = new(firstBlockPos.position.x + horizontalDistanceToFirst * -directionMoving.x, 
-            firstBlockPos.position.y + .3f, 
-            firstBlockPos.position.z - 1);
-        marbleObject = Instantiate(marblePrefab, marbleStartPosition, Quaternion.identity);
+        if (DEBUG_UseManualStart) {
+            marbleObject = Instantiate(marblePrefab, DEBUG_ManualPosition, Quaternion.identity);
+        } else {
+            float horizontalDistanceToFirst = Mathf.Abs(BeatManager.self.xDistancePerBeat * BeatManager.self.beatsBetweenFirstTwoBeats);
+            marbleStartPosition = new(firstBlockPos.position.x + horizontalDistanceToFirst * -directionMoving.x, 
+                firstBlockPos.position.y + .3f, 
+                firstBlockPos.position.z - 1);
+            marbleObject = Instantiate(marblePrefab, marbleStartPosition, Quaternion.identity);
+        }
 
         LoadingManager.self.SetMarbleStartForSection(0, VectorUtils.nullVector, marble.transform.position);
     }

@@ -9,5 +9,6 @@ public class VelocitySensor : MonoBehaviour
         other.gameObject.TryGetComponent<Rigidbody>(out Rigidbody rb);
         if (rb is null) return;
         print(rb.velocity);
+        print("pos:" + other.transform.position);
     }
 }

@@ -20,6 +20,7 @@ public class PlayerMarble : InteractableObject {
         rb = GetComponent<Rigidbody>();
         resetPosition = transform.position;
         originalPosition = transform.position;
+        if (LevelManager.self.DEBUG_UseManualStart) currentVelocity = LevelManager.self.DEBUG_ManualVelocity;
     }
     void FixedUpdate() {
         if (!rb.isKinematic) {
@@ -36,6 +37,7 @@ public class PlayerMarble : InteractableObject {
         rb.isKinematic = true;
         transform.position = originalPosition;
         launchVelocity = VectorUtils.nullVector;
+        
         RunMarble();
     }
 
@@ -56,9 +58,13 @@ public class PlayerMarble : InteractableObject {
     public void RunMarble() {
         rb.isKinematic = false;
         
+        if (LevelManager.self.DEBUG_UseManualStart) {
+            launchVelocity = LevelManager.self.DEBUG_ManualVelocity;
+        }
+
         if (VectorUtils.IsNullVector(launchVelocity)) {
             float timeBetweenPlatforms = BeatManager.self.beatsBetweenFirstTwoBeats * (float)BeatManager.self.secPerBeat; // Target timing
-            float vX = BeatManager.self.xDistancePerBeat / (float)BeatManager.self.secPerBeat;
+            float vX = BeatManager.self.xDistancePerBeat / (float)BeatManager.self.secPerBeat * LevelManager.self.directionMoving.x;
 
             float requiredVyAfterBounce = -0.5f * Physics.gravity.y * timeBetweenPlatforms;
             float requiredVyBeforeBounce = requiredVyAfterBounce / 0.85f; // Compensate for bounce loss

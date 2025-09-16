@@ -1,12 +1,14 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEditor;
 
 public class BounceBlock : MonoBehaviour
 {
     [SerializeField] private GameObject sphere;
     private List<GameObject> spheres = new();
     [SerializeField] bool DEBUG_ShowSpheres = false;
+    [SerializeField] bool DEBUG_DoAdjustments = true;
 
     void Awake()
     {
@@ -22,6 +24,11 @@ public class BounceBlock : MonoBehaviour
 
     private void OnCollisionEnter(Collision other) {
         if (!other.gameObject.CompareTag("Marble")) {
+            return;
+        }
+
+        if (!DEBUG_DoAdjustments) {
+            print($"Warning, {gameObject.name} has DEBUG_DoAdjustments = false");
             return;
         }
 
