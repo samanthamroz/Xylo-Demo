@@ -56,10 +56,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: DraggableSpringBlock
       objectReference: {fileID: 0}
+    - target: {fileID: 6775458521947268120, guid: 1aac3f3f65a4632479666047f3ecd5d0, type: 3}
+      propertyPath: handlePrefab
+      value: 
+      objectReference: {fileID: 1590050845703765432, guid: 1531ef76c5f29d945ac504f24a80121c, type: 3}
     m_RemovedComponents:
     - {fileID: 725931003248856517, guid: 1aac3f3f65a4632479666047f3ecd5d0, type: 3}
     - {fileID: 3939113710073439669, guid: 1aac3f3f65a4632479666047f3ecd5d0, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1419734710825763999, guid: 1aac3f3f65a4632479666047f3ecd5d0, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1aac3f3f65a4632479666047f3ecd5d0, type: 3}

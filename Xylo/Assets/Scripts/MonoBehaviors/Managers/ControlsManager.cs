@@ -14,7 +14,7 @@ public class ControlsManager : MonoBehaviour {
     private InputActionMap mainMap, levelSelectMap, menuMap, cinematicMap, currentActionMap, lastActionMap;
     private string currentActionMapName { get { return currentActionMap.name; } }
     [HideInInspector] public Vector3 mousePosition;
-    private InteractableObject currentInteractable, lastInteractable;
+    private GameObject currentInteractable, lastInteractable;
 
 
     void Awake() {
@@ -40,7 +40,6 @@ public class ControlsManager : MonoBehaviour {
 
         ChangeActionMap(map);
     }
-
     private void ChangeActionMap(string mapName) {
         if (currentActionMap != null) {
             lastActionMap = currentActionMap;
@@ -79,15 +78,12 @@ public class ControlsManager : MonoBehaviour {
     public void ActivateCinematicMap() {
         ChangeActionMap("cinematic");
     }
-
     public void ActivateMenuMap() {
         ChangeActionMap("levelmenus");
     }
-
     public void ActivateMainMap() {
         ChangeActionMap("main");
     }
-
     public void RevertToLastMap() {
         ChangeActionMap(lastActionMap.name);
     }
@@ -105,12 +101,11 @@ public class ControlsManager : MonoBehaviour {
         mousePosition = value.Get<Vector2>();
     }
 
-    private InteractableObject FindInteractableObjectAtMouse() {
+    private GameObject FindInteractableObjectAtMouse() {
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit)) {
-            InteractableObject testIfInteractable = hit.collider.gameObject.GetComponent<InteractableObject>();
-            if (testIfInteractable != null) {
-                return testIfInteractable;
+            if (hit.collider.gameObject.TryGetComponent<IClickBehavior>(out IClickBehavior test)) {
+                return hit.collider.gameObject;
             }
         }
         return null;
@@ -121,34 +116,32 @@ public class ControlsManager : MonoBehaviour {
             CameraManager.self.isRotating = false;
             CameraManager.self.isPanning = false;
 
-
             currentInteractable = FindInteractableObjectAtMouse();
 
             if (lastInteractable != null) {
-                var interactablesOnThisCurrentObj = lastInteractable.gameObject.GetComponents<InteractableObject>();
-                foreach (var interactable in interactablesOnThisCurrentObj)
+                var clickAwaysOnObject = lastInteractable.GetComponents<IClickAwayBehavior>();
+                foreach (var clickAway in clickAwaysOnObject)
                 {
-                    interactable.DoClickAway();
+                    clickAway.DoClickAway();
                 }
             }
 
             if (currentInteractable != null) {
-                var interactablesOnThisCurrentObj = currentInteractable.gameObject.GetComponents<InteractableObject>();
-                foreach (var interactable in interactablesOnThisCurrentObj)
+                var clickablesOnThisCurrentObj = currentInteractable.GetComponents<IClickBehavior>();
+                foreach (var clicker in clickablesOnThisCurrentObj)
                 {
-                    interactable.DoClick();
+                    clicker.DoClick();
                 }
-            }
-            else { //clicked on empty space
+            } else { //clicked on empty space
                 currentInteractable = null;
             }
         }
         else { //click released
             if (currentInteractable != null) {
-                var interactablesOnThisCurrentObj = currentInteractable.gameObject.GetComponents<InteractableObject>();
-                foreach (var interactable in interactablesOnThisCurrentObj)
+                var releasesOnThisCurrentObj = currentInteractable.GetComponents<IReleaseBehavior>();
+                foreach (var releaser in releasesOnThisCurrentObj)
                 {
-                    interactable.DoRelease();
+                    releaser.DoRelease();
                 }
                 lastInteractable = currentInteractable;
             }

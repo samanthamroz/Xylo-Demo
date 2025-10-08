@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(Renderer))]
-public class NoteBlock : InteractableObject
+public class NoteBlock : MonoBehaviour, IClickBehavior
 {
     private Renderer objectRenderer;
     private AudioSource audioSource;
@@ -120,7 +120,7 @@ public class NoteBlock : InteractableObject
         }
     }
     
-    public override void DoClick() {
+    public void DoClick() {
         audioSource.Play();
     }
     
