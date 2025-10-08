@@ -115,9 +115,24 @@ public class DraggableBlockHandle : InteractableObject {
             newBlockPosition = GetSnapToGridVector(parentBlock.originalPosition, newBlockPosition);
 
             bool isConnectedBlock = parentBlock.gameObject.TryGetComponent<ConnectedBlock>(out ConnectedBlock connected);
-            if (!IsParentBlockCollidingAtPosition(newBlockPosition) && IsNotJumpingBlocks(newBlockPosition)) {
+            if (IsNotJumpingBlocks(newBlockPosition)) {
+                Vector3 mdirection = newBlockPosition - parentBlock.transform.position;
+                float distance = mdirection.magnitude;
+
+                // Use BoxCast to match your block's shape
+                if (!Physics.BoxCast(parentBlock.transform.position, 
+                                    parentBlock.GetComponent<Collider>().bounds.extents, 
+                                    mdirection.normalized, 
+                                    out RaycastHit hit,
+                                    parentBlock.transform.rotation,
+                                    distance))
+                {
+                    parentBlock.GetComponent<Rigidbody>().MovePosition(newBlockPosition);
+                }
+
                 if (!isConnectedBlock) {
-                    parentBlock.transform.position = newBlockPosition;
+                    //parentBlock.GetComponent<Rigidbody>().MovePosition(newBlockPosition);
+                    //parentBlock.transform.position = newBlockPosition;
                     parentBlock.TurnOffHandlesNotInDirection(direction);
                 }
                 else {
@@ -130,7 +145,8 @@ public class DraggableBlockHandle : InteractableObject {
                         }
                     }
                     if (!isAnyChildrenColliding) {
-                        parentBlock.transform.position = newBlockPosition;
+                        parentBlock.GetComponent<Rigidbody>().MovePosition(newBlockPosition);
+                        //parentBlock.transform.position = newBlockPosition;
                         foreach (GameObject block in connected.connectedBlocks) {
                             block.transform.position += howMuchToMove;
                         }
