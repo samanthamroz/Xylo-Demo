@@ -117,8 +117,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2fd9ae3b9c4033439b885dbb029bf40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sphere: {fileID: 5936164703655211191, guid: 66ba69389283ddf45a8e45e1aa633343, type: 3}
-  DEBUG_ShowSpheres: 1
 --- !u!1 &5808275885313984935
 GameObject:
   m_ObjectHideFlags: 0
@@ -245,7 +243,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 5
+  m_Time: 60
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3

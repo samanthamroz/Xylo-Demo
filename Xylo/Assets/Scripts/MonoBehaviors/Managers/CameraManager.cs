@@ -21,7 +21,7 @@ public class CameraManager : MonoBehaviour {
     private float startingZoom, cameraHeight; //this is the difference in height between the lookAtObject and the camera
     private Vector2 cameraPlacementRadius = new(3, 2);
 
-    private float panDistancePerFrame = .01f;
+    private float panDistancePerFrame = .05f;
     private float rotateDistancePerFrame = .1f;
     private float zoomDistancePerFrame = 0.05f;
     private float zoomMin = 5f;

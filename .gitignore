@@ -1,4 +1,5 @@
 # Excluded folders
+/XyloBuild/
 /.vs/
 /Temp
 [Tt]emp/
