@@ -22,4 +22,8 @@ public class VectorUtils
 
         return new Vector3(snappedX, snappedY, snappedZ);
     }
+
+    public static Vector3 GetRoundedVector(Vector3 vec) {
+        return new Vector3((float)Mathf.Round(vec.x), (float)(Mathf.Round(vec.y * 2) / 2), (float)Mathf.Round(vec.z));
+    }
 }

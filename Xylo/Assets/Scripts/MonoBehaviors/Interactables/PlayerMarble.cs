@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerMarble : InteractableObject {
+public class PlayerMarble : MonoBehaviour, IClickBehavior {
     private Vector3 originalPosition, resetPosition, currentVelocity;
     private Vector3 launchVelocity = VectorUtils.nullVector;
     private Rigidbody rb;
@@ -29,7 +28,7 @@ public class PlayerMarble : InteractableObject {
         }
     }
     
-    public override void DoClick() {
+    public void DoClick() {
         LevelManager.self.StartPlaying();
     }
 
