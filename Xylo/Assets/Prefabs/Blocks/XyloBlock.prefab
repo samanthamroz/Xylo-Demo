@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 143510460823758325}
   - component: {fileID: 1328869018024965091}
   - component: {fileID: 2120304805434896548}
+  - component: {fileID: 8730777628074737120}
   m_Layer: 0
   m_Name: XyloBlock
   m_TagString: Bounces
@@ -371,3 +372,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handlePrefab: {fileID: 1590050845703765432, guid: 1531ef76c5f29d945ac504f24a80121c, type: 3}
   originalPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &8730777628074737120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5682095573819578197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0d25d740913a5d44866a9b4925853ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

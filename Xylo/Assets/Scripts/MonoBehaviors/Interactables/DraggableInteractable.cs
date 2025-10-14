@@ -1,14 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(GridCollisionHandler))]
 public class DraggableInteractable : MonoBehaviour, IClickBehavior, IClickAwayBehavior {
     [SerializeField] GameObject handlePrefab;
     private List<DraggableHandleInteractable> handles = new();
     [HideInInspector] public Vector3 originalPosition;
+    private GridCollisionHandler collisionHandler;
 
 
     void Start() {
+        collisionHandler = GetComponent<GridCollisionHandler>();
+
         Transform scaleAdjust = new GameObject("ScaleAdjust").transform;
         scaleAdjust.SetParent(transform);
         scaleAdjust.SetLocalPositionAndRotation(transform.rotation * new Vector3(0f, 0f, -0.4f), Quaternion.identity);
@@ -51,33 +54,9 @@ public class DraggableInteractable : MonoBehaviour, IClickBehavior, IClickAwayBe
         }
     }
 
-
-    public bool IsCollidingAtPosition(Vector3 targetPosition) {
-        Collider[] colliders = Physics.OverlapBox(targetPosition, GetComponent<Collider>().bounds.extents, Quaternion.identity);
-
-        bool isColliding = false;
-        foreach (Collider c in colliders) {
-            if (c.gameObject != gameObject && !c.isTrigger && !c.transform.IsChildOf(transform)) {
-                //Debug.Log($"Collision detected with: {c.gameObject.name} at position {targetPosition}");
-                isColliding = true;
-                break;
-            }
-        }
-        //Debug.Log($"Position {targetPosition} - Colliding: {isColliding}");
-        return isColliding;
-        /*
-
-        Vector3 moveVector = targetPosition - transform.position;
-        float distance = moveVector.magnitude;
-
-        return Physics.BoxCast(transform.position, 
-                            GetComponent<Collider>().bounds.extents, 
-                            moveVector.normalized, 
-                            out RaycastHit hit,
-                            transform.rotation,
-                            distance); */
+    public bool IsCollidingAtPosition(Vector3 testPosition) {
+        return collisionHandler.IsCollidingAtPosition(transform.position, testPosition);
     }
-
 
     public void DoClick() {
         TurnAllHandlesOn();
