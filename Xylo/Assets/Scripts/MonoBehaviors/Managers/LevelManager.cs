@@ -15,6 +15,13 @@ class NoteTrigger {
 
 public class LevelManager : MonoBehaviour {
     public static LevelManager self;
+    [SerializeField] private LevelConfiguration levelConfig;
+
+    //Level config data
+    [HideInInspector] public Vector3 directionMoving;
+    private Transform firstBlockPos;
+    private Vector3[][] deathPlaneCoords;
+
 
     public GameObject marblePrefab, deathPlaneObj;
     private GameObject marbleObject;
@@ -33,15 +40,7 @@ public class LevelManager : MonoBehaviour {
     private NoteTrigger[] currentSectionSolution { get { return solutions[levelNum][sectionNum]; } }
     private List<NoteTrigger> attemptList;
 
-    [SerializeField] private Transform firstBlockPos;
-    [SerializeField] private Vector3 setDirectionMoving = Vector3.right;
-    [HideInInspector] public Vector3 directionMoving => setDirectionMoving;
-
     private Vector3 marbleStartPosition;
-    private Vector3[][] deathPlaneCoords = {
-        //Level 1
-        new Vector3[] {new(0, 0, 0), new(0f, 0f, 17.2f), new(0, -1.29f, 32f), new(0, -6, 49)}
-    };
     private float forgivenessBetweenBeats = .1f;
     private bool attemptCountingStarted;
 
@@ -62,19 +61,35 @@ public class LevelManager : MonoBehaviour {
     void Start() {
         sectionNum = 0;
         attemptStarted = false;
-
+        
+        // Load level-specific configuration
+        var currentLevelData = levelConfig.GetLevelData(levelNum);
+        if (currentLevelData == null) {
+            Debug.LogError("Failed to load level configuration!");
+            return;
+        }
+        
+        directionMoving = currentLevelData.marbleDirection;
+        deathPlaneCoords = new Vector3[][] { currentLevelData.deathPlaneCoords };
+        
         if (DEBUG_UseManualStart) {
             marbleObject = Instantiate(marblePrefab, DEBUG_ManualPosition, Quaternion.identity);
         } else {
             float horizontalDistanceToFirst = Mathf.Abs(BeatManager.self.xDistancePerBeat * BeatManager.self.beatsBetweenFirstTwoBeats);
-            marbleStartPosition = new(firstBlockPos.position.x + horizontalDistanceToFirst * -directionMoving.x, 
-                firstBlockPos.position.y + .3f, 
-                firstBlockPos.position.z - 1);
+            
+            Vector3 offset = -directionMoving * horizontalDistanceToFirst;
+            marbleStartPosition = new Vector3(
+                currentLevelData.firstBlockPosition.x + offset.x, 
+                currentLevelData.firstBlockPosition.y + .3f, 
+                currentLevelData.firstBlockPosition.z + offset.z
+            );
+            
             marbleObject = Instantiate(marblePrefab, marbleStartPosition, Quaternion.identity);
         }
 
         LoadingManager.self.SetMarbleStartForSection(0, VectorUtils.nullVector, marble.transform.position);
     }
+    
     public void StartPlaying() {
         attemptStarted = true;
         attemptList = new List<NoteTrigger>();

@@ -32,20 +32,26 @@ public class BounceBlock : MonoBehaviour
             return;
         }
 
-        //Get "realistic" velocity
+        // Get "realistic" velocity
         var currentVelocity = other.gameObject.GetComponent<PlayerMarble>().GetCurrentVelocity();
         var speed = currentVelocity.magnitude;
         var direction = Vector3.Reflect(currentVelocity.normalized, -other.contacts[0].normal);
         float bounciness = .85f;
-        Vector2 realisticVelocity = new(direction.x * Mathf.Max(speed, 0f), direction.y * Mathf.Max(speed * bounciness, 0f));
+        
+        // Use full 3D velocity instead of Vector2
+        Vector3 realisticVelocity = new Vector3(
+            direction.x * Mathf.Max(speed, 0f),
+            direction.y * Mathf.Max(speed * bounciness, 0f),
+            direction.z * Mathf.Max(speed, 0f)
+        );
 
-        //Find "perfect" velocity - but only look for realistic landing points
-        Vector3 start =  other.transform.position;
+        // Find "perfect" velocity
+        Vector3 start = other.transform.position;
         float tPerfect = 0;
         Vector3 end = Vector3.zero;
         bool adjust = false;
 
-        float maxSearchTime = 5.0f; // Maximum 5 seconds ahead
+        float maxSearchTime = 5.0f;
         float maxSearchBeats = maxSearchTime / (float)BeatManager.self.secPerBeat;
         float tApex = realisticVelocity.y / -Physics.gravity.y;
 
@@ -53,28 +59,27 @@ public class BounceBlock : MonoBehaviour
             float t = i / 4f * (float)BeatManager.self.secPerBeat;
             if (t < tApex) continue;
 
-            //given velocity and x value, what y do we get?
+            // Calculate position in 3D
             float testX = start.x + realisticVelocity.x * t;
             float testY = start.y + (realisticVelocity.y * t) + (0.5f * Physics.gravity.y * t * t);
+            float testZ = start.z + realisticVelocity.z * t;
 
-            Vector2 tryEnd = new(testX, testY);
+            Vector3 tryEnd = new Vector3(testX, testY, testZ);
+            
             if (DEBUG_ShowSpheres) {
-                spheres.Add(Instantiate(sphere, new(tryEnd.x, tryEnd.y, -10), Quaternion.identity));
+                spheres.Add(Instantiate(sphere, tryEnd, Quaternion.identity));
                 if (i % 4 == 0) {
                     spheres[^1].transform.localScale = new(.5f, .5f, .5f);
                 }
             }
 
-            //if y is within range, that point is valid
-            //when a point is found, we keep searching to draw the curve
-            //but don't save any further points, only use the closest
             if (!adjust && IsWithinIntervalRange(tryEnd.y, 0.25f)) {
                 float roundedY = (float)(Mathf.Round(tryEnd.y * 4f) / 4f);
-                end = new(tryEnd.x, roundedY, other.transform.position.z);  // Use absolute coordinates
+                end = new Vector3(tryEnd.x, roundedY, tryEnd.z);
                 tPerfect = t;
                 adjust = true;
                 if (DEBUG_ShowSpheres) {
-                    spheres.Add(Instantiate(sphere, new(end.x, end.y, -10), Quaternion.identity));
+                    spheres.Add(Instantiate(sphere, end, Quaternion.identity));
                     spheres[^1].transform.localScale = Vector3.one;
                 }
             }
@@ -83,23 +88,26 @@ public class BounceBlock : MonoBehaviour
         if (!adjust) {
             print("No valid points found, using realistic velocity");
             other.gameObject.GetComponent<PlayerMarble>().SetVelocity(realisticVelocity);
+            return;
         }
 
-        //Calculate the perfect velocity to get to the new end point
+        // Calculate perfect velocity in 3D
         float deltaX = end.x - start.x;
         float deltaY = end.y - start.y;
+        float deltaZ = end.z - start.z;
         float time = tPerfect;
 
-        Vector2 perfectVelocity = new(
+        Vector3 perfectVelocity = new Vector3(
             deltaX / time,
-            (deltaY - 0.5f * Physics.gravity.y * time * time) / time);
+            (deltaY - 0.5f * Physics.gravity.y * time * time) / time,
+            deltaZ / time
+        );
 
-        // Add velocity limits to prevent extreme adjustments
-        float maxVelocityChange = 3.0f;  // Maximum change in velocity magnitude
+        // Velocity limits
+        float maxVelocityChange = 3.0f;
         float realisticSpeed = realisticVelocity.magnitude;
         float perfectSpeed = perfectVelocity.magnitude;
 
-        //Second check - cannot change more than _ in magnitude
         if (perfectSpeed > realisticSpeed + maxVelocityChange) {
             perfectVelocity = perfectVelocity.normalized * (realisticSpeed + maxVelocityChange);
         }

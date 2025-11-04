@@ -10,7 +10,7 @@ public class LevelSelectIslandGrapics : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (LoadingManager.self.IsLevelCompleted(unlockWhenLevelCompleted)) {
+        if (LoadingManager.self.IsLevelCompleted(0, unlockWhenLevelCompleted)) {
             GetComponent<Image>().sprite = originalImage;
         } else {
             GetComponent<Image>().sprite = greyedImage;

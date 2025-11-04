@@ -55,12 +55,12 @@ public class CameraManager : MonoBehaviour {
         SetCameraMode(CamMode.NORMAL);
 
         switch (levelNumber) {
-            case 1:
+            case 0:
                 lookAtPointResetPos = new Vector3(6, 12, -6);
                 cameraHeight = 2f;
                 startingZoom = 17f;
                 break;
-            case 2:
+            case 1:
                 lookAtPointResetPos = new Vector3(0, 0, 0);
                 cameraHeight = 2f;
                 startingZoom = 15f;

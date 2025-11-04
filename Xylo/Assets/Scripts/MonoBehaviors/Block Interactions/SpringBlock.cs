@@ -27,35 +27,42 @@ public class SpringBlock : MonoBehaviour
         var currentVelocity = other.gameObject.GetComponent<PlayerMarble>().GetCurrentVelocity();
         var speed = currentVelocity.magnitude;
         var direction = Vector3.Reflect(currentVelocity.normalized, -other.contacts[0].normal);
-        float realisticVelocityX = direction.x * Mathf.Max(speed, 0f);
+        
+        // Keep horizontal velocity (x and z) from realistic bounce
+        Vector3 realisticHorizontalVelocity = new Vector3(
+            direction.x * Mathf.Max(speed, 0f),
+            0f,
+            direction.z * Mathf.Max(speed, 0f)
+        );
 
         float deltaY = 0;
         float time = returnInBeats * (float)BeatManager.self.secPerBeat;
-        Vector2 perfectVelocity = new(
-            realisticVelocityX,
-            (deltaY - 0.5f * Physics.gravity.y * time * time) / time);
+        
+        Vector3 perfectVelocity = new Vector3(
+            realisticHorizontalVelocity.x,
+            (deltaY - 0.5f * Physics.gravity.y * time * time) / time,
+            realisticHorizontalVelocity.z
+        );
 
         other.gameObject.GetComponent<PlayerMarble>().SetVelocity(perfectVelocity);
 
-        //Calculate velocity needed for a 16th-note bounce
+        // Calculate velocity needed for a 16th-note bounce
         float T = .25f * (float)BeatManager.self.secPerBeat;
         float vYNeededForFourthBeat = -Physics.gravity.y * T;
 
         Vector3 start = other.transform.position;
         float maxSearchTime = 5.0f;
-        float maxSearchBeats = maxSearchTime / (float)BeatManager.self.secPerBeat;
         float tApex = perfectVelocity.y / -Physics.gravity.y;
 
-        //Searches each 16th note after the apex for a landing point that matches the velocity needed for the next bounce
-        float dt = 0.05f; // Small time step
+        float dt = 0.05f;
         for (float t = tApex; t < maxSearchTime; t += dt) {
+            float testX = start.x + perfectVelocity.x * t;
             float testY = start.y + (perfectVelocity.y * t) + (0.5f * Physics.gravity.y * t * t);
+            float testZ = start.z + perfectVelocity.z * t;
             
-            // Check if ball is crossing through your landing zone
             if (IsWithinIntervalRange(testY, 0.2f)) {
                 float testYVelocity = perfectVelocity.y + (Physics.gravity.y * t);
                 
-                // Check if velocity is close to an integer multiple of the base velocity
                 float multiple = Mathf.Abs(testYVelocity) / vYNeededForFourthBeat;
                 float nearestInteger = Mathf.Round(multiple);
                 float velocityTolerance = 0.2f;
@@ -63,17 +70,14 @@ public class SpringBlock : MonoBehaviour
                 if (Mathf.Abs(multiple - nearestInteger) <= velocityTolerance && 
                     nearestInteger >= 1 && nearestInteger <= 4) {
                     
-                    // Check if this landing time aligns with a beat subdivision
                     float beatPosition = t / (float)BeatManager.self.secPerBeat;
                     float fractionalBeat = beatPosition - Mathf.Floor(beatPosition);
                     float nearestSixteenth = Mathf.Round(fractionalBeat * 4) / 4f;
-                    float beatTolerance = 0.2f; // Tolerance for beat timing
+                    float beatTolerance = 0.2f;
                     
                     if (Mathf.Abs(fractionalBeat - nearestSixteenth) <= beatTolerance && IsWithinIntervalRange(testY, .2f)) {
-                        float testX = start.x + perfectVelocity.x * t;
-                        Vector2 tryEnd = new(testX, testY);
-                        if (DEBUG_ShowSpheres) spheres.Add(Instantiate(sphere, new(tryEnd.x, tryEnd.y, 0), Quaternion.identity));
-                        //print($"{nearestInteger}x beat jump ({testYVelocity:F2} vel) at {tryEnd} on beat {beatPosition:F3}");
+                        Vector3 tryEnd = new Vector3(testX, testY, testZ);
+                        if (DEBUG_ShowSpheres) spheres.Add(Instantiate(sphere, tryEnd, Quaternion.identity));
                     }
                 }
             }
