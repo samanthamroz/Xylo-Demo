@@ -18,7 +18,7 @@ public class LevelManager : MonoBehaviour {
     public GameObject marblePrefab, deathPlaneObj;
     private GameObject marbleObject;
     
-    private NoteTrigger[] currentSectionSolution { get { return solutions[sectionNum].triggers; } }
+    private NoteTriggerArray currentSectionSolution { get { return solutions[sectionNum]; } }
     private List<NoteTrigger> attemptList;
 
     private Vector3 marbleStartPosition;

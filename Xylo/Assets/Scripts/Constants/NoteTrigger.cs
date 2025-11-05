@@ -1,11 +1,6 @@
 using System;
 
 [Serializable]
-public class NoteTriggerArray {
-    public NoteTrigger[] triggers;
-}
-
-[Serializable]
 public class NoteTrigger {
     public Note note;
     public double beatTriggered;
