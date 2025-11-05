@@ -42,7 +42,7 @@ public class LevelSetup : MonoBehaviour
     }
 
     private static void DoSceneStart() {
-        CameraManager.self.InstantiateCamera(LoadingManager.self.GetCurrentLevelNumber());
+        CameraManager.self.InstantiateCamera();
         GUIManager.self.LoadMiddleToRight(.25f);
     }
 }
