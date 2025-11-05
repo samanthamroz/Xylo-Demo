@@ -8,6 +8,7 @@ public class CameraConfiguration : ScriptableObject {
         public Vector3 startingPoint;
         public float startingHeight;
         public float startingZoom;
+        public float zoomRange;
         public Vector3 startingRotation;
 
         [Header("Camera Positions")]

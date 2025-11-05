@@ -67,7 +67,7 @@ public class LoadingManager : MonoBehaviour {
             return;
         }
 
-        if (scene.buildIndex == 1) { //for tutorial only
+        if (GetCurrentWorldNumber() == 0 && GetCurrentLevelNumber() == 0) { //for tutorial only
             LevelSetup.SetupTutorial();
             return;
         }

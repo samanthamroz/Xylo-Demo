@@ -21,9 +21,9 @@ public partial class CameraManager : MonoBehaviour {
 
     private Vector3 lookAtPointResetPos, lastPositionInWorld, lastMousePosition;
     private float startingZoom, cameraHeight; //this is the difference in height between the lookAtObject and the camera
-    private Vector2 cameraPlacementRadius = new(3, 2);
+    private Vector3 cameraPlacementRadius = new(3, 2, 3);
 
-    private float panDistancePerFrame = .05f;
+    private float panDistancePerFrame = .2f;
     private float rotateDistancePerFrame = .1f;
     private float zoomDistancePerFrame = 0.05f;
     private float zoomMin = 5f;
@@ -67,6 +67,9 @@ public partial class CameraManager : MonoBehaviour {
         lookAtPointResetPos = cameraData.startingPoint;
         cameraHeight = cameraData.startingHeight;
         startingZoom = cameraData.startingZoom;
+        float zoomRange = cameraData.zoomRange;
+        zoomMax = startingZoom + zoomRange / 2f;
+        zoomMin = startingZoom - zoomRange / 2f;
         
         currentZoom = startingZoom;
         zoomGoal = currentZoom;
@@ -226,7 +229,8 @@ public partial class CameraManager : MonoBehaviour {
                 //Move camera and the place it is facing
                 Vector3 placeToMoveLookAtPoint = currentlookAtObject.transform.position + howMuchToMove;
                 if (Math.Abs(placeToMoveLookAtPoint.x - lookAtPointResetPos.x) < cameraPlacementRadius.x &&
-                    Math.Abs(placeToMoveLookAtPoint.y - lookAtPointResetPos.y) < cameraPlacementRadius.y) {
+                    Math.Abs(placeToMoveLookAtPoint.y - lookAtPointResetPos.y) < cameraPlacementRadius.y &&
+                    Math.Abs(placeToMoveLookAtPoint.z - lookAtPointResetPos.z) < cameraPlacementRadius.z) {
                     currentlookAtObject.transform.position += howMuchToMove;
                     StartCoroutine(PlaceCamera(0f));
                     lastPositionInWorld = newPositioninWorld;

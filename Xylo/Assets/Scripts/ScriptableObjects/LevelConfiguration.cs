@@ -21,6 +21,9 @@ public class LevelConfiguration : ScriptableObject {
         [Header("Beat Values")]
         public float xDistancePerBeat;
         public float beatsBetweenFirstTwoBeats;
+
+        [Header("Solution")]
+        public NoteTriggerArray[] sectionSolutions;
     }
     
     public LevelData[] levels;

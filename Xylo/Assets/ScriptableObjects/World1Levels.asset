@@ -25,11 +25,221 @@ MonoBehaviour:
     timeSigLow: 4
     xDistancePerBeat: 2
     beatsBetweenFirstTwoBeats: 1
+    sectionSolutions:
+    - triggers:
+      - note: 7
+        beatTriggered: 1
+      - note: 2
+        beatTriggered: 2
+      - note: 9
+        beatTriggered: 3
+      - note: 2
+        beatTriggered: 4
+    - triggers:
+      - note: 7
+        beatTriggered: 1
+      - note: 0
+        beatTriggered: 2
+      - note: 2
+        beatTriggered: 3
+      - note: 2
+        beatTriggered: 4
+    - triggers:
+      - note: 7
+        beatTriggered: 1
+      - note: 2
+        beatTriggered: 2
+      - note: 7
+        beatTriggered: 3
+      - note: 9
+        beatTriggered: 4
+    - triggers:
+      - note: 11
+        beatTriggered: 1
+      - note: 2
+        beatTriggered: 2
+      - note: 6
+        beatTriggered: 3
+      - note: 4
+        beatTriggered: 4
   - marbleDirection: {x: 0, y: 0, z: 1}
     firstBlockPosition: {x: 32.75, y: 7.25, z: 0.75}
-    deathPlaneCoords: []
+    deathPlaneCoords:
+    - {x: 0, y: 0, z: 0}
+    - {x: 0, y: 0, z: 0}
+    - {x: 0, y: 0, z: 0}
+    - {x: 0, y: 0, z: 0}
+    - {x: 0, y: 0, z: 0}
+    - {x: 0, y: 0, z: 0}
+    - {x: 0, y: 0, z: 0}
+    - {x: 0, y: 0, z: 0}
+    - {x: 0, y: 0, z: 0}
+    - {x: 0, y: 0, z: 0}
+    - {x: 0, y: 0, z: 0}
+    - {x: 0, y: 0, z: 0}
     Bpm: 80
     timeSigHigh: 2
     timeSigLow: 4
     xDistancePerBeat: 2
     beatsBetweenFirstTwoBeats: 0.5
+    sectionSolutions:
+    - triggers:
+      - note: 11
+        beatTriggered: 1
+      - note: 0
+        beatTriggered: 1.5
+      - note: 0
+        beatTriggered: 3
+      - note: 7
+        beatTriggered: 3.5
+      - note: 4
+        beatTriggered: 5
+      - note: 2
+        beatTriggered: 5.5
+    - triggers:
+      - note: 7
+        beatTriggered: 1
+      - note: 7
+        beatTriggered: 2
+      - note: 7
+        beatTriggered: 3
+      - note: 11
+        beatTriggered: 3.5
+      - note: 0
+        beatTriggered: 4
+    - triggers:
+      - note: 2
+        beatTriggered: 1
+      - note: 4
+        beatTriggered: 1.5
+      - note: 7
+        beatTriggered: 3
+      - note: 4
+        beatTriggered: 3.5
+      - note: 0
+        beatTriggered: 4.5
+      - note: 11
+        beatTriggered: 5.5
+    - triggers:
+      - note: 2
+        beatTriggered: 1
+      - note: 4
+        beatTriggered: 1.5
+      - note: 7
+        beatTriggered: 3
+      - note: 4
+        beatTriggered: 3.5
+    - triggers:
+      - note: 11
+        beatTriggered: 1
+      - note: 7
+        beatTriggered: 1.5
+      - note: 5
+        beatTriggered: 2
+      - note: 4
+        beatTriggered: 2.5
+      - note: 0
+        beatTriggered: 3
+      - note: 11
+        beatTriggered: 3.5
+    - triggers:
+      - note: 7
+        beatTriggered: 1
+      - note: 4
+        beatTriggered: 2
+      - note: 7
+        beatTriggered: 4
+      - note: 5
+        beatTriggered: 5.5
+      - note: 4
+        beatTriggered: 6
+      - note: 2
+        beatTriggered: 8
+    - triggers:
+      - note: 0
+        beatTriggered: 1
+      - note: 0
+        beatTriggered: 2.5
+      - note: 4
+        beatTriggered: 3
+      - note: 7
+        beatTriggered: 3.5
+      - note: 0
+        beatTriggered: 4.5
+      - note: 4
+        beatTriggered: 5
+      - note: 2
+        beatTriggered: 5.5
+    - triggers:
+      - note: 7
+        beatTriggered: 1
+      - note: 7
+        beatTriggered: 2
+      - note: 11
+        beatTriggered: 2.5
+      - note: 7
+        beatTriggered: 3
+      - note: 11
+        beatTriggered: 3.5
+      - note: 0
+        beatTriggered: 4
+    - triggers:
+      - note: 0
+        beatTriggered: 1
+      - note: 4
+        beatTriggered: 1.5
+      - note: 7
+        beatTriggered: 2
+      - note: 9
+        beatTriggered: 2.5
+      - note: 11
+        beatTriggered: 3
+      - note: 0
+        beatTriggered: 3.5
+      - note: 0
+        beatTriggered: 4.5
+    - triggers:
+      - note: 11
+        beatTriggered: 1
+      - note: 2
+        beatTriggered: 1.5
+      - note: 11
+        beatTriggered: 2
+      - note: 0
+        beatTriggered: 2.5
+      - note: 0
+        beatTriggered: 3
+    - triggers:
+      - note: 0
+        beatTriggered: 1
+      - note: 4
+        beatTriggered: 1.5
+      - note: 7
+        beatTriggered: 2
+      - note: 0
+        beatTriggered: 2.5
+      - note: 4
+        beatTriggered: 3
+      - note: 2
+        beatTriggered: 3.5
+      - note: 0
+        beatTriggered: 4.5
+      - note: 11
+        beatTriggered: 5.5
+      - note: 7
+        beatTriggered: 6.6
+    - triggers:
+      - note: 4
+        beatTriggered: 1
+      - note: 7
+        beatTriggered: 1.5
+      - note: 11
+        beatTriggered: 2.5
+      - note: 7
+        beatTriggered: 3
+      - note: 11
+        beatTriggered: 3.5
+      - note: 2
+        beatTriggered: 4.5
+      - note: 0
+        beatTriggered: 5
