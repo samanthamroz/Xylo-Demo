@@ -65,8 +65,8 @@ MonoBehaviour:
   - marbleDirection: {x: 0, y: 0, z: 1}
     firstBlockPosition: {x: 32.75, y: 7.25, z: 0.75}
     deathPlaneCoords:
-    - {x: 0, y: 0, z: 0}
-    - {x: 0, y: 0, z: 0}
+    - {x: 33, y: 9, z: 13}
+    - {x: 33, y: 9, z: 20.5}
     - {x: 0, y: 0, z: 0}
     - {x: 0, y: 0, z: 0}
     - {x: 0, y: 0, z: 0}
