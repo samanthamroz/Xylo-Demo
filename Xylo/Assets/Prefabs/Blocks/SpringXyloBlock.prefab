@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 4974515511709574163}
   - component: {fileID: 5984464341887849025}
   - component: {fileID: 2886724211260367694}
+  - component: {fileID: 641095880878384096}
   m_Layer: 0
   m_Name: SpringXyloBlock
   m_TagString: Springs
@@ -352,3 +353,15 @@ MonoBehaviour:
   returnInBeats: 1.24
   sphere: {fileID: 5936164703655211191, guid: 66ba69389283ddf45a8e45e1aa633343, type: 3}
   DEBUG_ShowSpheres: 0
+--- !u!114 &641095880878384096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5619258980788130510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0d25d740913a5d44866a9b4925853ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

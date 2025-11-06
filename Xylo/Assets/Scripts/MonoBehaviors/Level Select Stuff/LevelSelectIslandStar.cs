@@ -9,6 +9,6 @@ public class LevelSelectIslandStar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameObject.SetActive(LoadingManager.self.IsLevelCompleted(unlockWhenLevelCompleted));
+        gameObject.SetActive(LoadingManager.self.IsLevelCompleted(0, unlockWhenLevelCompleted));
     }
 }

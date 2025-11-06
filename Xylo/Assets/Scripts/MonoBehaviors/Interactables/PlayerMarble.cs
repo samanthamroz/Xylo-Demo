@@ -56,19 +56,21 @@ public class PlayerMarble : MonoBehaviour, IClickBehavior {
 
     public void RunMarble() {
         rb.isKinematic = false;
-        
+    
         if (LevelManager.self.DEBUG_UseManualStart) {
             launchVelocity = LevelManager.self.DEBUG_ManualVelocity;
         }
 
         if (VectorUtils.IsNullVector(launchVelocity)) {
-            float timeBetweenPlatforms = BeatManager.self.beatsBetweenFirstTwoBeats * (float)BeatManager.self.secPerBeat; // Target timing
-            float vX = BeatManager.self.xDistancePerBeat / (float)BeatManager.self.secPerBeat * LevelManager.self.directionMoving.x;
+            float timeBetweenPlatforms = BeatManager.self.beatsBetweenFirstTwoBeats * (float)BeatManager.self.secPerBeat;
+
+            float vX = (BeatManager.self.xDistancePerBeat / (float)BeatManager.self.secPerBeat) * LevelManager.self.directionMoving.x;
+            float vZ = (BeatManager.self.xDistancePerBeat / (float)BeatManager.self.secPerBeat) * LevelManager.self.directionMoving.z;
 
             float requiredVyAfterBounce = -0.5f * Physics.gravity.y * timeBetweenPlatforms;
             float requiredVyBeforeBounce = requiredVyAfterBounce / 0.85f; // Compensate for bounce loss
 
-            Vector2 launchVelocity = new(vX, requiredVyBeforeBounce);
+            Vector3 launchVelocity = new(vX, requiredVyBeforeBounce, vZ);
             SetVelocity(launchVelocity);
         }
         else {

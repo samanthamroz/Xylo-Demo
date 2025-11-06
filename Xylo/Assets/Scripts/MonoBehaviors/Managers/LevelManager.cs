@@ -4,44 +4,24 @@ using UnityEngine;
 
 //inspo: https://www.gamedeveloper.com/audio/coding-to-the-beat---under-the-hood-of-a-rhythm-game-in-unity
 
-class NoteTrigger {
-    public Note note { get; set; }
-    public double beatTriggered { get; set; }
-    public NoteTrigger(Note _note, double _beatTriggered) {
-        note = _note;
-        beatTriggered = _beatTriggered;
-    }
-}
-
 public class LevelManager : MonoBehaviour {
     public static LevelManager self;
+    [SerializeField] private LevelConfiguration levelConfig;
+
+    //Level config data
+    [HideInInspector] public Vector3 directionMoving;
+    private Transform firstBlockPos;
+    private Vector3[] deathPlaneCoords;
+    private NoteTriggerArray[] solutions;
+
 
     public GameObject marblePrefab, deathPlaneObj;
     private GameObject marbleObject;
     
-    private NoteTrigger[][][] solutions =
-    {
-        //Level 0
-        new NoteTrigger[][] {
-            //Individual Sections
-            new NoteTrigger[] {new(Note.E, 1f), new(Note.B, 2f), new(Note.Gb, 3f), new(Note.B, 4f)},
-            new NoteTrigger[] {new(Note.E, 1f), new(Note.A, 2f), new(Note.B, 3f), new(Note.B, 4f)},
-            new NoteTrigger[] {new(Note.E, 1f), new(Note.B, 2f), new(Note.E, 3f), new(Note.Gb, 4f)},
-            new NoteTrigger[] {new(Note.Ab, 1f), new(Note.B, 2f), new(Note.Eb, 3f), new(Note.Db, 4f)},
-        }
-    };
-    private NoteTrigger[] currentSectionSolution { get { return solutions[levelNum][sectionNum]; } }
+    private NoteTriggerArray currentSectionSolution { get { return solutions[sectionNum]; } }
     private List<NoteTrigger> attemptList;
 
-    [SerializeField] private Transform firstBlockPos;
-    [SerializeField] private Vector3 setDirectionMoving = Vector3.right;
-    [HideInInspector] public Vector3 directionMoving => setDirectionMoving;
-
     private Vector3 marbleStartPosition;
-    private Vector3[][] deathPlaneCoords = {
-        //Level 1
-        new Vector3[] {new(0, 0, 0), new(0f, 0f, 17.2f), new(0, -1.29f, 32f), new(0, -6, 49)}
-    };
     private float forgivenessBetweenBeats = .1f;
     private bool attemptCountingStarted;
 
@@ -62,19 +42,36 @@ public class LevelManager : MonoBehaviour {
     void Start() {
         sectionNum = 0;
         attemptStarted = false;
-
+        
+        // Load level-specific configuration
+        var currentLevelData = levelConfig.GetLevelData(levelNum);
+        if (currentLevelData == null) {
+            Debug.LogError("Failed to load level configuration!");
+            return;
+        }
+        
+        directionMoving = currentLevelData.marbleDirection;
+        deathPlaneCoords = currentLevelData.deathPlaneCoords;
+        solutions = currentLevelData.sectionSolutions;
+        
         if (DEBUG_UseManualStart) {
             marbleObject = Instantiate(marblePrefab, DEBUG_ManualPosition, Quaternion.identity);
         } else {
             float horizontalDistanceToFirst = Mathf.Abs(BeatManager.self.xDistancePerBeat * BeatManager.self.beatsBetweenFirstTwoBeats);
-            marbleStartPosition = new(firstBlockPos.position.x + horizontalDistanceToFirst * -directionMoving.x, 
-                firstBlockPos.position.y + .3f, 
-                firstBlockPos.position.z - 1);
+            
+            Vector3 offset = -directionMoving * horizontalDistanceToFirst;
+            marbleStartPosition = new Vector3(
+                currentLevelData.firstBlockPosition.x + offset.x, 
+                currentLevelData.firstBlockPosition.y + .3f, 
+                currentLevelData.firstBlockPosition.z + offset.z
+            );
+            
             marbleObject = Instantiate(marblePrefab, marbleStartPosition, Quaternion.identity);
         }
 
         LoadingManager.self.SetMarbleStartForSection(0, VectorUtils.nullVector, marble.transform.position);
     }
+    
     public void StartPlaying() {
         attemptStarted = true;
         attemptList = new List<NoteTrigger>();
@@ -131,7 +128,7 @@ public class LevelManager : MonoBehaviour {
 
         CameraManager.self.DoMoveToNextSection(sectionNum);
 
-        LeanTween.moveLocal(deathPlaneObj, deathPlaneCoords[levelNum][sectionNum], .5f);
+        LeanTween.moveLocal(deathPlaneObj, deathPlaneCoords[sectionNum], .5f);
 
         VelocityPosition marbStart = LoadingManager.self.GetMarbleStartForSection(sectionNum);
 
@@ -145,7 +142,7 @@ public class LevelManager : MonoBehaviour {
 
         CameraManager.self.DoMoveToNextSection(sectionNum);
 
-        LeanTween.moveLocal(deathPlaneObj, deathPlaneCoords[levelNum][sectionNum], .5f);
+        LeanTween.moveLocal(deathPlaneObj, deathPlaneCoords[sectionNum], .5f);
 
         VelocityPosition marbStart = LoadingManager.self.GetMarbleStartForSection(sectionNum);
         marble.PlaceMarbleForSectionStart(marbStart.velocity, marbStart.position);

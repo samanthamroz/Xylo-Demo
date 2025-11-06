@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31f3d1a3597cf4547a3e03f597f45800, type: 3}
+  m_Name: World1Camera
+  m_EditorClassIdentifier: 
+  levels:
+  - startingPoint: {x: 6, y: 12, z: -6}
+    startingHeight: 2
+    startingZoom: 17
+    zoomRange: 20
+    startingRotation: {x: 0, y: 180, z: 0}
+    sectionCinematicViewPoints:
+    - {x: 8, y: 15, z: -15}
+    - {x: 16, y: 14, z: -15}
+    - {x: 22, y: 13, z: -15}
+    - {x: 30, y: 12, z: -15}
+    sectionGameViewPoints:
+    - {x: 6, y: 12, z: -6}
+    - {x: 14, y: 11, z: -6}
+    - {x: 22, y: 10, z: -6}
+    - {x: 30, y: 9, z: -6}
+  - startingPoint: {x: 28, y: 8, z: 4}
+    startingHeight: 2
+    startingZoom: 22
+    zoomRange: 15
+    startingRotation: {x: 0, y: 90, z: 0}
+    sectionCinematicViewPoints:
+    - {x: 48, y: 10, z: 4}
+    - {x: 48, y: 10, z: 4}
+    - {x: 48, y: 10, z: 4}
+    - {x: 48, y: 10, z: 4}
+    - {x: 48, y: 10, z: 4}
+    - {x: 48, y: 10, z: 4}
+    - {x: 48, y: 10, z: 4}
+    - {x: 48, y: 10, z: 4}
+    - {x: 48, y: 10, z: 4}
+    - {x: 48, y: 10, z: 4}
+    - {x: 48, y: 10, z: 4}
+    - {x: 48, y: 10, z: 4}
+    sectionGameViewPoints:
+    - {x: 28, y: 8, z: 4}
+    - {x: 28, y: 7.5, z: 14}
+    - {x: 28, y: 7, z: 24}
+    - {x: 28, y: 5, z: 26}
+    - {x: 28, y: 5, z: 24}
+    - {x: 28, y: 4, z: 14}
+    - {x: 28, y: -3.5, z: 8}
+    - {x: 28, y: -3.5, z: 14}
+    - {x: 28, y: -3.5, z: 17.5}
+    - {x: 28, y: -3.5, z: 20}
+    - {x: 28, y: -3.5, z: 33.5}
+    - {x: 28, y: -3, z: 37}

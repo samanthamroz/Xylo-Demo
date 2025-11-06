@@ -367,19 +367,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5408928761333524389}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3711433313200856229}
-        m_TargetAssemblyTypeName: LoadSceneButton, Assembly-CSharp
-        m_MethodName: Load
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: LevelSelect
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &3711433313200856229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -392,6 +380,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b3001f0467ad3f418a2e832cf219293, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneNameToLoad: LevelSelect
+  levelNumberToLoad: -1
 --- !u!1 &1903913588113931421
 GameObject:
   m_ObjectHideFlags: 0
@@ -612,6 +602,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b3001f0467ad3f418a2e832cf219293, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneNameToLoad: 
+  levelNumberToLoad: -1
 --- !u!1 &3424441566951256068
 GameObject:
   m_ObjectHideFlags: 0

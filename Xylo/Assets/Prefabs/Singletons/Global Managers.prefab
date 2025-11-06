@@ -176,15 +176,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d278645e82b2f9a41bba5c8e675de7c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMode: 0
+  cameraConfiguration: {fileID: 11400000, guid: 1f89ea7bb92293c4a8d5c5bd059cced5, type: 2}
   cameraPrefab: {fileID: 6637513072474089607, guid: e2534d2040cf2634ca6c7439432e6772, type: 3}
   lookAtPrefab: {fileID: 4270330739806824873, guid: e12c0c2ae03821846a54820a4c4faa7f, type: 3}
   isRotating: 0
   isPanning: 0
-  cameraPlacementRadius: {x: 3, y: 2}
-  panDistancePerFrame: 0.5
-  rotateDistancePerFrame: 0.1
-  zoomDistancePerFrame: 0.05
 --- !u!114 &-4638047356350007426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,6 +194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DEBUG_AlwaysResetData: 1
+  DEBUG_OverrideCurrentLevelNum: -1
 --- !u!114 &4835543353819988492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,9 +232,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mousePosition: {x: 0, y: 0, z: 0}
-  currentInteractable: {fileID: 0}
-  lastInteractable: {fileID: 0}
-  isGamePaused: 0
 --- !u!114 &9154224894931836790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,9 +244,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b179211f801b54c44a8e74d47c112c8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  melodyFragments:
-  - list:
-    - {fileID: 8300000, guid: 6833a68cf72c82041b0bb9467e04b578, type: 3}
-    - {fileID: 8300000, guid: 1b42f075ffc9468419c9591c5a6dc367, type: 3}
-    - {fileID: 8300000, guid: d4b61f5e57c667e4aaf47fe96652621a, type: 3}
-    - {fileID: 8300000, guid: 58ab134753a92c046ac96d2d5a2bac23, type: 3}
+  audioConfiguration: {fileID: 11400000, guid: e80ca6afa3d67c54b8f87a15df8c9708, type: 2}

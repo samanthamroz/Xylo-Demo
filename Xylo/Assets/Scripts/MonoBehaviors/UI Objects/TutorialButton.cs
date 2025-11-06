@@ -22,7 +22,7 @@ public class TutorialButton : MonoBehaviour {
             return;
         }
         if (currentFrameNumber == 3) {
-            AudioManager.self.PlayMelodyForSection(0, 0);
+            AudioManager.self.PlayMelodyForSection(0);
         }
         currentFrame = frames[currentFrameNumber];
         currentFrame.SetActive(true);

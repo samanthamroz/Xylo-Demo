@@ -10,6 +10,14 @@ public class LoadingManager : MonoBehaviour {
     private GlobalSaveData globalData;
     private SceneSaveData currentSceneData;
     [SerializeField] private bool DEBUG_AlwaysResetData = false;
+    [SerializeField] private int DEBUG_OverrideCurrentLevelNum = -1;
+    private int currentLevelNumber = 0;
+    public int GetCurrentWorldNumber() {
+        return SceneManager.GetActiveScene().buildIndex - 1;
+    }
+    public int GetCurrentLevelNumber() {
+        return currentLevelNumber;
+    }
 
     void Awake() {
         if (self == null) {
@@ -21,56 +29,50 @@ public class LoadingManager : MonoBehaviour {
                 GlobalSaveData newSave = new();
                 SaveManager.Save(new SaveProfile<GlobalSaveData>(newSave));
             }
-            SceneManager.sceneLoaded += LoadCurrentScene;
+            SceneManager.sceneLoaded += LoadCurrentLevel;
             DontDestroyOnLoad(gameObject);
         }
         else {
             Destroy(gameObject);
         }
     }
-    public int GetCurrentLevelNumber() {
-        return SceneManager.GetActiveScene().buildIndex - 1;
-    }
-
+    
     // Loading Data functions
     // These read the data from disk and save to useable variable
     // LoadCurrentScene is triggered on Awake
-    private void LoadCurrentScene(Scene scene, LoadSceneMode mode) {
+    private void LoadCurrentLevel(Scene scene, LoadSceneMode mode) {
         RefreshPointerToGlobalData();
 
         try {
             RefreshPointerToSceneData();
         } catch {
-            //Debug.Log("Creating new scene save");
             SaveManager.Save(
                 new SaveProfile<SceneSaveData>(new() { scene = SceneManager.GetActiveScene() },
                 SceneManager.GetActiveScene().name));
             RefreshPointerToSceneData();
         }
 
-        if (scene.buildIndex == 0) { //for title only 
-            ControlsManager.self.InitializeActionMap("levelselect");
-            if (!hasTitleLoaded) {
-                GUIManager.self.InstantiateTitleUI(true);
-                CameraManager.self.InstantiateTitleCamera();
-                hasTitleLoaded = true;
-                return;
-            }
-            else {
-                GUIManager.self.InstantiateTitleUI(false);
-            }
+        if (DEBUG_OverrideCurrentLevelNum > -1) {
+            currentLevelNumber = DEBUG_OverrideCurrentLevelNum;
+            DEBUG_OverrideCurrentLevelNum = -1; //reset so the next load doesn't go back to this level
         }
-        if (scene.buildIndex == 1) { //for tutorial only
-            ControlsManager.self.InitializeActionMap("levelmenus");
-            GUIManager.self.InstantiateLevelUI(true);
-        }
-        if (scene.buildIndex > 1) {
-            ControlsManager.self.InitializeActionMap("main");
-            GUIManager.self.InstantiateLevelUI(false);
-        }
-        CameraManager.self.InstantiateCamera(scene.buildIndex);
 
-        GUIManager.self.LoadMiddleToRight(.25f);
+        if (scene.buildIndex == 0) { //for title only 
+            if (!hasTitleLoaded) {
+                LevelSetup.SetupTitle(true);
+                hasTitleLoaded = true;
+            } else {
+                LevelSetup.SetupTitle(false);
+            }
+            return;
+        }
+
+        if (GetCurrentWorldNumber() == 0 && GetCurrentLevelNumber() == 0) { //for tutorial only
+            LevelSetup.SetupTutorial();
+            return;
+        }
+
+        LevelSetup.SetupLevel(GetCurrentWorldNumber(), currentLevelNumber);
     }
     private void RefreshPointerToSceneData() {
         currentSceneData = SaveManager.Load<SceneSaveData>(SceneManager.GetActiveScene().name).saveData;
@@ -95,18 +97,30 @@ public class LoadingManager : MonoBehaviour {
     // Loading Scene Functions
     //
     // These take us from the current scene to a different one
+    public IEnumerator LoadNewScene(string sceneName, int levelNum) {
+        SaveGlobal();
+        float time = .25f;
+        GUIManager.self.LoadLeftToMiddle(time);
+
+        yield return new WaitForSeconds(time);
+        
+        currentLevelNumber = levelNum;
+        SceneManager.LoadScene(sceneName);
+        yield return null; //fixes coroutine running during scene load
+    }
     public IEnumerator LoadNewScene(string sceneName) {
         SaveGlobal();
         float time = .25f;
         GUIManager.self.LoadLeftToMiddle(time);
 
         yield return new WaitForSeconds(time);
-
+        
         SceneManager.LoadScene(sceneName);
         yield return null; //fixes coroutine running during scene load
     }
+
     public void ReloadCurrentScene() {
-        StartCoroutine(LoadNewScene(SceneManager.GetActiveScene().name));
+        StartCoroutine(LoadNewScene(SceneManager.GetActiveScene().name, currentLevelNumber));
     }
 
     // Saving Functions
@@ -129,13 +143,14 @@ public class LoadingManager : MonoBehaviour {
         //increment number of sections completed
         if (sectionNum == currentSceneData.numSectionsComplete) {
             currentSceneData.numSectionsComplete++;
+            globalData.SetSectionCompleted(GetCurrentWorldNumber(), currentLevelNumber, sectionNum);
         }
 
         SaveCurrentScene();
 
         //set level complete if all sections are done
-        if (currentSceneData.numSectionsComplete == globalData.numSectionsInLevel[GetCurrentLevelNumber()]) {
-            globalData.levelCompletionStatusList[GetCurrentLevelNumber()] = true;
+        if (globalData.GetTotalSectionsInLevel(GetCurrentWorldNumber(), currentLevelNumber) == globalData.GetNumCompletedSections(GetCurrentWorldNumber(), currentLevelNumber)) {
+            globalData.SetLevelCompleted(GetCurrentWorldNumber(), currentLevelNumber);
         }
 
         SaveGlobal();
@@ -172,17 +187,20 @@ public class LoadingManager : MonoBehaviour {
 
         return isCompleted;
     }
-    public bool IsLevelCompleted(int checkLevelNumber = 99) {
-        if (checkLevelNumber == 99) {
+    public bool IsLevelCompleted(int checkWorldNumber = -1, int checkLevelNumber = -1) {
+        if (checkLevelNumber == -1) {
             checkLevelNumber = GetCurrentLevelNumber();
+        }
+        if (checkWorldNumber == -1) {
+            checkWorldNumber = GetCurrentWorldNumber();
         }
         //print($"{string.Join("", saveData.levelCompletionStatusList)}");
         bool isCompleted = false;
         try {
-            isCompleted = globalData.levelCompletionStatusList[checkLevelNumber];
+            isCompleted = globalData.IsLevelCompleted(GetCurrentWorldNumber(), currentLevelNumber);
         }
         catch (IndexOutOfRangeException) {
-            print("Level " + checkLevelNumber + "status unknown");
+            print("Level " + checkLevelNumber + " of world " + checkWorldNumber + " status unknown");
         }
 
         return isCompleted;

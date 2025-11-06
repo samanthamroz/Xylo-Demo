@@ -16,11 +16,10 @@ public class Metronome : MonoBehaviour {
     private double nextTick;
     private int accent;
 
-    [SerializeField] private double setBpm = 80;
-    [HideInInspector] public double bpm => setBpm;
-
-    [SerializeField] private int signatureHi = 4;
-    [SerializeField] private int signatureLo = 4;
+    [SerializeField] private LevelConfiguration levelConfig;
+    [HideInInspector] public double bpm;
+    private int signatureHi;
+    private int signatureLo;
 
     private bool running = false;
     public void SetMetronomeRunning(bool isRunning) {
@@ -31,6 +30,16 @@ public class Metronome : MonoBehaviour {
     private ConcurrentQueue<Action> beatEvents = new();
 
     void Start() {
+        var currentLevelData = levelConfig.GetLevelData(LoadingManager.self.GetCurrentLevelNumber());
+        if (currentLevelData == null) {
+            Debug.LogError("Failed to load level configuration!");
+            return;
+        }
+
+        bpm = currentLevelData.Bpm;
+        signatureHi = currentLevelData.timeSigHigh;
+        signatureLo = currentLevelData.timeSigLow;
+        
         ResetTickSchedule();
         running = false;
     }
