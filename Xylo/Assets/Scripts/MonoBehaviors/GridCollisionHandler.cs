@@ -22,13 +22,8 @@ public class GridCollisionHandler : MonoBehaviour
     }
 
     private bool PassThrough(Collider c, Vector3 direction) {
-        if (c.gameObject.TryGetComponent<OneWayGate>(out OneWayGate g)) {
-            return g.CanPassThrough(direction);
-        }
-        
-        OneWayGate parentGate = c.GetComponentInParent<OneWayGate>();
-        if (parentGate != null) {
-            return parentGate.CanPassThrough(direction);
+        if (c.gameObject.TryGetComponent<IBlocksPassThrough>(out IBlocksPassThrough b)) {
+            return b.CanPassThrough(direction);
         }
         
         return false;
