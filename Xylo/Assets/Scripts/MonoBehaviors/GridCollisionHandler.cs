@@ -8,7 +8,21 @@ public class GridCollisionHandler : MonoBehaviour
 
         bool isColliding = false;
         foreach (Collider c in colliders) {
-            if (!IsConnectedToSelf(c) && !c.isTrigger && !PassThrough(c, (currentPosition - targetPosition).normalized)) {
+            if (IsConnectedToSelf(c)) {
+                continue;
+            }
+
+            // For triggers, only check CanPassThrough
+            if (c.isTrigger) {
+                if (!CanPassThrough(c, (currentPosition - targetPosition).normalized)) {
+                    isColliding = true;
+                    break;
+                }
+                continue;
+            }
+
+            // For non-triggers, check CanPassThrough, otherwise it's a collision
+            if (!CanPassThrough(c, (currentPosition - targetPosition).normalized)) {
                 isColliding = true;
                 break;
             }
@@ -21,11 +35,13 @@ public class GridCollisionHandler : MonoBehaviour
         return c.gameObject == gameObject || c.transform.IsChildOf(transform);
     }
 
-    private bool PassThrough(Collider c, Vector3 direction) {
-        if (c.gameObject.TryGetComponent<IBlocksPassThrough>(out IBlocksPassThrough b)) {
+    private bool CanPassThrough(Collider c, Vector3 direction) {
+        if (c.gameObject.TryGetComponent(out IBlocksPassThrough b)) {
             return b.CanPassThrough(direction);
         }
         
-        return false;
+        // If it's a trigger without IBlocksPassThrough, allow pass through
+        // If it's a solid collider without IBlocksPassThrough, block it
+        return c.isTrigger;
     }
 }

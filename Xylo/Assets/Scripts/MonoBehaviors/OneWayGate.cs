@@ -31,9 +31,26 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
 
     void Update() {
         if (isOpen && isTryingToClose) {
-            bool isSomethingInTheWay = Physics.CheckBox(_originalPos, 
-                                                     transform.localScale * 0.5f, 
-                                                     _originalRot);
+            // Check in world space with a slightly smaller box to avoid edge cases
+            Vector3 worldPos = transform.parent != null ? 
+                transform.parent.TransformPoint(_originalPos) : _originalPos;
+            Quaternion worldRot = transform.parent != null ? 
+                transform.parent.rotation * _originalRot : _originalRot;
+            
+            Collider[] overlaps = Physics.OverlapBox(worldPos, 
+                                                     transform.localScale * 0.45f, 
+                                                     worldRot);
+            
+            bool isSomethingInTheWay = false;
+            foreach (Collider col in overlaps) {
+                // Ignore self and children
+                if (col.transform == transform || col.transform.IsChildOf(transform)) continue;
+                // Ignore triggers
+                if (col.isTrigger) continue;
+                
+                isSomethingInTheWay = true;
+                break;
+            }
             
             if (!isSomethingInTheWay) {
                 CloseGate();
@@ -43,7 +60,7 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
 
     public bool CanPassThrough(Vector3 movementDirection)
     {
-        if (!isOpen) {
+        if (isOpen) {
             return true;
         }
         
@@ -51,9 +68,11 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
             return false;
         }
 
-        Vector3 worldAllowedDir = transform.TransformDirection(_allowedDirection);
+        Vector3 worldAllowedDir = transform.TransformDirection(_allowedDirection).normalized;
         float dot = Vector3.Dot(movementDirection.normalized, worldAllowedDir);
-        return dot > 0;
+        bool movingInAllowedDirection = dot < 0f;
+
+        return movingInAllowedDirection;
     }
 
     private void OpenGate() {
@@ -67,9 +86,7 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
         isTryingToClose = false;
     }
 
-    void OnCollisionEnter(Collision other) {
-        Debug.Log($"collision with {other.gameObject.name}");
-
+    void OnTriggerEnter(Collider other) {
         if (other.transform.IsChildOf(transform)) return; //if to this attached, disregard
         if (other.gameObject.layer == 5) return;
         
@@ -78,8 +95,11 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
         }
     }
 
-    void OnCollisionExit(Collision other)
+    void OnTriggerExit(Collider other)
     {
+        if (other.transform.IsChildOf(transform)) return;
+        if (other.gameObject.layer == 5) return;
+
         isTryingToClose = true;
     }
 }
