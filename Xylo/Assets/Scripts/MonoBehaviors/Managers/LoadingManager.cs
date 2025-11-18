@@ -173,6 +173,10 @@ public class LoadingManager : MonoBehaviour {
 
         SaveGlobal();
     }
+    public void SetCurrentLevelCompleted() {
+        globalData.SetLevelCompleted(GetCurrentWorldNumber(), currentLevelNumber);
+        SaveGlobal();
+    }
     public void SetMarbleStartForSection(int sectionNum, Vector3 velocity, Vector3 position) {
         if (currentSceneData.sectionStartMarbleVelocities.ContainsKey(sectionNum)) {
             currentSceneData.sectionStartMarbleVelocities[sectionNum] = velocity;
@@ -215,7 +219,7 @@ public class LoadingManager : MonoBehaviour {
         //print($"{string.Join("", saveData.levelCompletionStatusList)}");
         bool isCompleted = false;
         try {
-            isCompleted = globalData.IsLevelCompleted(GetCurrentWorldNumber(), currentLevelNumber);
+            isCompleted = globalData.IsLevelCompleted(checkWorldNumber, checkLevelNumber);
         }
         catch (IndexOutOfRangeException) {
             print("Level " + checkLevelNumber + " of world " + checkWorldNumber + " status unknown");
