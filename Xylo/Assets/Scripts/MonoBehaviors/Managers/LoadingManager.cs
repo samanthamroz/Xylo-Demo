@@ -61,7 +61,7 @@ public class LoadingManager : MonoBehaviour {
             DEBUG_OverrideCurrentLevelNum = -1; //reset so the next load doesn't go back to this level
         }
 
-        if (scene.buildIndex == 0) { //for title only 
+        if (scene.name == "LevelSelect") { //for title only 
             if (!hasTitleLoaded) {
                 LevelSetup.SetupTitle(true);
                 hasTitleLoaded = true;

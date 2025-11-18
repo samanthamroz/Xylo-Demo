@@ -18,7 +18,7 @@ public class LoadSceneButton : MonoBehaviour {
 
     public void Load(string sceneName, int levelNum) {
         ControlsManager.self.PauseGameTime(false);
-        if (levelNum == -1) {
+        if (levelNum != -1) {
             StartCoroutine(LoadingManager.self.LoadNewScene(sceneName, levelNum));
         } else {
             StartCoroutine(LoadingManager.self.LoadNewScene(sceneName));

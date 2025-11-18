@@ -35,7 +35,7 @@
      inkscape:window-x="-9"
      inkscape:window-y="31"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g60"
+     inkscape:current-layer="layer1"
      showguides="false"
      inkscape:export-bgcolor="#ffffff00" /><defs
      id="defs1"><rect
@@ -1512,7 +1512,7 @@
            xml:space="preserve"
            transform="translate(-3889.5651,241.15133)"
            id="text2"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:72px;line-height:1;font-family:'Altone Trial';-inkscape-font-specification:'Altone Trial';text-align:end;text-decoration-color:#000000;letter-spacing:0.41px;word-spacing:0px;white-space:pre;shape-inside:url(#rect24);fill:#002333;fill-opacity:1;stroke:none;stroke-width:3.77953;stroke-linecap:square"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:72px;line-height:1;font-family:'Altone Trial';-inkscape-font-specification:'Altone Trial';text-align:end;text-decoration-color:#000000;letter-spacing:0.41px;word-spacing:0px;white-space:pre;shape-inside:url(#rect24);display:inline;fill:#002333;fill-opacity:1;stroke:none;stroke-width:3.77953;stroke-linecap:square"><tspan
              x="4801.6802"
              y="1392.5289"
              id="tspan40"><tspan
@@ -1561,7 +1561,7 @@
            xml:space="preserve"
            transform="translate(-3889.5651,241.15133)"
            id="text2-8"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:72px;line-height:1;font-family:'Altone Trial';-inkscape-font-specification:'Altone Trial';text-align:end;text-decoration-color:#000000;letter-spacing:0.41px;word-spacing:0px;white-space:pre;shape-inside:url(#rect24-3);fill:#002333;fill-opacity:1;stroke:none;stroke-width:3.77953;stroke-linecap:square"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:72px;line-height:1;font-family:'Altone Trial';-inkscape-font-specification:'Altone Trial';text-align:end;text-decoration-color:#000000;letter-spacing:0.41px;word-spacing:0px;white-space:pre;shape-inside:url(#rect24-3);display:inline;fill:#002333;fill-opacity:1;stroke:none;stroke-width:3.77953;stroke-linecap:square"><tspan
              x="4799.8081"
              y="1392.5289"
              id="tspan44"><tspan

@@ -208,7 +208,7 @@ public class ControlsManager : MonoBehaviour {
 
     void OnDebug2(InputValue value) { //shift + D + 2
         if (value.Get<float>() == 1) {
-            LoadingManager.self.LoadNextLevel();
+            GUIManager.self.ActivateWinMenuUI();
         }
     }
 }

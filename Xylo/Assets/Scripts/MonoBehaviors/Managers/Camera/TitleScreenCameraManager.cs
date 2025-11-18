@@ -18,7 +18,7 @@ public partial class CameraManager {
             self.StartCoroutine(self.PlaceCamera(time, true));
         }
 
-        public void MoveToIsland(string key) {
+        public void MoveToIsland(string key = "level0") {
             self.currentlookAtObject.transform.position = levelSelectCameraPositions[key];
             self.currentlookAtObject.transform.eulerAngles = new Vector3(0, 0, 0);
             self.StartCoroutine(self.PlaceCamera(1f));

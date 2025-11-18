@@ -16,15 +16,16 @@ public class LevelSetup : MonoBehaviour
 
     public static void SetupTitle(bool firstTime) {
         ControlsManager.self.InitializeActionMap("levelselect");
-        
+        CameraManager.self.InstantiateTitleCamera();
+
         if (firstTime) {
             GUIManager.self.InstantiateTitleUI(true);
-            CameraManager.self.InstantiateTitleCamera();
             return;
         }
 
         GUIManager.self.InstantiateTitleUI(false);
-        DoSceneStart();
+        CameraManager.self.SwitchTitleScreenPosition("level0");
+        GUIManager.self.LoadMiddleToRight(.25f);
     }
 
     public static void SetupTutorial() {
