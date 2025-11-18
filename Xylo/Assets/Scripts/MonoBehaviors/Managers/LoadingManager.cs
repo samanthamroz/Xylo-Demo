@@ -12,6 +12,10 @@ public class LoadingManager : MonoBehaviour {
     [SerializeField] private bool DEBUG_AlwaysResetData = false;
     [SerializeField] private int DEBUG_OverrideCurrentLevelNum = -1;
     private int currentLevelNumber = 0;
+    private const int NUM_LEVELS_IN_WORLD_ONE = 2;
+    private const int NUM_LEVELS_IN_WORLD_TWO = 0;
+    private const int NUM_LEVELS_IN_WORLD_THREE = 0;
+
     public int GetCurrentWorldNumber() {
         return SceneManager.GetActiveScene().buildIndex - 1;
     }
@@ -118,9 +122,23 @@ public class LoadingManager : MonoBehaviour {
         SceneManager.LoadScene(sceneName);
         yield return null; //fixes coroutine running during scene load
     }
-
-    public void ReloadCurrentScene() {
+    public void ReloadCurrentLevel(bool forceUnpause = false) {
+        if (forceUnpause) {
+            Time.timeScale = 1f;
+        }
         StartCoroutine(LoadNewScene(SceneManager.GetActiveScene().name, currentLevelNumber));
+    }
+    public void LoadNextLevel(bool forceUnpause = false) {
+        if (forceUnpause) {
+            Time.timeScale = 1f;
+        }
+
+        if (currentLevelNumber + 1 < NUM_LEVELS_IN_WORLD_ONE) {
+            StartCoroutine(LoadNewScene(SceneManager.GetActiveScene().name, currentLevelNumber + 1));
+            return;
+        }
+        
+        StartCoroutine(LoadNewScene("LevelSelect"));
     }
 
     // Saving Functions

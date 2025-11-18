@@ -46,6 +46,7 @@ public partial class CameraManager : MonoBehaviour {
         }
     }
     public void InstantiateCamera() {
+        print("rah");
         cameraObject = Instantiate(cameraPrefab);
         cam = cameraObject.GetComponent<Camera>();
 
@@ -84,6 +85,7 @@ public partial class CameraManager : MonoBehaviour {
         currentlookAtObject = lookAtObject;
         SetCameraMode(CamMode.TITLESCREEN);
 
+        tscm = new TitleScreenCameraManager();
         tscm.ReturnToTitle();
     }
 

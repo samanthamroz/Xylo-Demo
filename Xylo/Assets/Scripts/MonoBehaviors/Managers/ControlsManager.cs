@@ -184,7 +184,7 @@ public class ControlsManager : MonoBehaviour {
 
     void OnRestart(InputValue value) {
         if (value.Get<float>() == 1) {
-            LoadingManager.self.ReloadCurrentScene();
+            LoadingManager.self.ReloadCurrentLevel();
         }
     }
 
@@ -199,6 +199,7 @@ public class ControlsManager : MonoBehaviour {
             LevelManager.self.GoToNextSection();
         }
     }
+
     void OnDebug1(InputValue value) { //shift + D + 1
         if (value.Get<float>() == 1) {
             SaveManager.DeleteAll();
@@ -207,8 +208,7 @@ public class ControlsManager : MonoBehaviour {
 
     void OnDebug2(InputValue value) { //shift + D + 2
         if (value.Get<float>() == 1) {
-            print("loading");
-            StartCoroutine(LoadingManager.self.LoadNewScene("World1", 2));
+            LoadingManager.self.LoadNextLevel();
         }
     }
 }
