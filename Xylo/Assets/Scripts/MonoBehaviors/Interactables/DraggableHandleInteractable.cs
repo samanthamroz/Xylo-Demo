@@ -27,7 +27,7 @@ public class DraggableHandleInteractable : MonoBehaviour, IClickBehavior, IRelea
     }
 
     public void DoClick() {
-        _parentBlock.TurnHandlesOffExceptInDirection(Direction);
+        //_parentBlock.TurnHandlesOffExceptInDirection(Direction);
         originalMousePosition = MousePosition;
         StartCoroutine(Drag());
     }
@@ -69,7 +69,7 @@ public class DraggableHandleInteractable : MonoBehaviour, IClickBehavior, IRelea
 
             if (IsNotJumpingBlocks(newBlockPosition) && !_parentBlock.IsCollidingAtPosition(newBlockPosition)) {
                 _parentBlock.GetComponent<Rigidbody>().MovePosition(newBlockPosition);
-                _parentBlock.TurnHandlesOffExceptInDirection(Direction);
+                //_parentBlock.TurnHandlesOffExceptInDirection(Direction);
             }
 
             yield return null;

@@ -14,7 +14,7 @@ public class VectorUtils
     public static Vector3 GetSnapToGridVector(Vector3 originalPosition, Vector3 targetVector)
     {
         float Yincrement = 0.25f;
-        float XZincrement = 0.5f;
+        float XZincrement = 0.25f;
 
         float snappedX = originalPosition.x + Mathf.Round((targetVector.x - originalPosition.x) / XZincrement) * XZincrement;
         float snappedY = originalPosition.y + Mathf.Round((targetVector.y - originalPosition.y) / Yincrement) * Yincrement;

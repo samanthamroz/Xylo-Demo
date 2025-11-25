@@ -1,65 +1,96 @@
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(GridCollisionHandler))]
-public class DraggableInteractable : MonoBehaviour, IClickBehavior, IClickAwayBehavior {
+[RequireComponent(typeof(Rigidbody))]
+public class DraggableInteractable : MonoBehaviour, IClickBehavior, IReleaseBehavior, IClickAwayBehavior {
     [SerializeField] GameObject handlePrefab;
     private List<DraggableHandleInteractable> handles = new();
     [HideInInspector] public Vector3 originalPosition;
     private GridCollisionHandler collisionHandler;
-
+    private Vector2 MousePosition { get { return ControlsManager.self.mousePosition; } }
+    private Vector2 originalMousePosition;
+    private bool _isDragging;
 
     void Start() {
         collisionHandler = GetComponent<GridCollisionHandler>();
 
-        CreateHandle(Vector3.left, transform);
-        CreateHandle(Vector3.right, transform);
-        CreateHandle(Vector3.up, transform);
-        CreateHandle(Vector3.down, transform);
-
-        TurnAllHandlesOff();
         originalPosition = VectorUtils.GetSnapToGridVector(transform.position, transform.position);
-    }
-    private void CreateHandle(Vector3 baseDirection, Transform parent) {
-        DraggableHandleInteractable handle = Instantiate(handlePrefab, parent).GetComponent<DraggableHandleInteractable>();
-        handle.transform.localScale = new(handle.transform.localScale.x / parent.localScale.x, handle.transform.localScale.y / parent.localScale.y, handle.transform.localScale.z / parent.localScale.z);
-
-        handle.Initialize(this, this.transform.localRotation * baseDirection);
-        print(gameObject.name + " - " + this.transform.localRotation * baseDirection);
-        handles.Add(handle);
+    
+        _isDragging = false;
     }
     
-    private bool ShouldHandleBeGrey(DraggableHandleInteractable handle) {
-        Vector3 testPosition = transform.position - new Vector3(handle.Direction.x / 4, handle.Direction.y / 4, handle.Direction.z / 4);
-        return IsCollidingAtPosition(testPosition);
-    }
-    private void TurnAllHandlesOn() {
-        foreach (DraggableHandleInteractable handle in handles) {
-            handle.SetHandleGraphics(true, ShouldHandleBeGrey(handle));
-        }
-    }
-    private void TurnAllHandlesOff() {
-        foreach (DraggableHandleInteractable handle in handles) {
-            handle.SetHandleGraphics(false);
-        }
-    }
-    public void TurnHandlesOffExceptInDirection(Vector3 direction) {
-        TurnAllHandlesOff();
-        foreach (DraggableHandleInteractable handle in handles) {
-            if (VectorUtils.GetAbsVector(handle.Direction) == VectorUtils.GetAbsVector(direction)) {
-                handle.SetHandleGraphics(true, ShouldHandleBeGrey(handle));
-            }
-        }
-    }
-
     public bool IsCollidingAtPosition(Vector3 testPosition) {
         return collisionHandler.IsCollidingAtPosition(transform.position, testPosition);
     }
 
     public void DoClick() {
-        TurnAllHandlesOn();
+        originalMousePosition = MousePosition;
+        StartCoroutine(Drag());
     }
     public void DoClickAway() {
-        TurnAllHandlesOff();
+        
+    }
+    public void DoRelease() {
+        originalPosition = VectorUtils.GetSnapToGridVector(originalPosition, transform.position);
+        _isDragging = false;
+    }
+
+    private IEnumerator Drag() {
+        _isDragging = true;
+        bool setDirectionYet = false;
+        Vector3 directionMoving = Vector3.one;
+
+        while (_isDragging) {
+            float z = Camera.main.WorldToScreenPoint(transform.position).z;
+            Vector3 originalMousePositionInWorld = Camera.main.ScreenToWorldPoint(new Vector3(originalMousePosition.x, originalMousePosition.y, z));
+            Vector3 mousePositionInWorld = Camera.main.ScreenToWorldPoint(new Vector3(MousePosition.x, MousePosition.y, z));
+
+            if (!setDirectionYet) {
+                Vector3 mouseDelta = VectorUtils.GetAbsVector(originalMousePositionInWorld - mousePositionInWorld);
+                float max = Mathf.Max(mouseDelta.x, mouseDelta.y, mouseDelta.z);
+                directionMoving = new Vector3(mouseDelta.x == max ? mouseDelta.x : 0, mouseDelta.y == max ? mouseDelta.y : 0, mouseDelta.z == max ? mouseDelta.z : 0).normalized;
+                if (directionMoving != Vector3.zero) {
+                    setDirectionYet = true;
+                }
+            }
+            print(directionMoving);
+
+            Vector3 newBlockPosition = originalPosition;
+
+            float amountToMove;
+
+            if (VectorUtils.GetAbsVector(directionMoving).y == 1) {
+                amountToMove = mousePositionInWorld.y - originalMousePositionInWorld.y;
+                newBlockPosition.y += amountToMove;
+            }
+            else {
+                amountToMove = (mousePositionInWorld.x + mousePositionInWorld.z) - (originalMousePositionInWorld.x + originalMousePositionInWorld.z);
+                if (VectorUtils.GetAbsVector(directionMoving).x == 1) {
+                    newBlockPosition.x += amountToMove;
+                }
+                if (VectorUtils.GetAbsVector(directionMoving).z == 1) {
+                    newBlockPosition.z += amountToMove;
+                }
+            }
+
+            newBlockPosition = VectorUtils.GetSnapToGridVector(originalPosition, newBlockPosition);
+
+            if (IsNotJumpingBlocks(newBlockPosition) && !IsCollidingAtPosition(newBlockPosition)) {
+                GetComponent<Rigidbody>().MovePosition(newBlockPosition);
+            }
+
+            yield return null;
+        }
+    }
+
+    private bool IsNotJumpingBlocks(Vector3 targetPosition) {
+        return
+            Mathf.Abs(transform.position.x - targetPosition.x) <= 1 &&
+            Mathf.Abs(transform.position.y - targetPosition.y) <= .5 &&
+            Mathf.Abs(transform.position.z - targetPosition.z) <= 1;
     }
 }
