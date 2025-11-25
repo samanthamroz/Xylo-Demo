@@ -13,7 +13,7 @@ public class DraggableHandleInteractable : MonoBehaviour, IClickBehavior, IRelea
     public void Initialize(DraggableInteractable parentBlock, Vector3 direction) {
         _parentBlock = parentBlock;
         Direction = VectorUtils.GetRoundedVector(direction);
-        transform.localPosition = -direction;
+        transform.localPosition = direction;
 
         _isDragging = false;
 

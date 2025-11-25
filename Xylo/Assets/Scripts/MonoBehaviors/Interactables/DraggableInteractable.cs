@@ -12,22 +12,20 @@ public class DraggableInteractable : MonoBehaviour, IClickBehavior, IClickAwayBe
     void Start() {
         collisionHandler = GetComponent<GridCollisionHandler>();
 
-        Transform scaleAdjust = new GameObject("ScaleAdjust").transform;
-        scaleAdjust.SetParent(transform);
-        scaleAdjust.SetLocalPositionAndRotation(transform.rotation * new Vector3(0f, 0f, -0.4f), Quaternion.identity);
-        scaleAdjust.localScale = new(1f / transform.localScale.x, 1f / transform.localScale.y, 1f / transform.localScale.z);
-
-        CreateHandle(Vector3.left, scaleAdjust);
-        CreateHandle(Vector3.right, scaleAdjust);
-        CreateHandle(Vector3.up, scaleAdjust);
-        CreateHandle(Vector3.down, scaleAdjust);
+        CreateHandle(Vector3.left, transform);
+        CreateHandle(Vector3.right, transform);
+        CreateHandle(Vector3.up, transform);
+        CreateHandle(Vector3.down, transform);
 
         TurnAllHandlesOff();
         originalPosition = VectorUtils.GetSnapToGridVector(transform.position, transform.position);
     }
     private void CreateHandle(Vector3 baseDirection, Transform parent) {
         DraggableHandleInteractable handle = Instantiate(handlePrefab, parent).GetComponent<DraggableHandleInteractable>();
-        handle.Initialize(this, transform.rotation * baseDirection);
+        handle.transform.localScale = new(handle.transform.localScale.x / parent.localScale.x, handle.transform.localScale.y / parent.localScale.y, handle.transform.localScale.z / parent.localScale.z);
+
+        handle.Initialize(this, this.transform.localRotation * baseDirection);
+        print(gameObject.name + " - " + this.transform.localRotation * baseDirection);
         handles.Add(handle);
     }
     

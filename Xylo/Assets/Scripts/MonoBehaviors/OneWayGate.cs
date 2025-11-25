@@ -62,9 +62,10 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
             Quaternion worldRot = transform.parent != null ? 
                 transform.parent.rotation * _originalRot : _originalRot;
             
-            Collider[] overlaps = Physics.OverlapBox(worldPos, 
-                                                     transform.localScale * 0.45f, 
-                                                     worldRot);
+            Vector3 boxCenter = worldPos + new Vector3(0f, .25f, 0f);
+            Vector3 boxHalfExtents = new Vector3(0.48f, 0.33f, 0.48f);
+
+            Collider[] overlaps = Physics.OverlapBox(boxCenter, boxHalfExtents, worldRot);
             
             bool isSomethingInTheWay = false;
             foreach (Collider col in overlaps) {
@@ -85,6 +86,7 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
 
     public bool CanPassThrough(Vector3 movementDirection)
     {
+        print("test");
         if (isOpen) {
             return true;
         }
