@@ -86,7 +86,7 @@ public class LevelManager : MonoBehaviour {
     public void EndAttempt(bool retrySection = true) {
         if (!attemptStarted) {
             if (retrySection) {
-                marble.ResetSelf();
+                marble.ResetSelf(sectionNum == 0);
             }
             return;
         }
@@ -102,7 +102,7 @@ public class LevelManager : MonoBehaviour {
         if (!hasWonSection && !DEBUG_AutoWin) {
             attemptList = new();
             if (retrySection) {
-                marble.ResetSelf();
+                marble.ResetSelf(sectionNum == 0);
             }
             CameraManager.self.DoMoveToNextSection(sectionNum);
             return;

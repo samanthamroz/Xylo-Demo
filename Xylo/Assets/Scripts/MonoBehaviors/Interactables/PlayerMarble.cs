@@ -40,8 +40,10 @@ public class PlayerMarble : MonoBehaviour, IClickBehavior {
         RunMarble();
     }
 
-    public void ResetSelf() {
+    public void ResetSelf(bool resetToBeginningVelocity = false) {
         rb.isKinematic = true;
+        if (resetToBeginningVelocity) launchVelocity = VectorUtils.nullVector;
+        
         LeanTween.move(gameObject, resetPosition, .5f).setEaseInOutSine();
         BeatManager.self.SetFirstNoteOccurred(false);
     }

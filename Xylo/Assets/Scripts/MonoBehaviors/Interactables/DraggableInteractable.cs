@@ -53,11 +53,7 @@ public class DraggableInteractable : MonoBehaviour, IClickBehavior, IReleaseBeha
                 Vector3 mouseDelta = VectorUtils.GetAbsVector(originalMousePositionInWorld - mousePositionInWorld);
                 float max = Mathf.Max(mouseDelta.x, mouseDelta.y, mouseDelta.z);
                 directionMoving = new Vector3(mouseDelta.x == max ? mouseDelta.x : 0, mouseDelta.y == max ? mouseDelta.y : 0, mouseDelta.z == max ? mouseDelta.z : 0).normalized;
-                if (directionMoving != Vector3.zero) {
-                    setDirectionYet = true;
-                }
             }
-            print(directionMoving);
 
             Vector3 newBlockPosition = originalPosition;
 
@@ -81,6 +77,9 @@ public class DraggableInteractable : MonoBehaviour, IClickBehavior, IReleaseBeha
 
             if (IsNotJumpingBlocks(newBlockPosition) && !IsCollidingAtPosition(newBlockPosition)) {
                 GetComponent<Rigidbody>().MovePosition(newBlockPosition);
+                if (newBlockPosition != originalPosition) {
+                    setDirectionYet = true;
+                }
             }
 
             yield return null;
@@ -89,8 +88,8 @@ public class DraggableInteractable : MonoBehaviour, IClickBehavior, IReleaseBeha
 
     private bool IsNotJumpingBlocks(Vector3 targetPosition) {
         return
-            Mathf.Abs(transform.position.x - targetPosition.x) <= 1 &&
-            Mathf.Abs(transform.position.y - targetPosition.y) <= .5 &&
-            Mathf.Abs(transform.position.z - targetPosition.z) <= 1;
+            Mathf.Abs(transform.position.x - targetPosition.x) <= .5 &&
+            Mathf.Abs(transform.position.y - targetPosition.y) <= .25 &&
+            Mathf.Abs(transform.position.z - targetPosition.z) <= .5;
     }
 }

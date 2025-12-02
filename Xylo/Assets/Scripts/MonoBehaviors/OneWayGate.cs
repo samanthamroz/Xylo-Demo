@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
-    [SerializeField] private Vector2 _allowedDirection;
+    [SerializeField] private Vector3 _allowedDirection;
     private Quaternion _originalRot, _rotatedRot;
     private Vector3 _originalPos, _rotatedPos;
     [SerializeField] bool startOpened = false;
@@ -10,6 +10,7 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
     void Start() {
         float invertedYDirection = _allowedDirection.y * -1f;
         float invertedXDirection = _allowedDirection.x * -1f;
+        float invertedZDirection = _allowedDirection.z * -1f;
 
         _originalRot = transform.localRotation;
         _originalPos = transform.localPosition;
@@ -21,6 +22,20 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
             _rotatedRot = Quaternion.AngleAxis(_originalRot.y - 90f, _axisOfRotation) * _originalRot;
 
             float rpoX = halfScale * invertedXDirection;
+            float rpoY = 0f;
+            float rpoZ = halfScale * 3f;
+
+            Quaternion roY = Quaternion.Euler(0f, _originalRot.eulerAngles.y, 0f);
+            Vector3 rpOffset = roY * new Vector3(rpoX, rpoY, rpoZ);
+
+            _rotatedPos = _originalPos + rpOffset;
+        }
+
+        if (_allowedDirection.z != 0) {
+            Vector3 _axisOfRotation = _originalRot * new Vector3(_allowedDirection.z, 0, 0) * invertedZDirection;
+            _rotatedRot = Quaternion.AngleAxis(_originalRot.y - 90f, _axisOfRotation) * _originalRot;
+
+            float rpoX = halfScale * invertedZDirection;
             float rpoY = 0f;
             float rpoZ = halfScale * 3f;
 
@@ -56,43 +71,66 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
         Debug.DrawRay(transform.position, raycastDirection * 1f, Color.red);
 
         if (isOpen && isTryingToClose) {
-            // Check in world space with a slightly smaller box to avoid edge cases
-            Vector3 worldPos = transform.parent != null ? 
-                transform.parent.TransformPoint(_originalPos) : _originalPos;
-            Quaternion worldRot = transform.parent != null ? 
-                transform.parent.rotation * _originalRot : _originalRot;
-            
-            Vector3 boxCenter = worldPos + new Vector3(0f, -0.25f * _allowedDirection.y, 0f);
-            Vector3 boxHalfExtents = new Vector3(0.48f * transform.localScale.x, 0.66f * transform.localScale.y, 0.48f * transform.localScale.z);
-
-            Collider[] overlaps = Physics.OverlapBox(boxCenter, boxHalfExtents, worldRot);
-            
-            bool isSomethingInTheWay = false;
-            foreach (Collider col in overlaps) {
-                // Ignore self and children
-                if (col.transform == transform || col.transform.IsChildOf(transform)) continue;
-                // Ignore triggers
-                if (col.isTrigger) continue;
-                
-                isSomethingInTheWay = true;
-                break;
-            }
-            
-            if (!isSomethingInTheWay) {
+            if (!IsSomethingInTheWay()) {
                 CloseGate();
             }
         }
     }
 
+    bool IsSomethingInTheWay() {
+        Vector3 worldPos = transform.parent != null ? 
+                transform.parent.TransformPoint(_originalPos) : _originalPos;
+        Quaternion worldRot = transform.parent != null ? 
+                transform.parent.rotation * _originalRot : _originalRot;
+            
+        Vector3 boxCenter = worldPos + new Vector3(-0.125f * _allowedDirection.x, -0.25f * _allowedDirection.y, -0.125f * _allowedDirection.z);
+        Vector3 boxHalfExtents = new Vector3(0.44f * transform.localScale.x, 0.98f * transform.localScale.y, 0.44f * transform.localScale.z);
+        Collider[] overlaps = Physics.OverlapBox(boxCenter, boxHalfExtents, worldRot);
+            
+        foreach (Collider col in overlaps) {
+                // Ignore self and children
+            if (col.transform == transform || col.transform.IsChildOf(transform)) continue;
+                // Ignore triggers
+            if (col.isTrigger) continue;
+                
+            return true;
+        }
+
+        return false;
+    }
+    
+    void OnDrawGizmos() {
+        // Only draw if you want to see it all the time
+        DrawOverlapBox();
+    }
+
+    void DrawOverlapBox() {
+        Vector3 worldPos = transform.parent != null ? 
+                transform.parent.TransformPoint(_originalPos) : _originalPos;
+        Quaternion worldRot = transform.parent != null ? 
+                transform.parent.rotation * _originalRot : _originalRot;
+            
+        Vector3 boxCenter = worldPos + new Vector3(-0.125f * _allowedDirection.x, -0.25f * _allowedDirection.y, -0.125f * _allowedDirection.z);
+        Vector3 boxHalfExtents = new Vector3(0.44f * transform.localScale.x, 0.98f * transform.localScale.y, 0.44f * transform.localScale.z);
+
+        // Set gizmo color (change based on whether something is in the way)
+        Gizmos.color = IsSomethingInTheWay() ? Color.red : Color.green;
+        
+        // Draw the wireframe box
+        Gizmos.matrix = Matrix4x4.TRS(boxCenter, worldRot, Vector3.one);
+        Gizmos.DrawWireCube(Vector3.zero, boxHalfExtents * 2f); // *2 because DrawWireCube uses full extents, not half
+        
+        // Reset matrix
+        Gizmos.matrix = Matrix4x4.identity;
+    }
+
     public bool CanPassThrough(Vector3 movementDirection)
     {
-        print("test");
         if (isOpen) {
             return true;
         }
-        
-        Vector3 raycastDirection = _allowedDirection * -1f;
-        if (Physics.Raycast(transform.position, raycastDirection, 1f)) {
+    
+        if (IsSomethingInTheWay()) {
             return false;
         }
 
