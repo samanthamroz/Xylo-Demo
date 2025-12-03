@@ -68,6 +68,7 @@ public class LevelManager : MonoBehaviour {
         }
 
         CollisionManager.self.TurnOffCollisionForPuzzle(0);
+        CloudsManager.self.MoveCloudsForSection(0);
         LoadingManager.self.SetMarbleStartForSection(0, VectorUtils.nullVector, marble.transform.position);
     }
 
@@ -113,7 +114,6 @@ public class LevelManager : MonoBehaviour {
         LoadingManager.self.SetMarbleStartForSection(sectionNum + 1, marble.GetComponent<Rigidbody>().velocity, marble.transform.position);
         //Move to next section
         if (!LoadingManager.self.IsLevelCompleted()) {
-            print("win");
             GoToNextSection();
             return;
         }
@@ -128,14 +128,19 @@ public class LevelManager : MonoBehaviour {
         sectionNum += 1;
         
         CameraManager.self.DoMoveToNextSection(sectionNum);
+        CloudsManager.self.MoveCloudsForSection(sectionNum);
         CollisionManager.self.TurnOffCollisionForPuzzle(sectionNum);
 
         VelocityPosition marbStart = LoadingManager.self.GetMarbleStartForSection(sectionNum);
         marble.PlaceMarbleForSectionStart(marbStart.velocity, marbStart.position);
 
         if (sectionNum == 6) {
-            StartPlaying();
+            StartCoroutine(DelayedAutoStart());
         }
+    }
+    private IEnumerator DelayedAutoStart() {
+        yield return new WaitForSeconds(1.5f); // Wait for camera transition and marble reset
+        StartPlaying();
     }
 
     public void GoToPreviousSection() {
@@ -144,7 +149,7 @@ public class LevelManager : MonoBehaviour {
         sectionNum -= 1;
 
         CameraManager.self.DoMoveToNextSection(sectionNum);
-
+        CloudsManager.self.MoveCloudsForSection(sectionNum, true);
         CollisionManager.self.TurnOffCollisionForPuzzle(sectionNum);
 
         VelocityPosition marbStart = LoadingManager.self.GetMarbleStartForSection(sectionNum);
