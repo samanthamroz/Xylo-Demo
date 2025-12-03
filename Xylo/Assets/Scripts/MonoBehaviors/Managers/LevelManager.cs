@@ -70,11 +70,6 @@ public class LevelManager : MonoBehaviour {
         CollisionManager.self.TurnOffCollisionForPuzzle(0);
         LoadingManager.self.SetMarbleStartForSection(0, VectorUtils.nullVector, marble.transform.position);
     }
-    void Update() {
-        if (marbleStartPosition.y - marble.transform.position.y >= 4) {
-            EndAttempt(true);
-        }
-    }
 
     public void StartPlaying() {
         attemptStarted = true;
@@ -98,10 +93,12 @@ public class LevelManager : MonoBehaviour {
         attemptCountingStarted = false;
 
         bool hasWonSection = false;
-        try {
-            hasWonSection = CheckForSectionWin();
+        if (!autoWin && !DEBUG_AutoWin) {
+            try {
+                hasWonSection = CheckForSectionWin();
+            }
+            catch (NullReferenceException) { } //occurs when restart is triggered before first note block is triggered
         }
-        catch (NullReferenceException) { } //occurs when restart is triggered before first note block is triggered
 
         if (!autoWin && !hasWonSection && !DEBUG_AutoWin) {
             attemptList = new();
@@ -116,6 +113,7 @@ public class LevelManager : MonoBehaviour {
         LoadingManager.self.SetMarbleStartForSection(sectionNum + 1, marble.GetComponent<Rigidbody>().velocity, marble.transform.position);
         //Move to next section
         if (!LoadingManager.self.IsLevelCompleted()) {
+            print("win");
             GoToNextSection();
             return;
         }
@@ -130,16 +128,13 @@ public class LevelManager : MonoBehaviour {
         sectionNum += 1;
         
         CameraManager.self.DoMoveToNextSection(sectionNum);
-
         CollisionManager.self.TurnOffCollisionForPuzzle(sectionNum);
 
         VelocityPosition marbStart = LoadingManager.self.GetMarbleStartForSection(sectionNum);
-        print(marbStart.velocity);
-        print(marbStart.position);
         marble.PlaceMarbleForSectionStart(marbStart.velocity, marbStart.position);
 
         if (sectionNum == 6) {
-            marble.DoClick();
+            StartPlaying();
         }
     }
 

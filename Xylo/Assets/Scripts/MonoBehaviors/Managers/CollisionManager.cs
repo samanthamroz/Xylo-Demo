@@ -20,19 +20,11 @@ public class CollisionManager : MonoBehaviour {
 	void Awake() {
 		if (self == null) {
 			self = this;
-			DontDestroyOnLoad(gameObject);
 		}
-		else {
-			Destroy(gameObject);
-		}
-	}
-
-    void Start() {
         turnOffs = new List<GameObject[]>{turnOffForPuzzle1, turnOffForPuzzle2, turnOffForPuzzle3,
             turnOffForPuzzle4, turnOffForPuzzle5, turnOffForPuzzle6, turnOffForPuzzle7, turnOffForPuzzle8,
             turnOffForPuzzle9, turnOffForPuzzle10, turnOffForPuzzle11, turnOffForPuzzle12, turnOffForPuzzle13};
-    }
-
+	}
     private void TurnOnAllCollisions() {
         foreach(GameObject[] garray in turnOffs) {
             foreach(GameObject g in garray) {

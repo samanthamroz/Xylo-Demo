@@ -147,20 +147,12 @@ MonoBehaviour:
         beatTriggered: 3
       - note: 11
         beatTriggered: 3.5
-    - triggers: []
     - triggers:
       - note: 7
         beatTriggered: 1
       - note: 4
         beatTriggered: 2
-      - note: 7
-        beatTriggered: 4
-      - note: 5
-        beatTriggered: 5.5
-      - note: 4
-        beatTriggered: 6
-      - note: 2
-        beatTriggered: 8
+    - triggers: []
     - triggers:
       - note: 0
         beatTriggered: 1

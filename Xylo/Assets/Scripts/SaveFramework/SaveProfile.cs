@@ -22,7 +22,7 @@ public record GlobalSaveData : SaveProfileData {
     // World 1: { Level 0: 6 sections, Level 1: 4 sections }
     // World 2: { Level 0: 3 sections, Level 1: 7 sections, Level 2: 4 sections }
     public readonly int[][] sectionsPerLevel = new int[][] {
-        new int[] { 4, 3 }//,  // World 0
+        new int[] { 4, 13 }//,  // World 0
         //new int[] { -1, -1 },     // World 1
         //new int[] { -1, -1, -1 }   // World 2
     };
