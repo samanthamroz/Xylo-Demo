@@ -81,4 +81,11 @@ public class PlayerMarble : MonoBehaviour, IClickBehavior {
 
         LevelManager.self.StartCountingForAttempt();
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Death")) {
+            LevelManager.self.EndAttempt();
+        }
+    }
 }

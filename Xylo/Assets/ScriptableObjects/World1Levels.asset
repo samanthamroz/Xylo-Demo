@@ -20,6 +20,7 @@ MonoBehaviour:
     - {x: 0, y: 0, z: 17.2}
     - {x: 0, y: -1.29, z: 32}
     - {x: 0, y: -6, z: 49}
+    deathPlaneXScale: []
     Bpm: 80
     timeSigHigh: 2
     timeSigLow: 4
@@ -65,18 +66,22 @@ MonoBehaviour:
   - marbleDirection: {x: 0, y: 0, z: 1}
     firstBlockPosition: {x: 32.75, y: 7.25, z: 0.75}
     deathPlaneCoords:
-    - {x: 33, y: 9, z: 13}
-    - {x: 33, y: 9, z: 20.5}
-    - {x: 0, y: 0, z: 0}
-    - {x: 0, y: 0, z: 0}
-    - {x: 0, y: 0, z: 0}
-    - {x: 0, y: 0, z: 0}
-    - {x: 0, y: 0, z: 0}
-    - {x: 0, y: 0, z: 0}
-    - {x: 0, y: 0, z: 0}
-    - {x: 0, y: 0, z: 0}
-    - {x: 0, y: 0, z: 0}
-    - {x: 0, y: 0, z: 0}
+    - {x: 30, y: 54.5, z: 4.2}
+    - {x: 30, y: 53.5, z: 13}
+    - {x: 30, y: 55.1, z: 24.2}
+    - {x: 30, y: 0, z: 0}
+    - {x: 30, y: 0, z: 0}
+    - {x: 30, y: 0, z: 0}
+    - {x: 30, y: 0, z: 0}
+    - {x: 30, y: 0, z: 0}
+    - {x: 30, y: 0, z: 0}
+    - {x: 30, y: 0, z: 0}
+    - {x: 30, y: 0, z: 0}
+    - {x: 30, y: 0, z: 0}
+    deathPlaneXScale:
+    - 12
+    - 9
+    - 13.5
     Bpm: 80
     timeSigHigh: 2
     timeSigLow: 4
@@ -142,6 +147,7 @@ MonoBehaviour:
         beatTriggered: 3
       - note: 11
         beatTriggered: 3.5
+    - triggers: []
     - triggers:
       - note: 7
         beatTriggered: 1

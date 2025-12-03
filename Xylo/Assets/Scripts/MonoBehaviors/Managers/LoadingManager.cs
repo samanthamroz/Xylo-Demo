@@ -6,15 +6,14 @@ using System.Collections;
 
 public class LoadingManager : MonoBehaviour {
     public static LoadingManager self;
-    private static bool hasTitleLoaded = false;
+    private bool hasTitleLoaded = false;
     private GlobalSaveData globalData;
     private SceneSaveData currentSceneData;
-    [SerializeField] private bool DEBUG_AlwaysResetData = false;
-    [SerializeField] private int DEBUG_OverrideCurrentLevelNum = -1;
     private int currentLevelNumber = 0;
     private const int NUM_LEVELS_IN_WORLD_ONE = 2;
-    private const int NUM_LEVELS_IN_WORLD_TWO = 0;
-    private const int NUM_LEVELS_IN_WORLD_THREE = 0;
+
+    [SerializeField] private bool DEBUG_AlwaysResetData = false;
+    [SerializeField] private int DEBUG_OverrideCurrentLevelNum = -1;
 
     public int GetCurrentWorldNumber() {
         return SceneManager.GetActiveScene().buildIndex - 1;
@@ -43,7 +42,7 @@ public class LoadingManager : MonoBehaviour {
     
     // Loading Data functions
     // These read the data from disk and save to useable variable
-    // LoadCurrentScene is triggered on Awake
+    // LoadCurrentLevel is triggered on Awake
     private void LoadCurrentLevel(Scene scene, LoadSceneMode mode) {
         RefreshPointerToGlobalData();
 

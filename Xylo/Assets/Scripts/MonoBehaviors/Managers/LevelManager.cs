@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,12 +11,10 @@ public class LevelManager : MonoBehaviour {
 
     //Level config data
     [HideInInspector] public Vector3 directionMoving;
-    private Transform firstBlockPos;
-    private Vector3[] deathPlaneCoords;
     private NoteTriggerArray[] solutions;
 
 
-    public GameObject marblePrefab, deathPlaneObj;
+    public GameObject marblePrefab;
     private GameObject marbleObject;
     
     private NoteTriggerArray currentSectionSolution { get { return solutions[sectionNum]; } }
@@ -51,7 +50,6 @@ public class LevelManager : MonoBehaviour {
         }
         
         directionMoving = currentLevelData.marbleDirection;
-        deathPlaneCoords = currentLevelData.deathPlaneCoords;
         solutions = currentLevelData.sectionSolutions;
         
         if (DEBUG_UseManualStart) {
@@ -69,9 +67,15 @@ public class LevelManager : MonoBehaviour {
             marbleObject = Instantiate(marblePrefab, marbleStartPosition, Quaternion.identity);
         }
 
+        CollisionManager.self.TurnOffCollisionForPuzzle(0);
         LoadingManager.self.SetMarbleStartForSection(0, VectorUtils.nullVector, marble.transform.position);
     }
-    
+    void Update() {
+        if (marbleStartPosition.y - marble.transform.position.y >= 4) {
+            EndAttempt(true);
+        }
+    }
+
     public void StartPlaying() {
         attemptStarted = true;
         attemptList = new List<NoteTrigger>();
@@ -83,7 +87,7 @@ public class LevelManager : MonoBehaviour {
     public void StartCountingForAttempt() {
         attemptCountingStarted = true;
     }
-    public void EndAttempt(bool retrySection = true) {
+    public void EndAttempt(bool retrySection = true, bool autoWin = false) {
         if (!attemptStarted) {
             if (retrySection) {
                 marble.ResetSelf(sectionNum == 0);
@@ -99,7 +103,7 @@ public class LevelManager : MonoBehaviour {
         }
         catch (NullReferenceException) { } //occurs when restart is triggered before first note block is triggered
 
-        if (!hasWonSection && !DEBUG_AutoWin) {
+        if (!autoWin && !hasWonSection && !DEBUG_AutoWin) {
             attemptList = new();
             if (retrySection) {
                 marble.ResetSelf(sectionNum == 0);
@@ -123,16 +127,20 @@ public class LevelManager : MonoBehaviour {
 
     public void GoToNextSection() {
         //if (!LoadingManager.self.IsCurrentSectionCompleted(sectionNum)) return;
-
         sectionNum += 1;
-
+        
         CameraManager.self.DoMoveToNextSection(sectionNum);
 
-        LeanTween.moveLocal(deathPlaneObj, deathPlaneCoords[sectionNum], .5f);
+        CollisionManager.self.TurnOffCollisionForPuzzle(sectionNum);
 
         VelocityPosition marbStart = LoadingManager.self.GetMarbleStartForSection(sectionNum);
-
+        print(marbStart.velocity);
+        print(marbStart.position);
         marble.PlaceMarbleForSectionStart(marbStart.velocity, marbStart.position);
+
+        if (sectionNum == 6) {
+            marble.DoClick();
+        }
     }
 
     public void GoToPreviousSection() {
@@ -142,7 +150,7 @@ public class LevelManager : MonoBehaviour {
 
         CameraManager.self.DoMoveToNextSection(sectionNum);
 
-        LeanTween.moveLocal(deathPlaneObj, deathPlaneCoords[sectionNum], .5f);
+        CollisionManager.self.TurnOffCollisionForPuzzle(sectionNum);
 
         VelocityPosition marbStart = LoadingManager.self.GetMarbleStartForSection(sectionNum);
         marble.PlaceMarbleForSectionStart(marbStart.velocity, marbStart.position);

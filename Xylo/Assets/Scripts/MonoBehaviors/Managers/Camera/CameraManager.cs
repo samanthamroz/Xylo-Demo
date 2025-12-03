@@ -229,9 +229,7 @@ public partial class CameraManager : MonoBehaviour {
 
                 //Move camera and the place it is facing
                 Vector3 placeToMoveLookAtPoint = currentlookAtObject.transform.position + howMuchToMove;
-                if (Math.Abs(placeToMoveLookAtPoint.x - lookAtPointResetPos.x) < cameraPlacementRadius.x &&
-                    Math.Abs(placeToMoveLookAtPoint.y - lookAtPointResetPos.y) < cameraPlacementRadius.y &&
-                    Math.Abs(placeToMoveLookAtPoint.z - lookAtPointResetPos.z) < cameraPlacementRadius.z) {
+                if (!IsCameraOutOfBounds(placeToMoveLookAtPoint)) {
                     currentlookAtObject.transform.position += howMuchToMove;
                     StartCoroutine(PlaceCamera(0f));
                     lastPositionInWorld = newPositioninWorld;
@@ -242,6 +240,12 @@ public partial class CameraManager : MonoBehaviour {
         }
         isPanning = false;
     }
+    private bool IsCameraOutOfBounds(Vector3 testLookAtPoint) {
+        return !(Math.Abs(testLookAtPoint.x - lookAtPointResetPos.x) < cameraPlacementRadius.x &&
+                    Math.Abs(testLookAtPoint.y - lookAtPointResetPos.y) < cameraPlacementRadius.y &&
+                    Math.Abs(testLookAtPoint.z - lookAtPointResetPos.z) < cameraPlacementRadius.z);
+    }
+    
     public void DoRotate() {
         lastMousePosition = mousePosition;
         StartCoroutine(Rotate());
@@ -264,6 +268,7 @@ public partial class CameraManager : MonoBehaviour {
         }
         isRotating = false;
     }
+    
     public void DoScroll(float scrollInput) {
         scrollInput *= -1;
         if ((scrollInput < 0 && zoomGoal >= zoomMin)

@@ -12,6 +12,7 @@ public class LevelConfiguration : ScriptableObject {
         
         [Header("Death Plane Positions")]
         public Vector3[] deathPlaneCoords;
+        public float[] deathPlaneXScale;
 
         [Header("Metronome Values")]
         public int Bpm;
