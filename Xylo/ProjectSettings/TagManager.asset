@@ -8,6 +8,7 @@ TagManager:
   - Bounces
   - Springs
   - Death
+  - Level Geometry
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - 
   - Water
   - UI
-  - Connected Geometry
+  - 
   - 
   - 
   - 

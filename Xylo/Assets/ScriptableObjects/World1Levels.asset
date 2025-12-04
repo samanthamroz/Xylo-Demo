@@ -64,7 +64,7 @@ MonoBehaviour:
       - note: 4
         beatTriggered: 4
   - marbleDirection: {x: 0, y: 0, z: 1}
-    firstBlockPosition: {x: 32.75, y: 7.25, z: 0.75}
+    firstBlockPosition: {x: 33.75, y: 7.25, z: 0.75}
     deathPlaneCoords:
     - {x: 30, y: 54.5, z: 4.2}
     - {x: 30, y: 53.5, z: 13}
@@ -126,13 +126,13 @@ MonoBehaviour:
       - note: 11
         beatTriggered: 5.5
     - triggers:
-      - note: 2
+      - note: 11
         beatTriggered: 1
-      - note: 4
+      - note: 0
         beatTriggered: 1.5
-      - note: 7
+      - note: 0
         beatTriggered: 3
-      - note: 4
+      - note: 7
         beatTriggered: 3.5
     - triggers:
       - note: 11

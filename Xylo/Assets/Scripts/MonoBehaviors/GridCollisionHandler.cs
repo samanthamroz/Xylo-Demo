@@ -5,7 +5,7 @@ public class GridCollisionHandler : MonoBehaviour
 {
     public bool IsCollidingAtPosition(Vector3 currentPosition, Vector3 targetPosition) {
         Collider[] colliders = Physics.OverlapBox(targetPosition, GetComponent<Collider>().bounds.extents, Quaternion.identity);
-
+        
         bool isColliding = false;
         foreach (Collider c in colliders) {
             if (IsConnectedToSelf(c)) {
@@ -27,7 +27,6 @@ public class GridCollisionHandler : MonoBehaviour
                 break;
             }
         }
-
         return isColliding;
     }
 

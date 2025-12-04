@@ -238,7 +238,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a475b5c762ddf4047a7583be4e2b42ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handlePrefab: {fileID: 1590050845703765432, guid: 1531ef76c5f29d945ac504f24a80121c, type: 3}
   originalPosition: {x: 0, y: 0, z: 0}
 --- !u!23 &2719440427613846718
 MeshRenderer:

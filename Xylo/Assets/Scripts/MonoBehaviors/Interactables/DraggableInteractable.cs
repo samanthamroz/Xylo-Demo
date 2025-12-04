@@ -7,8 +7,6 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(GridCollisionHandler))]
 [RequireComponent(typeof(Rigidbody))]
 public class DraggableInteractable : MonoBehaviour, IClickBehavior, IReleaseBehavior, IClickAwayBehavior {
-    [SerializeField] GameObject handlePrefab;
-    private List<DraggableHandleInteractable> handles = new();
     [HideInInspector] public Vector3 originalPosition;
     private GridCollisionHandler collisionHandler;
     private Vector2 MousePosition { get { return ControlsManager.self.mousePosition; } }

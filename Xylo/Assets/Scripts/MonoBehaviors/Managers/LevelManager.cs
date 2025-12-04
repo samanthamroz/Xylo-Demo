@@ -70,6 +70,7 @@ public class LevelManager : MonoBehaviour {
         CollisionManager.self.TurnOffCollisionForPuzzle(0);
         CloudsManager.self.MoveCloudsForSection(0);
         LoadingManager.self.SetMarbleStartForSection(0, VectorUtils.nullVector, marble.transform.position);
+        AudioManager.self.PlayMelodyForCurrentSection();
     }
 
     public void StartPlaying() {

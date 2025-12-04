@@ -61,6 +61,7 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
     
         if (startOpened) {
             OpenGate();
+            isTryingToClose = true;
         } else {
             CloseGate();
         }
@@ -83,13 +84,13 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
         Quaternion worldRot = transform.parent != null ? 
                 transform.parent.rotation * _originalRot : _originalRot;
             
-        Vector3 boxCenter = worldPos + new Vector3(-0.125f * _allowedDirection.x, -0.25f * _allowedDirection.y, -0.125f * _allowedDirection.z);
-        Vector3 boxHalfExtents = new Vector3(0.44f * transform.localScale.x, 0.98f * transform.localScale.y, 0.44f * transform.localScale.z);
+        Vector3 boxCenter = worldPos + new Vector3(-0.25f * _allowedDirection.x * transform.localScale.z, -0.5f * _allowedDirection.y * transform.localScale.y, -0.25f * _allowedDirection.z * transform.localScale.z);
+        Vector3 boxHalfExtents = new Vector3(0.42f * transform.localScale.x, 0.98f * transform.localScale.y, 0.42f * transform.localScale.z);
         Collider[] overlaps = Physics.OverlapBox(boxCenter, boxHalfExtents, worldRot);
             
         foreach (Collider col in overlaps) {
                 // Ignore self and children
-            if (col.transform == transform || col.transform.IsChildOf(transform)) continue;
+            if (col.transform == transform || col.transform.IsChildOf(transform) || col.gameObject.CompareTag("Level Geometry")) continue;
                 // Ignore triggers
             if (col.isTrigger) continue;
                 
@@ -110,7 +111,7 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
         Quaternion worldRot = transform.parent != null ? 
                 transform.parent.rotation * _originalRot : _originalRot;
             
-        Vector3 boxCenter = worldPos + new Vector3(-0.125f * _allowedDirection.x, -0.25f * _allowedDirection.y, -0.125f * _allowedDirection.z);
+        Vector3 boxCenter = worldPos + new Vector3(-0.25f * _allowedDirection.x * transform.localScale.z, -0.5f * _allowedDirection.y * transform.localScale.y, -0.25f * _allowedDirection.z * transform.localScale.z);
         Vector3 boxHalfExtents = new Vector3(0.44f * transform.localScale.x, 0.98f * transform.localScale.y, 0.44f * transform.localScale.z);
 
         // Set gizmo color (change based on whether something is in the way)
