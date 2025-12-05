@@ -25,9 +25,9 @@ public class LevelManager : MonoBehaviour {
     private bool attemptCountingStarted;
 
     [SerializeField] private bool DEBUG_AutoWin;
-    [SerializeField] public bool DEBUG_UseManualStart = false;
+    [SerializeField] public bool DEBUG_UseManualStart, DEBUG_FreeAdvance;
     [SerializeField] private Vector3 DEBUG_ManualPosition;
-    public Vector3 DEBUG_ManualVelocity;
+    [SerializeField] public Vector3 DEBUG_ManualVelocity;
     
     [HideInInspector] public int sectionNum { get; private set; }
     [HideInInspector] public bool attemptStarted { get; private set; }
@@ -125,7 +125,8 @@ public class LevelManager : MonoBehaviour {
     }
 
     public void GoToNextSection() {
-        //if (!LoadingManager.self.IsCurrentSectionCompleted(sectionNum)) return;
+        if (!LoadingManager.self.IsCurrentSectionCompleted(sectionNum) && !DEBUG_FreeAdvance) return;
+
         sectionNum += 1;
         
         CameraManager.self.DoMoveToNextSection(sectionNum);

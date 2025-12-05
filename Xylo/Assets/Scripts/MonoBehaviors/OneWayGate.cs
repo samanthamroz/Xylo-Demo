@@ -21,9 +21,9 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
             Vector3 _axisOfRotation = _originalRot * new Vector3(_allowedDirection.x, 0, 0) * invertedXDirection;
             _rotatedRot = Quaternion.AngleAxis(_originalRot.y - 90f, _axisOfRotation) * _originalRot;
 
-            float rpoX = halfScale * invertedXDirection;
+            float rpoX = transform.localScale.y * invertedXDirection;
             float rpoY = 0f;
-            float rpoZ = halfScale * 3f;
+            float rpoZ = transform.localScale.z;
 
             Quaternion roY = Quaternion.Euler(0f, _originalRot.eulerAngles.y, 0f);
             Vector3 rpOffset = roY * new Vector3(rpoX, rpoY, rpoZ);
@@ -35,9 +35,9 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
             Vector3 _axisOfRotation = _originalRot * new Vector3(_allowedDirection.z, 0, 0) * invertedZDirection;
             _rotatedRot = Quaternion.AngleAxis(_originalRot.y - 90f, _axisOfRotation) * _originalRot;
 
-            float rpoX = halfScale * invertedZDirection;
+            float rpoX = transform.localScale.y * invertedZDirection;
             float rpoY = 0f;
-            float rpoZ = halfScale * 3f;
+            float rpoZ = transform.localScale.z;
 
             Quaternion roY = Quaternion.Euler(0f, _originalRot.eulerAngles.y, 0f);
             Vector3 rpOffset = roY * new Vector3(rpoX, rpoY, rpoZ);
@@ -50,8 +50,8 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
             _rotatedRot = Quaternion.AngleAxis(_originalRot.x - 90f, _axisOfRotation) * _originalRot;
 
             float rpoX = 0f;
-            float rpoY = halfScale * invertedYDirection;
-            float rpoZ = halfScale * 3f;
+            float rpoY = transform.localScale.y * invertedYDirection;
+            float rpoZ = transform.localScale.z;
 
             Quaternion roY = Quaternion.Euler(0f, _originalRot.eulerAngles.y, 0f);
             Vector3 rpOffset = roY * new Vector3(rpoX, rpoY, rpoZ);
@@ -84,7 +84,7 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
         Quaternion worldRot = transform.parent != null ? 
                 transform.parent.rotation * _originalRot : _originalRot;
             
-        Vector3 boxCenter = worldPos + new Vector3(-0.25f * _allowedDirection.x * transform.localScale.z, -0.5f * _allowedDirection.y * transform.localScale.y, -0.25f * _allowedDirection.z * transform.localScale.z);
+        Vector3 boxCenter = worldPos + new Vector3(-0.5f * _allowedDirection.x * transform.localScale.z, -0.5f * _allowedDirection.y * transform.localScale.y, -0.5f * _allowedDirection.z * transform.localScale.z);
         Vector3 boxHalfExtents = new Vector3(0.42f * transform.localScale.x, 0.98f * transform.localScale.y, 0.42f * transform.localScale.z);
         Collider[] overlaps = Physics.OverlapBox(boxCenter, boxHalfExtents, worldRot);
             
@@ -111,7 +111,7 @@ public class OneWayGate : MonoBehaviour, IBlocksPassThrough {
         Quaternion worldRot = transform.parent != null ? 
                 transform.parent.rotation * _originalRot : _originalRot;
             
-        Vector3 boxCenter = worldPos + new Vector3(-0.25f * _allowedDirection.x * transform.localScale.z, -0.5f * _allowedDirection.y * transform.localScale.y, -0.25f * _allowedDirection.z * transform.localScale.z);
+        Vector3 boxCenter = worldPos + new Vector3(-0.5f * _allowedDirection.x * transform.localScale.z, -0.5f * _allowedDirection.y * transform.localScale.y, -0.5f * _allowedDirection.z * transform.localScale.z);
         Vector3 boxHalfExtents = new Vector3(0.44f * transform.localScale.x, 0.98f * transform.localScale.y, 0.44f * transform.localScale.z);
 
         // Set gizmo color (change based on whether something is in the way)
