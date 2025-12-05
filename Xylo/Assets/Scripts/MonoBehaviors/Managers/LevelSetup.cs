@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class LevelSetup : MonoBehaviour
@@ -43,6 +44,13 @@ public class LevelSetup : MonoBehaviour
     }
 
     private static void DoSceneStart() {
+        var foundInteractables = FindObjectsByType<DraggableInteractable>(FindObjectsSortMode.None);
+        foreach (var found in foundInteractables) {
+            string foundId = ((DraggableInteractable)found).uniqueId;
+            Vector3 newPos = LoadingManager.self.GetPositionForInteractable(foundId);
+            if (newPos != VectorUtils.nullVector) found.transform.position = newPos;
+        }
+
         CameraManager.self.InstantiateCamera();
         GUIManager.self.LoadMiddleToRight(.25f);
     }

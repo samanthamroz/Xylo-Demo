@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,13 +19,8 @@ public abstract record SaveProfileData { }
 
 public record GlobalSaveData : SaveProfileData {
     // World → Level → Section structure
-    // World 0: { Level 0: 4 sections, Level 1: 3 sections, Level 2: 5 sections }
-    // World 1: { Level 0: 6 sections, Level 1: 4 sections }
-    // World 2: { Level 0: 3 sections, Level 1: 7 sections, Level 2: 4 sections }
     public readonly int[][] sectionsPerLevel = new int[][] {
         new int[] { 4, 13 }//,  // World 0
-        //new int[] { -1, -1 },     // World 1
-        //new int[] { -1, -1, -1 }   // World 2
     };
 
     // Tracks completion status for each section
@@ -59,7 +55,7 @@ public record GlobalSaveData : SaveProfileData {
                completedLevels[worldNum].Contains(levelNum);
     }
 
-    public void SetSectionCompleted(int worldNum, int levelNum, int sectionNum) {
+    public void SetSectionCompleted(int worldNum, int levelNum, int sectionNum, bool isCompleted) {
         if (!completedSections.ContainsKey(worldNum)) {
             completedSections[worldNum] = new Dictionary<int, HashSet<int>>();
         }
@@ -68,6 +64,9 @@ public record GlobalSaveData : SaveProfileData {
         }
         
         completedSections[worldNum][levelNum].Add(sectionNum);
+        if (!isCompleted) {
+            completedSections[worldNum][levelNum].Remove(sectionNum);
+        }
         
         // Check if all sections in this level are now completed
         if (completedSections[worldNum][levelNum].Count == sectionsPerLevel[worldNum][levelNum]) {
@@ -104,4 +103,5 @@ public record SceneSaveData : SaveProfileData {
     public int numSectionsComplete = 0;
     public Dictionary<int, Vector3> sectionStartMarbleVelocities = new();
     public Dictionary<int, Vector3> sectionStartMarblePositions = new();
+    public Dictionary<string, Vector3> interactablePositions = new();
 }

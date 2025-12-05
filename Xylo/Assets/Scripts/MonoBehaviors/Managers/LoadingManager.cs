@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 using System.Collections;
+using UnityEditor;
 
 public class LoadingManager : MonoBehaviour {
     public static LoadingManager self;
@@ -33,6 +34,7 @@ public class LoadingManager : MonoBehaviour {
                 SaveManager.Save(new SaveProfile<GlobalSaveData>(newSave));
             }
             SceneManager.sceneLoaded += LoadCurrentLevel;
+            SceneManager.sceneUnloaded += OnSceneUnloaded;
             DontDestroyOnLoad(gameObject);
         }
         else {
@@ -77,6 +79,12 @@ public class LoadingManager : MonoBehaviour {
 
         LevelSetup.SetupLevel(GetCurrentWorldNumber(), currentLevelNumber);
     }
+    private void OnSceneUnloaded(Scene scene) {
+        SetInteractablePositions();
+        SaveCurrentScene();
+        SaveGlobal();
+    }
+    
     private void RefreshPointerToSceneData() {
         currentSceneData = SaveManager.Load<SceneSaveData>(SceneManager.GetActiveScene().name).saveData;
         if (currentSceneData == null) {
@@ -113,6 +121,7 @@ public class LoadingManager : MonoBehaviour {
     }
     public IEnumerator LoadNewScene(string sceneName) {
         SaveGlobal();
+
         float time = .25f;
         GUIManager.self.LoadLeftToMiddle(time);
 
@@ -125,6 +134,7 @@ public class LoadingManager : MonoBehaviour {
         if (forceUnpause) {
             Time.timeScale = 1f;
         }
+
         StartCoroutine(LoadNewScene(SceneManager.GetActiveScene().name, currentLevelNumber));
     }
     public void LoadNextLevel(bool forceUnpause = false) {
@@ -144,23 +154,21 @@ public class LoadingManager : MonoBehaviour {
     // 
     // These write save data to disk as it currently is
     private void SaveCurrentScene() {
-        //save to file
         var saveProfile = new SaveProfile<SceneSaveData>(currentSceneData, currentSceneData.scene.name);
         SaveManager.Save(saveProfile);
     }
     private void SaveGlobal() {
-        SaveCurrentScene();
         SaveManager.Save(new SaveProfile<GlobalSaveData>(globalData));
     }
 
     // Writing Functions
     //
     // These change values in the save data and then write it to disk
-    public void SetCurrentSectionCompleted(int sectionNum) {
+    public void SetSectionCompleted(int sectionNum, bool isCompleted = true) {
         //increment number of sections completed
         if (sectionNum == currentSceneData.numSectionsComplete) {
             currentSceneData.numSectionsComplete++;
-            globalData.SetSectionCompleted(GetCurrentWorldNumber(), currentLevelNumber, sectionNum);
+            globalData.SetSectionCompleted(GetCurrentWorldNumber(), currentLevelNumber, sectionNum, isCompleted);
         }
 
         SaveCurrentScene();
@@ -193,7 +201,18 @@ public class LoadingManager : MonoBehaviour {
 
         SaveCurrentScene();
     }
-    
+    public void SetInteractablePositions() {
+        var foundInteractables = FindObjectsByType<DraggableInteractable>(FindObjectsSortMode.None);
+        foreach (var found in foundInteractables) {
+            string foundId = ((DraggableInteractable)found).uniqueId;
+            if (currentSceneData.interactablePositions.ContainsKey(foundId)) {
+                currentSceneData.interactablePositions[foundId] = found.transform.position;
+            } else {
+                currentSceneData.interactablePositions.Add(foundId, found.transform.position);
+            }
+        }
+    }
+
     // References for other managers
     //
     // These are easily accessbile values for other managers to use
@@ -242,6 +261,17 @@ public class LoadingManager : MonoBehaviour {
         }
         catch {
             print("Could not find marble data for section " + sectionNum);
+        }
+
+        return returnVal;
+    }
+
+    public Vector3 GetPositionForInteractable(string id) {
+        Vector3 returnVal = VectorUtils.nullVector;
+        try {
+            returnVal = currentSceneData.interactablePositions[id];
+        } catch {
+            print("not found");
         }
 
         return returnVal;

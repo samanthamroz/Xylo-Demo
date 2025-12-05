@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 //inspo: https://www.gamedeveloper.com/audio/coding-to-the-beat---under-the-hood-of-a-rhythm-game-in-unity
 
@@ -22,7 +23,7 @@ public class LevelManager : MonoBehaviour {
 
     private Vector3 marbleStartPosition;
     private float forgivenessBetweenBeats = .1f;
-    private bool attemptCountingStarted;
+    private bool attemptCountingStarted, fullLevelCountingStarted;
 
     [SerializeField] private bool DEBUG_AutoWin;
     [SerializeField] public bool DEBUG_UseManualStart, DEBUG_FreeAdvance;
@@ -84,7 +85,7 @@ public class LevelManager : MonoBehaviour {
     public void StartCountingForAttempt() {
         attemptCountingStarted = true;
     }
-    public void EndAttempt(bool retrySection = true, bool autoWin = false) {
+    public void EndAttempt(bool retrySection = true, bool autoWin = false, bool autoLose = false) {
         if (!attemptStarted) {
             if (retrySection) {
                 marble.ResetSelf(sectionNum == 0);
@@ -93,6 +94,10 @@ public class LevelManager : MonoBehaviour {
         }
         attemptStarted = false;
         attemptCountingStarted = false;
+
+        if (autoLose) {
+            return;
+        }
 
         bool hasWonSection = false;
         if (!autoWin && !DEBUG_AutoWin) {
@@ -111,7 +116,7 @@ public class LevelManager : MonoBehaviour {
             return;
         }
 
-        LoadingManager.self.SetCurrentSectionCompleted(sectionNum);
+        LoadingManager.self.SetSectionCompleted(sectionNum);
         LoadingManager.self.SetMarbleStartForSection(sectionNum + 1, marble.GetComponent<Rigidbody>().velocity, marble.transform.position);
         //Move to next section
         if (!LoadingManager.self.IsLevelCompleted()) {
@@ -120,8 +125,35 @@ public class LevelManager : MonoBehaviour {
         }
 
         //TODO: Level won stuff
+        CollisionManager.self.TurnOffAllCollision();
         marble.RunMarbleFromBeginning();
         CameraManager.self.DoEndOfLevel(marble.gameObject);
+        attemptStarted = true;
+        attemptList = new List<NoteTrigger>();
+        attemptCountingStarted = true;
+        fullLevelCountingStarted = true;
+    }
+
+    private IEnumerator DelayedAutoStart() {
+        yield return new WaitForSeconds(1.5f); // Wait for camera transition and marble reset
+        StartPlaying();
+    }
+
+    public void GoToSection(int sectionGoTo) {
+        CameraManager.self.StopAllCoroutines();
+
+        sectionNum = sectionGoTo;
+        
+        CameraManager.self.DoMoveToNextSection(sectionNum);
+        CloudsManager.self.MoveCloudsForSection(sectionNum);
+        CollisionManager.self.TurnOffCollisionForPuzzle(sectionNum);
+
+        VelocityPosition marbStart = LoadingManager.self.GetMarbleStartForSection(sectionNum);
+        marble.PlaceMarbleForSectionStart(marbStart.velocity, marbStart.position);
+
+        if (sectionNum == 6) {
+            StartCoroutine(DelayedAutoStart());
+        }
     }
 
     public void GoToNextSection() {
@@ -140,10 +172,7 @@ public class LevelManager : MonoBehaviour {
             StartCoroutine(DelayedAutoStart());
         }
     }
-    private IEnumerator DelayedAutoStart() {
-        yield return new WaitForSeconds(1.5f); // Wait for camera transition and marble reset
-        StartPlaying();
-    }
+    
 
     public void GoToPreviousSection() {
         if (sectionNum == 0) return;
@@ -156,6 +185,10 @@ public class LevelManager : MonoBehaviour {
 
         VelocityPosition marbStart = LoadingManager.self.GetMarbleStartForSection(sectionNum);
         marble.PlaceMarbleForSectionStart(marbStart.velocity, marbStart.position);
+
+        if (sectionNum == 6) {
+            StartCoroutine(DelayedAutoStart());
+        }
     }
 
     private void PrintNoteList(List<NoteTrigger> list) {
@@ -192,8 +225,8 @@ public class LevelManager : MonoBehaviour {
         }
 
         //PrintNoteList(currentSectionSolution.ToList());
-        PrintNoteList(attemptList);
-        PrintDistanceList(attemptList);
+        //PrintNoteList(attemptList);
+        //PrintDistanceList(attemptList);
         if ((attemptList[0].note != currentSectionSolution[0].note) ||
             (attemptList.Count != currentSectionSolution.Length)) {
             return false;
@@ -213,11 +246,65 @@ public class LevelManager : MonoBehaviour {
         }
         return true;
     }
+
+    private int CheckForSectionInaccuracies() {
+        int notesChecked = 0;
+        int sectionChecking = 0;
+
+        while (notesChecked < attemptList.Count && sectionChecking < solutions.Length) {
+            NoteTriggerArray arrayChecking = solutions[sectionChecking];
+            int localIndex = 0;
+
+            // Check all notes in current section
+            while (localIndex < arrayChecking.Length && notesChecked < attemptList.Count) {
+                int attemptIndex = notesChecked;
+                
+                // Check note match
+                if (attemptList[attemptIndex].note != arrayChecking[localIndex].note) {
+                    return sectionChecking;
+                }
+
+                // Check timing (skip for first note of section)
+                if (localIndex > 0) {
+                    double distanceBetweenAttemptNotes = 
+                        attemptList[attemptIndex].beatTriggered - attemptList[attemptIndex - 1].beatTriggered;
+                    double distanceBetweenSolutionNotes = 
+                        arrayChecking[localIndex].beatTriggered - arrayChecking[localIndex - 1].beatTriggered;
+
+                    if (Math.Abs(distanceBetweenAttemptNotes - distanceBetweenSolutionNotes) >= forgivenessBetweenBeats) {
+                        return sectionChecking;
+                    }
+                }
+
+                localIndex++;
+                notesChecked++;
+            }
+
+            sectionChecking++;
+        }
+
+        return -1; // No inaccuracies
+    }
+
+
     public void TriggerNote(Note note) {
         if (!attemptCountingStarted) {
             return;
         }
 
         attemptList.Add(new NoteTrigger(note, BeatManager.self.songPosInBeats));
+
+        if (fullLevelCountingStarted) {
+            if (DEBUG_AutoWin) return;
+
+            int wrongSection = CheckForSectionInaccuracies();
+
+            if (wrongSection != -1) {
+                fullLevelCountingStarted = false;
+                EndAttempt(true, false, true);
+                LoadingManager.self.SetSectionCompleted(wrongSection, false);
+                GoToSection(wrongSection);
+            }
+        }
     }
 }

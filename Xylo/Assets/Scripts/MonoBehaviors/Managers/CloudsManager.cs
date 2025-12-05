@@ -7,8 +7,14 @@ public class CloudsManager : MonoBehaviour {
         public string sectionName;
         public Cloud[] cloudsToMove;
     }
+    [System.Serializable]
+    public class WorldCloudData {
+        public string levelName;
+        public SectionClouds[] levelClouds;
+    }
 
-    [SerializeField] private SectionClouds[] sections;
+    [SerializeField] private WorldCloudData[] worldCloudDatas;
+    private SectionClouds[] sections { get { return worldCloudDatas[LoadingManager.self.GetCurrentLevelNumber()].levelClouds; } }
 	
 	public static CloudsManager self;
 
@@ -17,7 +23,7 @@ public class CloudsManager : MonoBehaviour {
 			self = this;
 		}
 	}
-
+	
 	public void MoveCloudsForSection(int sectionNum, bool goingBackToPrevSection = false) {
 		var thisSection = sections[sectionNum];
 		

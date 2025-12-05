@@ -1,14 +1,21 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CollisionManager : MonoBehaviour {
     [System.Serializable]
-    public class SectionCollisionData {
+    public class LevelCollisionData {
         public string sectionName;
         public GameObject[] objectsToDisable;
     }
+    [System.Serializable]
+    public class WorldCollisionData {
+        public string levelName;
+        public LevelCollisionData[] levelCollisionDatas;
+    }
 
-    [SerializeField] private SectionCollisionData[] sections;
+    [SerializeField] private WorldCollisionData[] worldCollisionDatas;
+    private LevelCollisionData[] sections { get { return worldCollisionDatas[LoadingManager.self.GetCurrentLevelNumber()].levelCollisionDatas; } }
     public static CollisionManager self;
 
     void Awake() {
