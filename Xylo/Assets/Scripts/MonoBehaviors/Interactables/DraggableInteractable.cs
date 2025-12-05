@@ -5,19 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(GridCollisionHandler))]
 [RequireComponent(typeof(Rigidbody))]
 public class DraggableInteractable : MonoBehaviour, IClickBehavior, IReleaseBehavior, IClickAwayBehavior {
-    [HideInInspector] public string uniqueId;
     [HideInInspector] public Vector3 originalPosition;
     private GridCollisionHandler collisionHandler;
     private Vector2 MousePosition { get { return ControlsManager.self.mousePosition; } }
     private Vector2 originalMousePosition;
     private bool _isDragging;
-
-    void Awake() {
-        if (string.IsNullOrEmpty(uniqueId)) {
-            // Generate a unique ID based on scene path
-            uniqueId = gameObject.scene.name + "_" + transform.GetSiblingIndex() + "_" + name;
-        }
-    }
 
     void Start() {
         collisionHandler = GetComponent<GridCollisionHandler>();

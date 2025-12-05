@@ -34,7 +34,6 @@ public class LoadingManager : MonoBehaviour {
                 SaveManager.Save(new SaveProfile<GlobalSaveData>(newSave));
             }
             SceneManager.sceneLoaded += LoadCurrentLevel;
-            SceneManager.sceneUnloaded += OnSceneUnloaded;
             DontDestroyOnLoad(gameObject);
         }
         else {
@@ -78,11 +77,6 @@ public class LoadingManager : MonoBehaviour {
         }
 
         LevelSetup.SetupLevel(GetCurrentWorldNumber(), currentLevelNumber);
-    }
-    private void OnSceneUnloaded(Scene scene) {
-        SetInteractablePositions();
-        SaveCurrentScene();
-        SaveGlobal();
     }
     
     private void RefreshPointerToSceneData() {
@@ -201,17 +195,6 @@ public class LoadingManager : MonoBehaviour {
 
         SaveCurrentScene();
     }
-    public void SetInteractablePositions() {
-        var foundInteractables = FindObjectsByType<DraggableInteractable>(FindObjectsSortMode.None);
-        foreach (var found in foundInteractables) {
-            string foundId = ((DraggableInteractable)found).uniqueId;
-            if (currentSceneData.interactablePositions.ContainsKey(foundId)) {
-                currentSceneData.interactablePositions[foundId] = found.transform.position;
-            } else {
-                currentSceneData.interactablePositions.Add(foundId, found.transform.position);
-            }
-        }
-    }
 
     // References for other managers
     //
@@ -261,17 +244,6 @@ public class LoadingManager : MonoBehaviour {
         }
         catch {
             print("Could not find marble data for section " + sectionNum);
-        }
-
-        return returnVal;
-    }
-
-    public Vector3 GetPositionForInteractable(string id) {
-        Vector3 returnVal = VectorUtils.nullVector;
-        try {
-            returnVal = currentSceneData.interactablePositions[id];
-        } catch {
-            print("not found");
         }
 
         return returnVal;

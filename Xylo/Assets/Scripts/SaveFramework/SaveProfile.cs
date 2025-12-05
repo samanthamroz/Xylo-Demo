@@ -103,5 +103,4 @@ public record SceneSaveData : SaveProfileData {
     public int numSectionsComplete = 0;
     public Dictionary<int, Vector3> sectionStartMarbleVelocities = new();
     public Dictionary<int, Vector3> sectionStartMarblePositions = new();
-    public Dictionary<string, Vector3> interactablePositions = new();
 }
