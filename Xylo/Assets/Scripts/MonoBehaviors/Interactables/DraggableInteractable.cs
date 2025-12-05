@@ -1,11 +1,29 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+
+public static class NameIdRegistry
+{
+    private static readonly Dictionary<string, int> nameToId = new();
+    private static int nextId = 1;
+
+    public static int GetId(string name)
+    {
+        if (!nameToId.TryGetValue(name, out int id))
+        {
+            id = nextId++;
+            nameToId[name] = id;
+        }
+
+        return id;
+    }
+}
 
 [RequireComponent(typeof(GridCollisionHandler))]
 [RequireComponent(typeof(Rigidbody))]
 public class DraggableInteractable : MonoBehaviour, IClickBehavior, IReleaseBehavior, IClickAwayBehavior {
-    [HideInInspector] public string uniqueId;
+    [HideInInspector] public int uniqueId = -1;
     [HideInInspector] public Vector3 originalPosition;
     private GridCollisionHandler collisionHandler;
     private Vector2 MousePosition { get { return ControlsManager.self.mousePosition; } }
@@ -13,9 +31,9 @@ public class DraggableInteractable : MonoBehaviour, IClickBehavior, IReleaseBeha
     private bool _isDragging;
 
     void Awake() {
-        if (string.IsNullOrEmpty(uniqueId)) {
+        if (uniqueId == -1) {
             // Generate a unique ID based on scene path
-            uniqueId = gameObject.scene.name + "_" + transform.GetSiblingIndex() + "_" + name;
+            uniqueId = NameIdRegistry.GetId(gameObject.name);
         }
     }
 
@@ -41,6 +59,8 @@ public class DraggableInteractable : MonoBehaviour, IClickBehavior, IReleaseBeha
     public void DoRelease() {
         originalPosition = VectorUtils.GetSnapToGridVector(originalPosition, transform.position);
         _isDragging = false;
+
+        LoadingManager.self.SaveInteractablePosition(uniqueId, transform.position);
     }
 
     private IEnumerator Drag() {

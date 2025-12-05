@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
 
@@ -44,14 +45,24 @@ public class LevelSetup : MonoBehaviour
     }
 
     private static void DoSceneStart() {
-        var foundInteractables = FindObjectsByType<DraggableInteractable>(FindObjectsSortMode.None);
-        foreach (var found in foundInteractables) {
-            string foundId = ((DraggableInteractable)found).uniqueId;
-            Vector3 newPos = LoadingManager.self.GetPositionForInteractable(foundId);
-            if (newPos != VectorUtils.nullVector) found.transform.position = newPos;
-        }
-
         CameraManager.self.InstantiateCamera();
         GUIManager.self.LoadMiddleToRight(.25f);
+        
+        // Start coroutine to restore positions after Awake
+        LoadingManager.self.StartCoroutine(RestoreInteractablePositions());
+    }
+
+    private static IEnumerator RestoreInteractablePositions() {
+        // Wait one frame to ensure all Awake() methods have run
+        yield return null;
+        
+        var foundInteractables = FindObjectsByType<DraggableInteractable>(FindObjectsSortMode.None);
+        foreach (var found in foundInteractables) {
+            int foundId = found.uniqueId;
+            Vector3 newPos = LoadingManager.self.GetPositionForInteractable(foundId);
+            if (newPos != VectorUtils.nullVector) {
+                found.transform.position = newPos;
+            }
+        }
     }
 }
