@@ -80,6 +80,7 @@ public class LoadingManager : MonoBehaviour {
         LevelSetup.SetupLevel(GetCurrentWorldNumber(), currentLevelNumber);
     }
     private void OnSceneUnloaded(Scene scene) {
+        SetInteractablePositions();
         SaveCurrentScene();
         SaveGlobal();
     }
@@ -200,13 +201,16 @@ public class LoadingManager : MonoBehaviour {
 
         SaveCurrentScene();
     }
-    public void SaveInteractablePosition(int id, Vector3 position) {
-        if (currentSceneData.interactablePositions.ContainsKey(id)) {
-            currentSceneData.interactablePositions[id] = position;
-        } else {
-            currentSceneData.interactablePositions.Add(id, position);
+    public void SetInteractablePositions() {
+        var foundInteractables = FindObjectsByType<DraggableInteractable>(FindObjectsSortMode.None);
+        foreach (var found in foundInteractables) {
+            string foundId = ((DraggableInteractable)found).uniqueId;
+            if (currentSceneData.interactablePositions.ContainsKey(foundId)) {
+                currentSceneData.interactablePositions[foundId] = found.transform.position;
+            } else {
+                currentSceneData.interactablePositions.Add(foundId, found.transform.position);
+            }
         }
-        SaveCurrentScene();
     }
 
     // References for other managers
@@ -262,19 +266,12 @@ public class LoadingManager : MonoBehaviour {
         return returnVal;
     }
 
-    public Vector3 GetPositionForInteractable(int id) {
-        Debug.Log($"Looking for interactable with ID: '{id}'");
-        Debug.Log($"Dictionary has {currentSceneData.interactablePositions.Count} entries");
-        foreach (var kvp in currentSceneData.interactablePositions) {
-            Debug.Log($"  Saved ID: '{kvp.Key}' at {kvp.Value}");
-        }
-        
+    public Vector3 GetPositionForInteractable(string id) {
         Vector3 returnVal = VectorUtils.nullVector;
         try {
             returnVal = currentSceneData.interactablePositions[id];
-            Debug.Log($"Found position: {returnVal}");
         } catch {
-            Debug.Log($"ID '{id}' not found in dictionary");
+            print("not found");
         }
 
         return returnVal;
