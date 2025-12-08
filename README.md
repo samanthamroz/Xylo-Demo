@@ -5,12 +5,18 @@
 * ESC: Pause
 * Space: Replay the level's melody
 * P: Open the piano
-* R (Hold): Restart the level
   
 There are also a few debug keys for testing:
 
 * Shift + D + 1: Deletes all save data
-* Shift + D + 2: Triggers a win for the current level
+
+<ins>In-Editor Debugging:</ins>
+
+* Overwrite saved data in new play sessions: Managers > LoadingManager > Turn on AlwaysResetData
+* Enter a specific level in World1 scene: Managers > LoadingManager > OverrideCurrentLevel = 0 (Level 1) or 1 (Level 2)
+* Automatically trigger a win at the end of the playthough of each section: LevelManager > LevelManager > Turn on AutoWin
+* Jump around different sections without having to complete the previous section: LevelManager > LevelManager > Turn on FreeAdvance
+* Start the marble at a specific position with a specific velocity: LevelManager > LevelManager > Turn on UseManualStart and enter ManualPosition and ManualVelocity vectors
 
 <ins>Credits:</ins>
 
