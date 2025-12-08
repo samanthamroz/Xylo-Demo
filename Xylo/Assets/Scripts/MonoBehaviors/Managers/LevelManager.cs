@@ -132,13 +132,20 @@ public class LevelManager : MonoBehaviour {
         }
 
         //TODO: Level won stuff
-        CollisionManager.self.TurnOffAllCollision();
-        marble.RunMarbleFromBeginning();
-        CameraManager.self.DoEndOfLevel(marble.gameObject);
-        attemptStarted = true;
-        attemptList = new List<NoteTrigger>();
-        attemptCountingStarted = true;
-        fullLevelCountingStarted = true;
+        if (levelNum == 0) {
+            CollisionManager.self.TurnOffAllCollision();
+            marble.RunMarbleFromBeginning();
+            CameraManager.self.DoEndOfLevel(marble.gameObject);
+            attemptStarted = true;
+            attemptList = new List<NoteTrigger>();
+            attemptCountingStarted = true;
+            fullLevelCountingStarted = true;
+            ControlsManager.self.ActivateMenuMap();
+        } else {
+            GUIManager.self.ActivateWinMenuUI();
+            ControlsManager.self.ActivateMenuMap();
+        }
+        
     }
 
     private IEnumerator DelayedAutoStart() {
