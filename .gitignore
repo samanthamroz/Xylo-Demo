@@ -36,6 +36,7 @@ sysinfo.txt
 *.vspscc
 *_i.c
 *_p.c
+*.lnk
 *.ncb
 *.suo
 *.tlb
