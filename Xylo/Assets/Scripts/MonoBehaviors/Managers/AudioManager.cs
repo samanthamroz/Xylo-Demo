@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(AudioSource))]
 public class AudioManager : MonoBehaviour {
 	[SerializeField] private AudioConfiguration audioConfiguration;
-	private AudioClipList levelAudioClips;
+	private AudioClipList levelAudioClips { get { return audioConfiguration.GetLevelAudioData(LoadingManager.self.GetCurrentLevelNumber()).sectionClips; } }
 	private AudioSource audioSource;
 	public static AudioManager self;
 	void Awake() {
@@ -19,14 +19,6 @@ public class AudioManager : MonoBehaviour {
 
 	void Start() {
 		audioSource = GetComponent<AudioSource>();
-
-		var currentAudioData = audioConfiguration.GetLevelAudioData(LoadingManager.self.GetCurrentLevelNumber());
-        if (currentAudioData == null) {
-            Debug.LogError("Failed to load audio configuration!");
-            return;
-        }
-
-        levelAudioClips = currentAudioData.sectionClips;
 	}
 
 	public void PlayMelodyForSection(int sectionNum) {

@@ -40,7 +40,7 @@ public class LoadingManager : MonoBehaviour {
             Destroy(gameObject);
         }
     }
-    
+
     // Loading Data functions
     // These read the data from disk and save to useable variable
     // LoadCurrentLevel is triggered on Awake
@@ -243,7 +243,7 @@ public class LoadingManager : MonoBehaviour {
             returnVal.position = currentSceneData.sectionStartMarblePositions[sectionNum];
         }
         catch {
-            print("Could not find marble data for section " + sectionNum);
+            Debug.LogWarning("Could not find marble data for section " + sectionNum);
         }
 
         return returnVal;

@@ -163,11 +163,11 @@ MonoBehaviour:
       - note: 7
         beatTriggered: 3.5
       - note: 0
-        beatTriggered: 4.5
+        beatTriggered: 4
       - note: 4
-        beatTriggered: 5
+        beatTriggered: 4.5
       - note: 2
-        beatTriggered: 5.5
+        beatTriggered: 5
     - triggers:
       - note: 7
         beatTriggered: 1
@@ -203,7 +203,7 @@ MonoBehaviour:
         beatTriggered: 1.5
       - note: 11
         beatTriggered: 2
-      - note: 0
+      - note: 7
         beatTriggered: 2.5
       - note: 0
         beatTriggered: 3
@@ -236,8 +236,6 @@ MonoBehaviour:
       - note: 7
         beatTriggered: 3
       - note: 11
-        beatTriggered: 3.5
-      - note: 2
-        beatTriggered: 4.5
+        beatTriggered: 4
       - note: 0
         beatTriggered: 5

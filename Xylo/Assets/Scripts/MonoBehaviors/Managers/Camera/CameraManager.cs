@@ -163,6 +163,7 @@ public partial class CameraManager : MonoBehaviour {
             GUIManager.self.TogglePlayButtonImage(true);
             currentlookAtObject = lookAtObject;
         }
+        
         if (currentMode == CamMode.CINEMATIC) {
             StartCoroutine(GUIManager.self.DeactivateCinematicUI());
             currentZoom = Vector3.Distance(cam.transform.position, currentlookAtObject.transform.position);

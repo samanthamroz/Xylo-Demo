@@ -22,7 +22,7 @@ public class LevelManager : MonoBehaviour {
     private List<NoteTrigger> attemptList;
 
     private Vector3 marbleStartPosition;
-    private float forgivenessBetweenBeats = .1f;
+    private float forgivenessBetweenBeats = .15f;
     private bool attemptCountingStarted, fullLevelCountingStarted;
 
     [SerializeField] private bool DEBUG_AutoWin;
@@ -72,6 +72,7 @@ public class LevelManager : MonoBehaviour {
         CloudsManager.self.MoveCloudsForSection(0);
         LoadingManager.self.SetMarbleStartForSection(0, VectorUtils.nullVector, marble.transform.position);
         AudioManager.self.PlayMelodyForCurrentSection();
+        SnapDraggables();
     }
 
     public void StartPlaying() {
@@ -79,8 +80,14 @@ public class LevelManager : MonoBehaviour {
         attemptList = new List<NoteTrigger>();
 
         CameraManager.self.DoBeginAttempt(sectionNum, marbleObject);
-
+        SnapDraggables();
         marble.RunMarble();
+    }
+    private void SnapDraggables() {
+        var draggables = FindObjectsByType<DraggableInteractable>(FindObjectsSortMode.None);
+        foreach (DraggableInteractable d in draggables) {
+            d.transform.localPosition = VectorUtils.GetSnapToGridVector(Vector3.zero, d.transform.localPosition);
+        }
     }
     public void StartCountingForAttempt() {
         attemptCountingStarted = true;
@@ -223,6 +230,8 @@ public class LevelManager : MonoBehaviour {
         if (attemptList.Count < 1) {
             return false;
         }
+
+        if (currentSectionSolution.Length == 0) return true;
 
         //PrintNoteList(currentSectionSolution.ToList());
         //PrintNoteList(attemptList);

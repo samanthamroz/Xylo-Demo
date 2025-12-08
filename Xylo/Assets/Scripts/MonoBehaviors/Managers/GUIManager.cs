@@ -141,13 +141,17 @@ public class GUIManager : MonoBehaviour {
 	public IEnumerator ActivateCinematicUI(float animationTime = .5f) {
 		ActivatePiano(false, animationTime);
 		ActivateCinematicBars(true, animationTime);
+		playButton.GetComponent<Button>().enabled = false;
 		yield return new WaitForSeconds(animationTime);
+		playButton.GetComponent<Button>().enabled = true;
 		SetPianoActive(false);
 	}
 	public IEnumerator DeactivateCinematicUI(float animationTime = .5f) {
 		SetPianoActive(true);
 		ActivateCinematicBars(false, animationTime);
+		playButton.GetComponent<Button>().enabled = false;
 		yield return new WaitForSeconds(animationTime);
+		playButton.GetComponent<Button>().enabled = true;
 	}
 	public void ActivateWinMenuUI() {
 		UICanvas.SetActive(false);

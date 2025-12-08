@@ -9,7 +9,7 @@ public class PlayerMarble : MonoBehaviour, IClickBehavior {
     
     public Vector3 GetCurrentVelocity() { return currentVelocity; }
     public void SetVelocity(Vector3 newVelocity) { 
-        if (rb.isKinematic) throw new Exception("Error: Attempted to set velocity while marble is kinematic");
+        if (rb.isKinematic) Debug.LogWarning("Warning: Attempted to set velocity while marble is kinematic");
 
         rb.velocity = newVelocity;
         currentVelocity = rb.velocity;
@@ -44,7 +44,8 @@ public class PlayerMarble : MonoBehaviour, IClickBehavior {
         rb.isKinematic = true;
         if (resetToBeginningVelocity) launchVelocity = VectorUtils.nullVector;
         
-        LeanTween.move(gameObject, resetPosition, .5f).setEaseInOutSine();
+        if (!VectorUtils.IsNullVector(resetPosition)) LeanTween.move(gameObject, resetPosition, .5f).setEaseInOutSine();
+        
         BeatManager.self.SetFirstNoteOccurred(false);
     }
     public void PlaceMarbleForSectionStart(Vector3 velocity, Vector3 position) {
