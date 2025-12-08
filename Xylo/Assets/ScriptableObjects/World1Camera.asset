@@ -28,6 +28,8 @@ MonoBehaviour:
     - {x: 14, y: 11, z: -6}
     - {x: 22, y: 10, z: -6}
     - {x: 30, y: 9, z: -6}
+    timeToStartingPos: 1
+    totalTimeOfSection: 10
   - startingPoint: {x: 28, y: 8, z: 4}
     startingHeight: 2
     startingZoom: 22
@@ -54,10 +56,12 @@ MonoBehaviour:
     - {x: 28, y: 5, z: 26}
     - {x: 28, y: 5, z: 24}
     - {x: 28, y: 4, z: 14}
-    - {x: 28, y: 5, z: 18}
+    - {x: 28, y: 3, z: 10}
     - {x: 28, y: -3.5, z: 8}
     - {x: 28, y: -3.5, z: 14}
     - {x: 28, y: -3.5, z: 17.5}
     - {x: 28, y: -3.5, z: 20}
     - {x: 28, y: -3.5, z: 33.5}
     - {x: 28, y: -3, z: 37}
+    timeToStartingPos: 2
+    totalTimeOfSection: 34

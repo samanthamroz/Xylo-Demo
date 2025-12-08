@@ -5,12 +5,11 @@ using Unity.VisualScripting;
 public partial class CameraManager
 {
     private class CinematicCameraManager {
-        private readonly Vector3[] sectionCinematicViewPoints;
-        private readonly Vector3[] sectionGameViewPoints;
+        private Vector3[] sectionCinematicViewPoints { get { return self.cameraConfiguration.GetLevelCameraData(LoadingManager.self.GetCurrentLevelNumber()).sectionCinematicViewPoints; } }
+        private Vector3[] sectionGameViewPoints { get { return self.cameraConfiguration.GetLevelCameraData(LoadingManager.self.GetCurrentLevelNumber()).sectionGameViewPoints; } }
 
-        public CinematicCameraManager(Vector3[] sectionCinematicViewPoints, Vector3[] sectionGameViewPoints) {
-            this.sectionCinematicViewPoints = sectionCinematicViewPoints;
-            this.sectionGameViewPoints = sectionGameViewPoints;
+        public CinematicCameraManager() {
+            
         }
 
         public IEnumerator DoSectionView(int sectionNum) {
@@ -76,14 +75,24 @@ public partial class CameraManager
         }
     
         public IEnumerator DoCinematicLevelOne() {
-            self.cam.transform.GetPositionAndRotation(out Vector3 originalPosition, out Quaternion originalRotation);
-            float timeToStartingPos = .5f;
+            self.cam.transform.GetPositionAndRotation(out Vector3 _, out Quaternion originalRotation);
+
+            var data = self.cameraConfiguration.GetLevelCameraData(LoadingManager.self.GetCurrentLevelNumber());
+
+            float timeToStartingPos = data.timeToStartingPos;
             float timeToNextPos = 1f;
-            float timeBetweenPositions = 3f;
+            float timeBetweenPositions = data.totalTimeOfSection / sectionCinematicViewPoints.Length;
             float timeToWait = timeBetweenPositions - timeToNextPos;
 
             //Move to starting position
-            Vector3 startingPosition = new(0, 15, -15);
+            
+            float sumX = 0, sumY = 0, sumZ = 0;
+            foreach(Vector3 point in sectionCinematicViewPoints) {
+                sumX += point.x;
+                sumY += point.y;
+                sumZ += point.z;
+            }
+            Vector3 startingPosition = new(sumX / sectionCinematicViewPoints.Length, sumY / sectionCinematicViewPoints.Length, sumZ / sectionCinematicViewPoints.Length);
             
             //LeanTween.moveLocal(self.lookAtObject, startingPosition, timeToStartingPos).setEaseInOutSine();
             LeanTween.moveLocal(self.cameraObject, startingPosition, timeToStartingPos).setEaseInOutSine();
@@ -114,13 +123,20 @@ public partial class CameraManager
                 self.cam.transform.LookAt(self.currentlookAtObject.transform);
                 yield return null;
             }
-
-            Vector3[] moveToPositions = { new(26, 14, -15), new(14, 13, -15), new(40, 12, -15) };
             
-            foreach (Vector3 position in moveToPositions) {
-                self.cam.transform.GetPositionAndRotation(out originalPosition, out originalRotation);
+            for (int i = 0; i < sectionCinematicViewPoints.Length; i++) {
+                self.cam.transform.GetPositionAndRotation(out _, out originalRotation);
 
-                LeanTween.moveLocal(self.cam.gameObject, position, timeToNextPos).setEaseInOutSine();
+                Vector3 moveBy = (self.cam.transform.position - self.currentlookAtObject.transform.position) * .5f;
+                Vector3 moveTo = self.cam.transform.position + moveBy;
+                if (LoadingManager.self.GetCurrentLevelNumber() == 0) {
+                    moveTo.z = startingPosition.z;
+                } else {
+                    moveTo.x = startingPosition.x;
+                }
+
+                LeanTween.moveLocal(self.cam.gameObject, moveTo, timeToNextPos).setEaseInOutSine();
+
                 elapsed = 0f;
                 while (elapsed < timeToNextPos) {
                     //what to update here
@@ -136,7 +152,6 @@ public partial class CameraManager
                     // Smoothly interpolate rotation
                     self.cam.transform.rotation = Quaternion.Slerp(originalRotation, targetRotation, easedT);
 
-
                     yield return null; // wait for next frame
                 }
 
@@ -151,9 +166,8 @@ public partial class CameraManager
             }
 
             GUIManager.self.ActivateWinMenuUI();
-            self.lookAtObject.transform.position = new Vector3(17.5f, 18, -40);
-            LeanTween.moveLocal(self.cam.gameObject, new Vector3(17.5f, 18, -50), 1f).setEaseInOutSine();
-            self.SetCameraMode(CamMode.NORMAL);
+            ControlsManager.self.ActivateMenuMap();
+            LeanTween.moveLocal(self.cam.gameObject, startingPosition, 1f).setEaseInOutSine();
         }
     }
 }

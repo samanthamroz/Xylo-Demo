@@ -7,9 +7,7 @@ public partial class CameraManager : MonoBehaviour {
     private CinematicCameraManager ccm;
     public static CameraManager self;
 
-    [SerializeField] CameraConfiguration cameraConfiguration;
-    private Vector3 instantiateCameraPoint;
-
+    [SerializeField] protected CameraConfiguration cameraConfiguration;
 
     private CamMode currentMode;
     
@@ -52,10 +50,7 @@ public partial class CameraManager : MonoBehaviour {
         int currentLevelNum = LoadingManager.self.GetCurrentLevelNumber();
         var cameraData = cameraConfiguration.GetLevelCameraData(currentLevelNum);
 
-        var cinamaticPoints = cameraData.sectionCinematicViewPoints;
-        var gamePoints = cameraData.sectionGameViewPoints;
-        ccm = new CinematicCameraManager(cinamaticPoints, gamePoints);
-
+        ccm = new CinematicCameraManager();
         tscm = new TitleScreenCameraManager();
 
         lookAtObject = Instantiate(lookAtPrefab);

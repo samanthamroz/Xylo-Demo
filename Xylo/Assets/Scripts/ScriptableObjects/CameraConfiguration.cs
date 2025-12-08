@@ -14,6 +14,10 @@ public class CameraConfiguration : ScriptableObject {
         [Header("Camera Positions")]
         public Vector3[] sectionCinematicViewPoints;
         public Vector3[] sectionGameViewPoints;
+
+        [Header("Cinematic Stuff")]
+        public float timeToStartingPos = 1f;
+        public float totalTimeOfSection = 12f;
     }
     
     public CameraData[] levels;
