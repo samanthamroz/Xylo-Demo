@@ -11,8 +11,8 @@ public class PlayerMarble : MonoBehaviour, IClickBehavior {
     public void SetVelocity(Vector3 newVelocity) { 
         if (rb.isKinematic) Debug.LogWarning("Warning: Attempted to set velocity while marble is kinematic");
 
-        rb.velocity = newVelocity;
-        currentVelocity = rb.velocity;
+        rb.linearVelocity = newVelocity;
+        currentVelocity = rb.linearVelocity;
     }
 
     void Start() {
@@ -23,7 +23,7 @@ public class PlayerMarble : MonoBehaviour, IClickBehavior {
     }
     void FixedUpdate() {
         if (!rb.isKinematic) {
-            currentVelocity = rb.velocity;
+            currentVelocity = rb.linearVelocity;
             //print(currentVelocity);
         }
     }
@@ -77,7 +77,7 @@ public class PlayerMarble : MonoBehaviour, IClickBehavior {
             SetVelocity(launchVelocity);
         }
         else {
-            rb.velocity = launchVelocity;
+            rb.linearVelocity = launchVelocity;
         }
 
         LevelManager.self.StartCountingForAttempt();

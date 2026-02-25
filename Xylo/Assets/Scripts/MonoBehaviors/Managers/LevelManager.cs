@@ -124,7 +124,7 @@ public class LevelManager : MonoBehaviour {
         }
 
         LoadingManager.self.SetSectionCompleted(sectionNum);
-        LoadingManager.self.SetMarbleStartForSection(sectionNum + 1, marble.GetComponent<Rigidbody>().velocity, marble.transform.position);
+        LoadingManager.self.SetMarbleStartForSection(sectionNum + 1, marble.GetComponent<Rigidbody>().linearVelocity, marble.transform.position);
         //Move to next section
         if (!LoadingManager.self.IsLevelCompleted()) {
             GoToNextSection();
